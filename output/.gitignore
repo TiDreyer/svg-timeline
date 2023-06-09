@@ -1,0 +1,3 @@
+# let git ignore all output files
+*
+!.gitignore
