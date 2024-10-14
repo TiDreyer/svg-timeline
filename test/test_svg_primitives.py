@@ -1,6 +1,8 @@
 """ test cases for the classes defined in the svg_primitives module """
+from pathlib import Path
+
 from timeliner.geometry import CanvasVector, CanvasPoint
-from timeliner.svg_primitives import Line, Text, Rectangle, Circle
+from timeliner.svg_primitives import Line, Text, Rectangle, Circle, Image
 from timeliner.svg_style import SvgPathStyle, SvgTextStyle
 
 
@@ -36,3 +38,15 @@ def test_circle():
     circle = Circle(center=coord, radius=30, color='green')
     svg = '<circle cx="300" cy="400" r="30" fill="green" />'
     assert str(circle) == svg
+
+
+def test_image():
+    coord = CanvasPoint(300, 400)
+    file_path = Path(__file__).parent.joinpath('files/single_pixel.png')
+    image = Image(position=coord, width=200, height=300, file=file_path)
+    svg = ('<image x="300" y="400" width="200" height="300"'
+           ' xlink:href="data:image/png;base64,'
+           'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA'
+           'AADElEQVQI12P4//8/AAX+Av7czFnnAAAAAElFTkSuQmCC'
+           '" />')
+    assert str(image) == svg

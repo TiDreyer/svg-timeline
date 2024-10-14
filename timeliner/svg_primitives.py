@@ -1,5 +1,8 @@
 """ classes for defining different kinds of elements that can be drawn in an SVG """
 import math
+from mimetypes import guess_type
+from base64 import b64encode
+from pathlib import Path
 
 from timeliner.geometry import CanvasVector, CanvasPoint
 from timeliner.svg import SvgElement
@@ -69,4 +72,28 @@ class Circle(SvgElement):
             'cy': str(self.center.y),
             'r': str(self.radius),
             'fill': self.color,
+        }
+
+
+class Image(SvgElement):
+    """ SVG embedding of the image found at the given file path """
+    def __init__(self, position: CanvasPoint, width: float, height: float,
+                 file: Path):
+        super().__init__(tag='image')
+        self.position = position
+        self.width = width
+        self.height = height
+        self.file = file
+
+    @property
+    def attributes(self) -> dict[str, str]:
+        mimetype, encoding = guess_type(self.file)
+        with open(self.file, 'rb', encoding=encoding) as image_file:
+            image_data = b64encode(image_file.read())
+        return {
+            'x': str(self.position.x),
+            'y': str(self.position.y),
+            'width': str(self.width),
+            'height': str(self.height),
+            'xlink:href': f'data:{mimetype};base64,{image_data.decode()}',
         }
