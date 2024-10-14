@@ -1,6 +1,6 @@
 """ test cases for the classes defined in the svg_primitives module """
 from timeliner.geometry import CanvasVector, CanvasPoint
-from timeliner.svg_primitives import Line, Text
+from timeliner.svg_primitives import Line, Text, Rectangle
 from timeliner.svg_style import SvgPathStyle, SvgTextStyle
 
 
@@ -22,3 +22,10 @@ def test_text():
            'asdf\nasdf\nasdf'
            '</text>')
     assert str(text) == svg
+
+
+def test_rectangle():
+    coord = CanvasVector(CanvasPoint(-100, -200), CanvasPoint(300, 400))
+    rect = Rectangle(coord=coord, color='red')
+    svg = '<rect x="-100" y="-200" width="400.0" height="600.0" fill="red" />'
+    assert str(rect) == svg

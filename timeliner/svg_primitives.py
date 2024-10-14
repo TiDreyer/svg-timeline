@@ -1,4 +1,6 @@
 """ classes for defining different kinds of elements that can be drawn in an SVG """
+import math
+
 from timeliner.geometry import CanvasVector, CanvasPoint
 from timeliner.svg import SvgElement
 from timeliner.svg_style import SvgTextStyle, SvgPathStyle
@@ -32,3 +34,21 @@ class Text(SvgElement):
         attr |= self.text_style.as_attributes
         return attr
 
+
+class Rectangle(SvgElement):
+    """ rectangle filled with the given color """
+    def __init__(self, coord: CanvasVector, color: str):
+        super().__init__(tag='rect')
+        self.coord = coord
+        self.color = color
+
+    @property
+    def attributes(self) -> dict[str, str]:
+        a, b = self.coord.initial_point, self.coord.terminal_point
+        return {
+            'x': str(min(a.x, b.x)),
+            'y': str(min(a.y, b.y)),
+            'width': str(math.fabs(a.x - b.x)),
+            'height': str(math.fabs(a.y - b.y)),
+            'fill': self.color,
+        }
