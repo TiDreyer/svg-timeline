@@ -1,4 +1,6 @@
 """ basic geometry classes to describe canvas points """
+import math
+
 
 class Canvas:
     """ representation of a rectangular drawing area
@@ -17,6 +19,13 @@ class Canvas:
             if item.y > self.height:
                 return False
             return True
+        if isinstance(item, CanvasVector):
+            # only True if the vector is **completely** contained inside the canvas
+            if item.initial_point not in self:
+                return False
+            if item.terminal_point not in self:
+                return False
+            return True
         raise TypeError(f"__contains__ not defined for type '{type(item)}'")
 
 
@@ -25,3 +34,18 @@ class CanvasPoint:
     def __init__(self, x: float, y: float):
         self.x = x
         self.y = y
+
+
+class CanvasVector:
+    """ a vector between two points on a canvas """
+    def __init__(self, initial_point: CanvasPoint, terminal_point: CanvasPoint):
+        self.initial_point = initial_point
+        self.terminal_point = terminal_point
+
+    @property
+    def mag(self) -> float:
+        """ the vector magnitude (length) according to the euclidian norm """
+        delta_x_squared = (self.terminal_point.x - self.initial_point.x)**2
+        delta_y_squared = (self.terminal_point.y - self.initial_point.y)**2
+        norm = math.sqrt(delta_x_squared + delta_y_squared)
+        return norm
