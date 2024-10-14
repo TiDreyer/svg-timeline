@@ -20,18 +20,13 @@ class Canvas:
     def __contains__(self, item) -> bool:
         """ check whether the item is contained within the canvas"""
         if isinstance(item, CanvasPoint):
-            if item.x < 0 or item.y < 0:
-                return False
-            if item.x > self.width:
-                return False
-            if item.y > self.height:
+            if (item.x < 0 or item.x > self.width or
+                item.y < 0 or item.y > self.height):
                 return False
             return True
         if isinstance(item, CanvasVector):
             # only True if the vector is **completely** contained inside the canvas
-            if item.initial_point not in self:
-                return False
-            if item.terminal_point not in self:
+            if item.initial_point not in self or item.terminal_point not in self:
                 return False
             return True
         raise TypeError(f"__contains__ not defined for type '{type(item)}'")
@@ -78,7 +73,7 @@ class CanvasVector:
         which leaves the initial_point and direction as-is, and returns a vector
         which has a scaled magnitude
         """
-        if not (isinstance(other, int) or isinstance(other, float)):
+        if not isinstance(other, (int, float)):
             return NotImplemented
         if self.mag == 0:
             return self
