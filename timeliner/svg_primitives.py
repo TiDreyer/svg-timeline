@@ -52,3 +52,21 @@ class Rectangle(SvgElement):
             'height': str(math.fabs(a.y - b.y)),
             'fill': self.color,
         }
+
+
+class Circle(SvgElement):
+    """ circle filled with the given color """
+    def __init__(self, center: CanvasPoint, radius: float, color: str):
+        super().__init__(tag='circle')
+        self.center = center
+        self.radius = radius
+        self.color = color
+
+    @property
+    def attributes(self) -> dict[str, str]:
+        return {
+            'cx': str(self.center.x),
+            'cy': str(self.center.y),
+            'r': str(self.radius),
+            'fill': self.color,
+        }
