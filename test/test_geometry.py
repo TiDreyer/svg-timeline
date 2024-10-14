@@ -1,5 +1,5 @@
 """ test cases for the classes defined in the geometry module """
-from timeliner.geometry import Canvas, CanvasPoint, CanvasVector
+from timeliner.geometry import Canvas, CanvasPoint, CanvasVector, COORD_TOLERANCE
 
 
 def test_point_in_canvas():
@@ -25,6 +25,47 @@ def test_point_in_canvas():
     assert CanvasPoint(101, 50) not in canvas
     assert CanvasPoint(50, 130) not in canvas
     assert CanvasPoint(50, 100.0001) not in canvas
+
+
+def test_point_equal():
+    p_0_0 = CanvasPoint(0, 0)
+    p_0_1 = CanvasPoint(0, 1)
+    p_1_0 = CanvasPoint(1, 0)
+    p_1_1 = CanvasPoint(1, 1)
+    # obvious equal cases
+    assert p_0_0 == p_0_0
+    assert p_0_1 == p_0_1
+    assert p_1_0 == p_1_0
+    assert p_1_1 == p_1_1
+    # obvious unequal cases
+    assert p_0_0 != p_0_1
+    assert p_0_0 != p_1_0
+    assert p_0_0 != p_1_1
+    assert p_0_1 != p_0_0
+    assert p_1_0 != p_0_0
+    assert p_1_1 != p_0_0
+    # rounding errors
+    one_ninth = 1 / 9
+    one_tenth = 1 / 10
+    assert CanvasPoint(0, 1/3) == CanvasPoint(0, one_ninth+one_ninth+one_ninth)
+    assert CanvasPoint(0, 0.3) == CanvasPoint(0, one_tenth+one_tenth+one_tenth)
+    # close cases
+    below_tol = 0.99 * COORD_TOLERANCE
+    above_tol = 1.01 * COORD_TOLERANCE
+    assert p_0_0 == CanvasPoint(below_tol, below_tol)
+    assert p_0_0 != CanvasPoint(below_tol, above_tol)
+    assert p_0_0 != CanvasPoint(above_tol, below_tol)
+    assert p_0_0 != CanvasPoint(above_tol, above_tol)
+
+
+def test_vector_equal():
+    p_0_0 = CanvasPoint(0, 0)
+    p_1_1 = CanvasPoint(1, 1)
+    assert CanvasVector(p_0_0, p_1_1) == CanvasVector(p_0_0, p_1_1)
+    assert CanvasVector(p_1_1, p_0_0) == CanvasVector(p_1_1, p_0_0)
+    assert CanvasVector(p_1_1, p_1_1) == CanvasVector(p_1_1, p_1_1)
+    assert CanvasVector(p_0_0, p_0_0) != CanvasVector(p_1_1, p_1_1)
+    assert CanvasVector(p_0_0, p_1_1) != CanvasVector(p_1_1, p_0_0)
 
 
 def test_vector_in_canvas():

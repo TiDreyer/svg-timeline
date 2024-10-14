@@ -2,6 +2,10 @@
 import math
 
 
+# tolerance on coordinates within which two points are considered equal
+COORD_TOLERANCE = 0.000_001
+
+
 class Canvas:
     """ representation of a rectangular drawing area
     with the origin (0,0) in the top left corner """
@@ -35,12 +39,26 @@ class CanvasPoint:
         self.x = x
         self.y = y
 
+    def __eq__(self, other) -> bool:
+        """ two points are equal, if their coordinates are equal within COORD_TOLERANCE """
+        if not isinstance(other, CanvasPoint):
+            raise TypeError("Can only compare with another CanvasPoint instance")
+        return (math.fabs(self.x - other.x) < COORD_TOLERANCE and
+                math.fabs(self.y - other.y) < COORD_TOLERANCE)
+
 
 class CanvasVector:
     """ a vector between two points on a canvas """
     def __init__(self, initial_point: CanvasPoint, terminal_point: CanvasPoint):
         self.initial_point = initial_point
         self.terminal_point = terminal_point
+
+    def __eq__(self, other) -> bool:
+        """ two vectors are equal, if their two endpoints are equal within COORD_TOLERANCE """
+        if not isinstance(other, CanvasVector):
+            raise TypeError("Can only compare with another CanvasVector instance")
+        return (self.initial_point == other.initial_point and
+                self.terminal_point == other.terminal_point)
 
     @property
     def mag(self) -> float:
