@@ -14,6 +14,9 @@ class Canvas:
         self.width = width
         self.height = height
 
+    def __repr__(self) -> str:
+        return f"Canvas(width={self.width}, height={self.height})"
+
     def __contains__(self, item) -> bool:
         """ check whether the item is contained within the canvas"""
         if isinstance(item, CanvasPoint):
@@ -40,6 +43,9 @@ class CanvasPoint:
         self.x = x
         self.y = y
 
+    def __repr__(self) -> str:
+        return f"CanvasPoint({self.x}, {self.y})"
+
     def __eq__(self, other) -> bool:
         """ two points are equal, if their coordinates are equal within COORD_TOLERANCE """
         if not isinstance(other, CanvasPoint):
@@ -56,6 +62,9 @@ class CanvasVector:
     def __init__(self, initial_point: CanvasPoint, terminal_point: CanvasPoint):
         self.initial_point = initial_point
         self.terminal_point = terminal_point
+
+    def __repr__(self) -> str:
+        return f"CanvasVector({self.initial_point}, {self.terminal_point})"
 
     def __eq__(self, other) -> bool:
         """ two vectors are equal, if their two endpoints are equal within COORD_TOLERANCE """
