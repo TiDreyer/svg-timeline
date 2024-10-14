@@ -1,5 +1,6 @@
 """ base classes for creating SVG files """
 from html import escape
+from pathlib import Path
 from typing import Optional
 
 
@@ -36,3 +37,66 @@ class SvgElement:
         else:
             svg_element += ' />'
         return svg_element
+
+
+class SVG:
+    """ representation of an SVG file used to collect the contained elements
+    and save them into a .svg along with the necessary meta-data
+    """
+    def __init__(self, width: int, height: int,
+                 elements: Optional[list[SvgElement]] = None,
+                 definitions: Optional[list[SvgElement]] = None):
+        self.width = width
+        self.height = height
+        self.elements = elements or []
+        self.defs = definitions or []
+
+    @property
+    def header(self) -> str:
+        """ first lines of the .svg file """
+        width, height = int(self.width), int(self.height)
+        view_x, view_y = int(-self.width/2), int(-self.height/2)
+        lines = [
+            '<?xml version="1.0" encoding="UTF-8"?>',
+            '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"',
+            f'     width="{width}" height="{height}" viewBox="{view_x} {view_y} {width} {height}">',
+        ]
+        return '\n'.join(lines) + '\n'
+
+    @property
+    def defs_section(self) -> str:
+        """ definition section lines of the .svg file """
+        defs_section = ''
+        indent = ' ' * 4
+        if len(self.defs) > 0:
+            defs_section += '<defs>\n'
+            defs_section += ''.join(indent + str(element) + '\n'
+                                    for element in self.defs)
+            defs_section += '</defs>\n'
+        return defs_section
+
+    @property
+    def element_section(self) -> str:
+        """ main elements section lines of the .svg file """
+        element_section = ''.join(str(element) + '\n'
+                                  for element in self.elements)
+        return element_section
+
+    @property
+    def footer(self) -> str:
+        """ last lines of the .svg file """
+        return '</svg>\n'
+
+    @property
+    def full(self) -> str:
+        """ the full raw .svg file """
+        full = self.header
+        full += self.defs_section
+        full += self.element_section
+        full += self.footer
+        return full
+
+    def save_as(self, file_path: Path) -> None:
+        """ save the SVG under given file path """
+        with open(file_path, 'w', encoding='utf-8') as out_file:
+            out_file.write(self.full)
