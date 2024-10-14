@@ -90,6 +90,44 @@ def test_vector_in_canvas():
     assert CanvasVector(out_point_b, out_point_a) not in canvas
 
 
+def test_vector_multiplication():
+    p_0_0 = CanvasPoint(0, 0)
+    p_0_1 = CanvasPoint(0, 1)
+    p_1_0 = CanvasPoint(1, 0)
+    p_0_m1 = CanvasPoint(0, -1)
+    p_m1_0 = CanvasPoint(-1, 0)
+    p_1_2 = CanvasPoint(1, 2)
+    p_2_4 = CanvasPoint(2, 4)
+    p_3_6 = CanvasPoint(3, 6)
+    p_m3_m6 = CanvasPoint(-3, -6)
+    # normal scaling
+    assert CanvasVector(p_0_0, p_1_2) * 2 == CanvasVector(p_0_0, p_2_4)
+    assert CanvasVector(p_0_0, p_1_2) * 3 == CanvasVector(p_0_0, p_3_6)
+    assert CanvasVector(p_0_0, p_2_4) * 0.5 == CanvasVector(p_0_0, p_1_2)
+    assert CanvasVector(p_0_0, p_3_6) / 3 == CanvasVector(p_0_0, p_1_2)
+    assert CanvasVector(p_0_0, p_m3_m6) / -3 == CanvasVector(p_0_0, p_1_2)
+    # wrong type
+    with pytest.raises(TypeError):
+        _ = CanvasVector(p_0_0, p_0_0) * '7'
+    # float and integer
+    assert CanvasVector(p_0_0, p_3_6) * 7 == CanvasVector(p_0_0, p_3_6) * 7.0
+    assert CanvasVector(p_3_6, p_0_0) * 7 == CanvasVector(p_3_6, p_0_0) * 7.0
+    # magnitude zero vectors
+    assert CanvasVector(p_0_0, p_0_0) * 7 == CanvasVector(p_0_0, p_0_0)
+    assert CanvasVector(p_3_6, p_3_6) * 7 == CanvasVector(p_3_6, p_3_6)
+    assert CanvasVector(p_0_0, p_0_0) * 7 != CanvasVector(p_3_6, p_3_6)
+    # left and right multiplicity
+    assert CanvasVector(p_0_0, p_3_6) * 7 == 7 * CanvasVector(p_0_0, p_3_6)
+    assert CanvasVector(p_3_6, p_0_0) * 7 == 7 * CanvasVector(p_3_6, p_0_0)
+    assert CanvasVector(p_0_0, p_3_6) * -7 == -7 * CanvasVector(p_0_0, p_3_6)
+    assert CanvasVector(p_3_6, p_0_0) * -7 == -7 * CanvasVector(p_3_6, p_0_0)
+    # inversion
+    assert CanvasVector(p_0_0, p_0_1) * -1 == CanvasVector(p_0_0, p_0_m1)
+    assert CanvasVector(p_0_0, p_1_0) * -1 == CanvasVector(p_0_0, p_m1_0)
+    assert CanvasVector(p_0_0, p_3_6) * -1 == CanvasVector(p_0_0, p_m3_m6)
+
+
+
 def test_vector_magnitude():
     p_0_0 = CanvasPoint(0, 0)
     p_3_0 = CanvasPoint(3, 0)

@@ -73,6 +73,35 @@ class CanvasVector:
         return (self.initial_point == other.initial_point and
                 self.terminal_point == other.terminal_point)
 
+    def __mul__(self, other) -> Self:
+        """ scalar multiplication with an integer or float value
+        which leaves the initial_point and direction as-is, and returns a vector
+        which has a scaled magnitude
+        """
+        if not (isinstance(other, int) or isinstance(other, float)):
+            return NotImplemented
+        if self.mag == 0:
+            return self
+        direction = self.normalized().terminal_point
+        new_magnitude = self.mag * other
+        new_terminal_x = self.initial_point.x + new_magnitude * direction.x
+        new_terminal_y = self.initial_point.y + new_magnitude * direction.y
+        return CanvasVector(initial_point=self.initial_point,
+                            terminal_point=CanvasPoint(new_terminal_x, new_terminal_y))
+
+    def __rmul__(self, other) -> Self:
+        """ (see __mul__)"""
+        return self.__mul__(other=other)
+
+    def __truediv__(self, other) -> Self:
+        """ (see __mul__)"""
+        factor = 1/other
+        return self.__mul__(other=factor)
+
+    def __rtruediv__(self, other) -> Self:
+        """ dividing a value by a vector is not possible """
+        return NotImplemented
+
     @property
     def mag(self) -> float:
         """ the vector magnitude (length) according to the euclidian norm """
