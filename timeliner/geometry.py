@@ -83,3 +83,19 @@ class CanvasVector:
         norm_y = (self.terminal_point.y - self.initial_point.y) / self.mag
         norm_vec = CanvasVector(ORIGIN, CanvasPoint(norm_x, norm_y))
         return norm_vec
+
+    def orthogonal(self, ccw: bool = False) -> Self:
+        """ return a normalized vector that points in the (counter)clockwise
+        orthogonal direction from this vector
+        :argument ccw if True rotate counterclockwise, otherwise clockwise
+        :raises ZeroDivisionError if the vector has magnitude zero
+        """
+        if self.mag == 0:
+            raise ZeroDivisionError("Can not normalize a vector of magnitude 0")
+        norm_x = (self.terminal_point.x - self.initial_point.x) / self.mag
+        norm_y = (self.terminal_point.y - self.initial_point.y) / self.mag
+        if ccw:
+            vec_orthogonal = CanvasVector(ORIGIN, CanvasPoint(norm_y, -norm_x))
+        else:
+            vec_orthogonal = CanvasVector(ORIGIN, CanvasPoint(-norm_y, norm_x))
+        return vec_orthogonal

@@ -1,4 +1,6 @@
 """ test cases for the classes defined in the geometry module """
+import math
+
 import pytest
 
 from timeliner.geometry import Canvas, CanvasPoint, CanvasVector, COORD_TOLERANCE
@@ -139,3 +141,34 @@ def test_vector_normalized():
     assert CanvasVector(p_4_0, p_0_0).normalized() == v_x_norm_neg
     assert CanvasVector(p_4_0, p_7_0).normalized() == v_x_norm
     assert CanvasVector(p_7_0, p_4_0).normalized() == v_x_norm_neg
+
+
+def test_vector_orthogonal():
+    p_0_0 = CanvasPoint(0, 0)
+    v_up = CanvasVector(p_0_0, CanvasPoint(0, -1))
+    v_down = CanvasVector(p_0_0, CanvasPoint(0, 1))
+    v_left = CanvasVector(p_0_0, CanvasPoint(-1, 0))
+    v_right = CanvasVector(p_0_0, CanvasPoint(1, 0))
+    inv_sqrt2 = 1/math.sqrt(2)
+    v_up_left = CanvasVector(p_0_0, CanvasPoint(-inv_sqrt2, -inv_sqrt2))
+    v_up_right = CanvasVector(p_0_0, CanvasPoint(inv_sqrt2, -inv_sqrt2))
+    v_down_left = CanvasVector(p_0_0, CanvasPoint(-inv_sqrt2, inv_sqrt2))
+    v_down_right = CanvasVector(p_0_0, CanvasPoint(inv_sqrt2, inv_sqrt2))
+    # clockwise
+    assert v_up.orthogonal() == v_right
+    assert v_right.orthogonal() == v_down
+    assert v_down.orthogonal() == v_left
+    assert v_left.orthogonal() == v_up
+    assert v_up_left.orthogonal() == v_up_right
+    assert v_up_right.orthogonal() == v_down_right
+    assert v_down_right.orthogonal() == v_down_left
+    assert v_down_left.orthogonal() == v_up_left
+    # counterclockwise
+    assert v_up.orthogonal(ccw=True) == v_left
+    assert v_left.orthogonal(ccw=True) == v_down
+    assert v_down.orthogonal(ccw=True) == v_right
+    assert v_right.orthogonal(ccw=True) == v_up
+    assert v_up_right.orthogonal(ccw=True) == v_up_left
+    assert v_up_left.orthogonal(ccw=True) == v_down_left
+    assert v_down_left.orthogonal(ccw=True) == v_down_right
+    assert v_down_right.orthogonal(ccw=True) == v_up_right
