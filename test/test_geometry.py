@@ -1,4 +1,6 @@
 """ test cases for the classes defined in the geometry module """
+import pytest
+
 from timeliner.geometry import Canvas, CanvasPoint, CanvasVector, COORD_TOLERANCE
 
 
@@ -106,3 +108,34 @@ def test_vector_magnitude():
     assert CanvasVector(p_3_4, p_0_0).mag == 5
     assert CanvasVector(p_6_7, p_10_10).mag == 5
     assert CanvasVector(p_10_10, p_6_7).mag == 5
+
+
+def test_vector_normalized():
+    p_0_0 = CanvasPoint(0, 0)
+    p_0_1 = CanvasPoint(0, 1)
+    p_1_0 = CanvasPoint(1, 0)
+    p_0_m1 = CanvasPoint(0, -1)
+    p_m1_0 = CanvasPoint(-1, 0)
+    p_0_4 = CanvasPoint(0, 4)
+    p_0_7 = CanvasPoint(0, 7)
+    p_4_0 = CanvasPoint(4, 0)
+    p_7_0 = CanvasPoint(7, 0)
+    p_3_4 = CanvasPoint(3, 4)
+    v_x_norm = CanvasVector(p_0_0, p_1_0)
+    v_y_norm = CanvasVector(p_0_0, p_0_1)
+    v_x_norm_neg = CanvasVector(p_0_0, p_m1_0)
+    v_y_norm_neg = CanvasVector(p_0_0, p_0_m1)
+    # zero length
+    with pytest.raises(ZeroDivisionError):
+        _ = CanvasVector(p_0_0, p_0_0).normalized()
+    with pytest.raises(ZeroDivisionError):
+        _ = CanvasVector(p_3_4, p_3_4).normalized()
+    # one component
+    assert CanvasVector(p_0_0, p_0_4).normalized() == v_y_norm
+    assert CanvasVector(p_0_4, p_0_0).normalized() == v_y_norm_neg
+    assert CanvasVector(p_0_4, p_0_7).normalized() == v_y_norm
+    assert CanvasVector(p_0_7, p_0_4).normalized() == v_y_norm_neg
+    assert CanvasVector(p_0_0, p_4_0).normalized() == v_x_norm
+    assert CanvasVector(p_4_0, p_0_0).normalized() == v_x_norm_neg
+    assert CanvasVector(p_4_0, p_7_0).normalized() == v_x_norm
+    assert CanvasVector(p_7_0, p_4_0).normalized() == v_x_norm_neg

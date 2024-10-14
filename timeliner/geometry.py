@@ -1,5 +1,6 @@
 """ basic geometry classes to describe canvas points """
 import math
+from typing import Self
 
 
 # tolerance on coordinates within which two points are considered equal
@@ -47,6 +48,9 @@ class CanvasPoint:
                 math.fabs(self.y - other.y) < COORD_TOLERANCE)
 
 
+ORIGIN = CanvasPoint(0, 0)
+
+
 class CanvasVector:
     """ a vector between two points on a canvas """
     def __init__(self, initial_point: CanvasPoint, terminal_point: CanvasPoint):
@@ -67,3 +71,15 @@ class CanvasVector:
         delta_y_squared = (self.terminal_point.y - self.initial_point.y)**2
         norm = math.sqrt(delta_x_squared + delta_y_squared)
         return norm
+
+    def normalized(self) -> Self:
+        """ return a normalized version of the vector
+        the initial_point will be the origin (0, 0) and the magnitude will be 1
+        :raises ZeroDivisionError if the vector has magnitude zero
+        """
+        if self.mag == 0:
+            raise ZeroDivisionError("Can not normalize a vector of magnitude 0")
+        norm_x = (self.terminal_point.x - self.initial_point.x) / self.mag
+        norm_y = (self.terminal_point.y - self.initial_point.y) / self.mag
+        norm_vec = CanvasVector(ORIGIN, CanvasPoint(norm_x, norm_y))
+        return norm_vec
