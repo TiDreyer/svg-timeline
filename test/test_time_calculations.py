@@ -4,7 +4,7 @@ from datetime import datetime
 from timeliner.time_calculations import TimeGradient
 from timeliner.time_calculations import TimeSpacingPerMillennia, TimeSpacingPerCentury, TimeSpacingPerDecade
 from timeliner.time_calculations import TimeSpacingPerYear, TimeSpacingPerMonth, TimeSpacingPerDay
-from timeliner.geometry import CanvasPoint, CanvasVector
+from timeliner.geometry import Vector
 
 __DATE_MINUS_ONE = datetime.fromisoformat('2000-01-01T00:00:00')
 __DATE_START = datetime.fromisoformat('2000-01-01T10:00:00')
@@ -12,20 +12,20 @@ __DATE_HALF = datetime.fromisoformat('2000-01-01T15:00:00')
 __DATE_END = datetime.fromisoformat('2000-01-01T20:00:00')
 __DATE_PLUS_POINT_TWO = datetime.fromisoformat('2000-01-01T22:00:00')
 
-__COORD_MINUS_ONE = CanvasPoint(-100, 0)
-__COORD_START = CanvasPoint(0, 100)
-__COORD_HALF = CanvasPoint(50, 150)
-__COORD_END = CanvasPoint(100, 200)
-__COORD_PLUS_POINT_TWO = CanvasPoint(120, 220)
+__COORD_MINUS_ONE = Vector(-100, 0)
+__COORD_START = Vector(0, 100)
+__COORD_HALF = Vector(50, 150)
+__COORD_END = Vector(100, 200)
+__COORD_PLUS_POINT_TWO = Vector(120, 220)
 
-__TIMELINE = CanvasVector(__COORD_START, __COORD_END)
-__GRADIENT = TimeGradient(timeline=__TIMELINE, start_date=__DATE_START, end_date=__DATE_END)
+__GRADIENT = TimeGradient(source=__COORD_START, target=__COORD_END, start_date=__DATE_START, end_date=__DATE_END)
 
 
 def test_timegradient_init():
     assert __GRADIENT.start_date == __DATE_START
     assert __GRADIENT.end_date == __DATE_END
-    assert __GRADIENT.timeline == __TIMELINE
+    assert __GRADIENT.source == __COORD_START
+    assert __GRADIENT.target == __COORD_END
 
 
 def test_timegradient_date_to_coord():
@@ -59,10 +59,10 @@ def test_timegradient_coord_to_relative():
     assert __GRADIENT.coord_to_relative(__COORD_END) == 1
     assert __GRADIENT.coord_to_relative(__COORD_PLUS_POINT_TWO) == 1.2
     # points that are not directly on the timeline
-    assert __GRADIENT.coord_to_relative(CanvasPoint(0, 200)) == 0.5
-    assert __GRADIENT.coord_to_relative(CanvasPoint(100, 100)) == 0.5
-    assert __GRADIENT.coord_to_relative(CanvasPoint(-50, 150)) == 0
-    assert __GRADIENT.coord_to_relative(CanvasPoint(50, 250)) == 1
+    assert __GRADIENT.coord_to_relative(Vector(0, 200)) == 0.5
+    assert __GRADIENT.coord_to_relative(Vector(100, 100)) == 0.5
+    assert __GRADIENT.coord_to_relative(Vector(-50, 150)) == 0
+    assert __GRADIENT.coord_to_relative(Vector(50, 250)) == 1
 
 
 def test_timegradient_relative_to_coord():

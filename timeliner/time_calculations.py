@@ -3,25 +3,32 @@ import calendar
 from collections.abc import Iterable
 from datetime import datetime
 
-from timeliner.geometry import CanvasVector, CanvasPoint
+from timeliner.geometry import Vector
 
 
 class TimeGradient:
     """ class for the transfer of dates to canvas coordinates and back """
-    def __init__(self, timeline: CanvasVector, start_date: datetime, end_date: datetime):
+    def __init__(self, source: Vector, target: Vector, start_date: datetime, end_date: datetime):
         """
-        :param timeline: the vector on the canvas that correspond to the given times
+        :param source: the point on the canvas that correspond to the start of the gradient
+        :param target: the point on the canvas that correspond to the end of the gradient
         :param start_date: the datetime that corresponds to the start of the canvas_vector
         :param end_date: the datetime that corresponds to the end of the canvas_vector
         """
-        self._timeline = timeline
+        self._source = source
+        self._target = target
         self._start_date = start_date
         self._end_date = end_date
 
     @property
-    def timeline(self) -> CanvasVector:
-        """ the vector on the canvas that correspond to the given times """
-        return self._timeline
+    def source(self) -> Vector:
+        """ the point on the canvas that correspond to the start of the gradient """
+        return self._source
+
+    @property
+    def target(self) -> Vector:
+        """ the point on the canvas that correspond to the end of the gradient """
+        return self._target
 
     @property
     def start_date(self) -> datetime:
@@ -33,20 +40,20 @@ class TimeGradient:
         """ the datetime that corresponds to the end of the canvas_vector """
         return self._end_date
 
-    def coord_to_date(self, coord: CanvasPoint) -> datetime:
+    def coord_to_date(self, coord: Vector) -> datetime:
         """ transform an absolute position on the canvas into a date """
         return self.relative_to_date(self.coord_to_relative(coord=coord))
 
-    def coord_to_relative(self, coord: CanvasPoint) -> float:
+    def coord_to_relative(self, coord: Vector) -> float:
         """ transform an absolute position on the canvas
         into a relative position on the timeline
         """
         # Transform coordinates so that the timeline start is at (0, 0).
         # (simplifies the following calculations)
-        coord_x = coord.x - self._timeline.initial_point.x
-        coord_y = coord.y - self._timeline.initial_point.y
-        end_x = self._timeline.terminal_point.x - self._timeline.initial_point.x
-        end_y = self._timeline.terminal_point.y - self._timeline.initial_point.y
+        coord_x = coord.x - self._source.x
+        coord_y = coord.y - self._source.y
+        end_x = self._target.x - self._source.x
+        end_y = self._target.y - self._source.y
         # Given a scalar factor 'a', minimize the length of vector 'coord - a * end'.
         # 'a' then describes the relative position on this timeline with the
         # shortest distance to the given coordinates.
@@ -56,7 +63,7 @@ class TimeGradient:
         a = numerator / denominator
         return a
 
-    def date_to_coord(self, date: datetime) -> CanvasPoint:
+    def date_to_coord(self, date: datetime) -> Vector:
         """ transform a date into a position on the canvas """
         return self.relative_to_coord(self.date_to_relative(date=date))
 
@@ -66,12 +73,13 @@ class TimeGradient:
         date_delta = date - self.start_date
         return date_delta / self_delta
 
-    def relative_to_coord(self, relative_position: float) -> CanvasPoint:
+    def relative_to_coord(self, relative_position: float) -> Vector:
         """ transform a relative position on the timeline
         into an absolute position on the canvas
         """
-        scaled_vector = relative_position * self._timeline
-        return scaled_vector.terminal_point
+        delta = self._target - self._source
+        scaled_vector = self._source + (relative_position * delta)
+        return scaled_vector
 
     def relative_to_date(self, relative_position: float) -> datetime:
         """ transform a relative position on the timeline into a date """
