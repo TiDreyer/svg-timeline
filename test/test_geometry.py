@@ -62,22 +62,30 @@ def test_point_equal():
     assert p_0_0 != CanvasPoint(above_tol, above_tol)
 
 
+def test_vector_init():
+    a_point = CanvasPoint(4, 6)
+    a_tuple = (4, 6)
+    b_point = CanvasPoint(-3.5, -7.89)
+    b_tuple = (-3.5, -7.89)
+    assert CanvasVector(a_point, b_point) == CanvasVector(a_tuple, b_tuple)
+    assert CanvasVector(a_point, b_point) == CanvasVector(a_point, b_tuple)
+    assert CanvasVector(a_point, b_point) == CanvasVector(a_tuple, b_point)
+
+
 def test_vector_equal():
-    p_0_0 = CanvasPoint(0, 0)
-    p_1_1 = CanvasPoint(1, 1)
-    assert CanvasVector(p_0_0, p_1_1) == CanvasVector(p_0_0, p_1_1)
-    assert CanvasVector(p_1_1, p_0_0) == CanvasVector(p_1_1, p_0_0)
-    assert CanvasVector(p_1_1, p_1_1) == CanvasVector(p_1_1, p_1_1)
-    assert CanvasVector(p_0_0, p_0_0) != CanvasVector(p_1_1, p_1_1)
-    assert CanvasVector(p_0_0, p_1_1) != CanvasVector(p_1_1, p_0_0)
+    assert CanvasVector((0, 0), (1, 1)) == CanvasVector((0, 0), (1, 1))
+    assert CanvasVector((1, 1), (0, 0)) == CanvasVector((1, 1), (0, 0))
+    assert CanvasVector((1, 1), (1, 1)) == CanvasVector((1, 1), (1, 1))
+    assert CanvasVector((0, 0), (0, 0)) != CanvasVector((1, 1), (1, 1))
+    assert CanvasVector((0, 0), (1, 1)) != CanvasVector((1, 1), (0, 0))
 
 
 def test_vector_in_canvas():
     canvas = Canvas(100, 100)
-    in_point_a = CanvasPoint(30, 30)
-    in_point_b = CanvasPoint(50, 50)
-    out_point_a = CanvasPoint(-33, 50)
-    out_point_b = CanvasPoint(33, 120)
+    in_point_a = (30, 30)
+    in_point_b = (50, 50)
+    out_point_a = (-33, 50)
+    out_point_b = (33, 120)
     # inside
     assert CanvasVector(in_point_a, in_point_a) in canvas
     assert CanvasVector(in_point_a, in_point_b) in canvas
@@ -91,107 +99,81 @@ def test_vector_in_canvas():
 
 
 def test_vector_multiplication():
-    p_0_0 = CanvasPoint(0, 0)
-    p_0_1 = CanvasPoint(0, 1)
-    p_1_0 = CanvasPoint(1, 0)
-    p_0_m1 = CanvasPoint(0, -1)
-    p_m1_0 = CanvasPoint(-1, 0)
-    p_1_2 = CanvasPoint(1, 2)
-    p_2_4 = CanvasPoint(2, 4)
-    p_3_6 = CanvasPoint(3, 6)
-    p_m3_m6 = CanvasPoint(-3, -6)
     # normal scaling
-    assert CanvasVector(p_0_0, p_1_2) * 2 == CanvasVector(p_0_0, p_2_4)
-    assert CanvasVector(p_0_0, p_1_2) * 3 == CanvasVector(p_0_0, p_3_6)
-    assert CanvasVector(p_0_0, p_2_4) * 0.5 == CanvasVector(p_0_0, p_1_2)
-    assert CanvasVector(p_0_0, p_3_6) / 3 == CanvasVector(p_0_0, p_1_2)
-    assert CanvasVector(p_0_0, p_m3_m6) / -3 == CanvasVector(p_0_0, p_1_2)
+    assert CanvasVector((0, 0), (1, 2)) * 2 == CanvasVector((0, 0), (2, 4))
+    assert CanvasVector((0, 0), (1, 2)) * 3 == CanvasVector((0, 0), (3, 6))
+    assert CanvasVector((0, 0), (2, 4)) * 0.5 == CanvasVector((0, 0), (1, 2))
+    assert CanvasVector((0, 0), (3, 6)) / 3 == CanvasVector((0, 0), (1, 2))
+    assert CanvasVector((0, 0), (-3, -6)) / -3 == CanvasVector((0, 0), (1, 2))
     # wrong type
     with pytest.raises(TypeError):
-        _ = CanvasVector(p_0_0, p_0_0) * '7'
+        _ = CanvasVector((0, 0), (0, 0)) * '7'
     # float and integer
-    assert CanvasVector(p_0_0, p_3_6) * 7 == CanvasVector(p_0_0, p_3_6) * 7.0
-    assert CanvasVector(p_3_6, p_0_0) * 7 == CanvasVector(p_3_6, p_0_0) * 7.0
+    assert CanvasVector((0, 0), (3, 6)) * 7 == CanvasVector((0, 0), (3, 6)) * 7.0
+    assert CanvasVector((3, 6), (0, 0)) * 7 == CanvasVector((3, 6), (0, 0)) * 7.0
     # magnitude zero vectors
-    assert CanvasVector(p_0_0, p_0_0) * 7 == CanvasVector(p_0_0, p_0_0)
-    assert CanvasVector(p_3_6, p_3_6) * 7 == CanvasVector(p_3_6, p_3_6)
-    assert CanvasVector(p_0_0, p_0_0) * 7 != CanvasVector(p_3_6, p_3_6)
+    assert CanvasVector((0, 0), (0, 0)) * 7 == CanvasVector((0, 0), (0, 0))
+    assert CanvasVector((3, 6), (3, 6)) * 7 == CanvasVector((3, 6), (3, 6))
+    assert CanvasVector((0, 0), (0, 0)) * 7 != CanvasVector((3, 6), (3, 6))
     # left and right multiplicity
-    assert CanvasVector(p_0_0, p_3_6) * 7 == 7 * CanvasVector(p_0_0, p_3_6)
-    assert CanvasVector(p_3_6, p_0_0) * 7 == 7 * CanvasVector(p_3_6, p_0_0)
-    assert CanvasVector(p_0_0, p_3_6) * -7 == -7 * CanvasVector(p_0_0, p_3_6)
-    assert CanvasVector(p_3_6, p_0_0) * -7 == -7 * CanvasVector(p_3_6, p_0_0)
+    assert CanvasVector((0, 0), (3, 6)) * 7 == 7 * CanvasVector((0, 0), (3, 6))
+    assert CanvasVector((3, 6), (0, 0)) * 7 == 7 * CanvasVector((3, 6), (0, 0))
+    assert CanvasVector((0, 0), (3, 6)) * -7 == -7 * CanvasVector((0, 0), (3, 6))
+    assert CanvasVector((3, 6), (0, 0)) * -7 == -7 * CanvasVector((3, 6), (0, 0))
     # inversion
-    assert CanvasVector(p_0_0, p_0_1) * -1 == CanvasVector(p_0_0, p_0_m1)
-    assert CanvasVector(p_0_0, p_1_0) * -1 == CanvasVector(p_0_0, p_m1_0)
-    assert CanvasVector(p_0_0, p_3_6) * -1 == CanvasVector(p_0_0, p_m3_m6)
+    assert CanvasVector((0, 0), (0, 1)) * -1 == CanvasVector((0, 0), (0, -1))
+    assert CanvasVector((0, 0), (1, 0)) * -1 == CanvasVector((0, 0), (-1, 0))
+    assert CanvasVector((0, 0), (3, 6)) * -1 == CanvasVector((0, 0), (-3, -6))
 
 
 
 def test_vector_magnitude():
-    p_0_0 = CanvasPoint(0, 0)
-    p_3_0 = CanvasPoint(3, 0)
-    p_0_4 = CanvasPoint(0, 4)
-    p_3_4 = CanvasPoint(3, 4)
-    p_6_7 = CanvasPoint(6, 7)
-    p_10_10 = CanvasPoint(10, 10)
     # zero length
-    assert CanvasVector(p_0_0, p_0_0).mag == 0
-    assert CanvasVector(p_3_4, p_3_4).mag == 0
+    assert CanvasVector((0, 0), (0, 0)).mag == 0
+    assert CanvasVector((3, 4), (3, 4)).mag == 0
     # one component
-    assert CanvasVector(p_0_0, p_0_4).mag == 4
-    assert CanvasVector(p_0_4, p_0_0).mag == 4
-    assert CanvasVector(p_0_0, p_3_0).mag == 3
-    assert CanvasVector(p_3_0, p_0_0).mag == 3
+    assert CanvasVector((0, 0), (0, 4)).mag == 4
+    assert CanvasVector((0, 4), (0, 0)).mag == 4
+    assert CanvasVector((0, 0), (3, 0)).mag == 3
+    assert CanvasVector((3, 0), (0, 0)).mag == 3
     # 3^2 + 4^2 = 5^2
-    assert CanvasVector(p_0_0, p_3_4).mag == 5
-    assert CanvasVector(p_3_4, p_0_0).mag == 5
-    assert CanvasVector(p_6_7, p_10_10).mag == 5
-    assert CanvasVector(p_10_10, p_6_7).mag == 5
+    assert CanvasVector((0, 0), (3, 4)).mag == 5
+    assert CanvasVector((3, 4), (0, 0)).mag == 5
+    assert CanvasVector((6, 7), (10, 10)).mag == 5
+    assert CanvasVector((10, 10), (6, 7)).mag == 5
 
 
 def test_vector_normalized():
-    p_0_0 = CanvasPoint(0, 0)
-    p_0_1 = CanvasPoint(0, 1)
-    p_1_0 = CanvasPoint(1, 0)
-    p_0_m1 = CanvasPoint(0, -1)
-    p_m1_0 = CanvasPoint(-1, 0)
-    p_0_4 = CanvasPoint(0, 4)
-    p_0_7 = CanvasPoint(0, 7)
-    p_4_0 = CanvasPoint(4, 0)
-    p_7_0 = CanvasPoint(7, 0)
-    p_3_4 = CanvasPoint(3, 4)
-    v_x_norm = CanvasVector(p_0_0, p_1_0)
-    v_y_norm = CanvasVector(p_0_0, p_0_1)
-    v_x_norm_neg = CanvasVector(p_0_0, p_m1_0)
-    v_y_norm_neg = CanvasVector(p_0_0, p_0_m1)
+    v_x_norm = CanvasVector((0, 0), (1, 0))
+    v_y_norm = CanvasVector((0, 0), (0, 1))
+    v_x_norm_neg = CanvasVector((0, 0), (-1, 0))
+    v_y_norm_neg = CanvasVector((0, 0), (0, -1))
     # zero length
     with pytest.raises(ZeroDivisionError):
-        _ = CanvasVector(p_0_0, p_0_0).normalized()
+        _ = CanvasVector((0, 0), (0, 0)).normalized()
     with pytest.raises(ZeroDivisionError):
-        _ = CanvasVector(p_3_4, p_3_4).normalized()
+        _ = CanvasVector((3, 4), (3, 4)).normalized()
     # one component
-    assert CanvasVector(p_0_0, p_0_4).normalized() == v_y_norm
-    assert CanvasVector(p_0_4, p_0_0).normalized() == v_y_norm_neg
-    assert CanvasVector(p_0_4, p_0_7).normalized() == v_y_norm
-    assert CanvasVector(p_0_7, p_0_4).normalized() == v_y_norm_neg
-    assert CanvasVector(p_0_0, p_4_0).normalized() == v_x_norm
-    assert CanvasVector(p_4_0, p_0_0).normalized() == v_x_norm_neg
-    assert CanvasVector(p_4_0, p_7_0).normalized() == v_x_norm
-    assert CanvasVector(p_7_0, p_4_0).normalized() == v_x_norm_neg
+    assert CanvasVector((0, 0), (0, 4)).normalized() == v_y_norm
+    assert CanvasVector((0, 4), (0, 0)).normalized() == v_y_norm_neg
+    assert CanvasVector((0, 4), (0, 7)).normalized() == v_y_norm
+    assert CanvasVector((0, 7), (0, 4)).normalized() == v_y_norm_neg
+    assert CanvasVector((0, 0), (4, 0)).normalized() == v_x_norm
+    assert CanvasVector((4, 0), (0, 0)).normalized() == v_x_norm_neg
+    assert CanvasVector((4, 0), (7, 0)).normalized() == v_x_norm
+    assert CanvasVector((7, 0), (4, 0)).normalized() == v_x_norm_neg
 
 
 def test_vector_orthogonal():
-    p_0_0 = CanvasPoint(0, 0)
-    v_up = CanvasVector(p_0_0, CanvasPoint(0, -1))
-    v_down = CanvasVector(p_0_0, CanvasPoint(0, 1))
-    v_left = CanvasVector(p_0_0, CanvasPoint(-1, 0))
-    v_right = CanvasVector(p_0_0, CanvasPoint(1, 0))
+    v_up = CanvasVector((0, 0), (0, -1))
+    v_down = CanvasVector((0, 0), (0, 1))
+    v_left = CanvasVector((0, 0), (-1, 0))
+    v_right = CanvasVector((0, 0), (1, 0))
     inv_sqrt2 = 1/math.sqrt(2)
-    v_up_left = CanvasVector(p_0_0, CanvasPoint(-inv_sqrt2, -inv_sqrt2))
-    v_up_right = CanvasVector(p_0_0, CanvasPoint(inv_sqrt2, -inv_sqrt2))
-    v_down_left = CanvasVector(p_0_0, CanvasPoint(-inv_sqrt2, inv_sqrt2))
-    v_down_right = CanvasVector(p_0_0, CanvasPoint(inv_sqrt2, inv_sqrt2))
+    v_up_left = CanvasVector((0, 0), (-inv_sqrt2, -inv_sqrt2))
+    v_up_right = CanvasVector((0, 0), (inv_sqrt2, -inv_sqrt2))
+    v_down_left = CanvasVector((0, 0), (-inv_sqrt2, inv_sqrt2))
+    v_down_right = CanvasVector((0, 0), (inv_sqrt2, inv_sqrt2))
     # clockwise
     assert v_up.orthogonal() == v_right
     assert v_right.orthogonal() == v_down
