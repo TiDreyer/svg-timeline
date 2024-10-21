@@ -1,12 +1,18 @@
 """ high level timeline API classes """
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
 from timeliner.geometry import Vector
 from timeliner.svg import SVG
-from timeliner.svg_primitives import Rectangle, Line, Text
+from timeliner.svg_primitives import Rectangle, Line, Text, Circle
 from timeliner.svg_style import SvgPathStyle, SvgTextStyle
 from timeliner.time_calculations import TimeGradient, TimeSpacing
+
+@dataclass
+class Event:
+    date: datetime
+    text: str
 
 
 class TimelinePlot:
@@ -44,6 +50,18 @@ class TimelinePlot:
             tic_end = tic_base + tic_delta
             self._svg.elements.append(Line(source=tic_base, target=tic_end, style=style_minor))
             self._svg.elements.append(Text(tic_end, text_style, label))
+
+    def add_event(self, event: Event, lane: int = 1, color: str = 'red'):
+        line_style = SvgPathStyle(stroke_width=2, color=color)
+        text_style = SvgTextStyle()
+        lane_shift = 30 * (self._time.target - self._time.source).orthogonal(ccw=True)
+        event_base = self._time.date_to_coord(event.date)
+        event_end = event_base + lane * lane_shift
+        self._svg.elements += [
+            Line(source=event_base, target=event_end, style=line_style),
+            Circle(center=event_end, radius=3, color=color),
+            Text(event_end + 0.5 * lane_shift, text_style, event.text),
+        ]
 
     def save(self, file_path: Path):
         self._svg.save_as(file_path=file_path)
