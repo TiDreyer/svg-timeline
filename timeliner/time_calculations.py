@@ -1,4 +1,5 @@
 """ classes and functions for easier calculations on datetimes and coordinates """
+from collections.abc import Iterable
 from datetime import datetime
 
 from timeliner.geometry import CanvasVector, CanvasPoint
@@ -108,3 +109,47 @@ class TimeSpacing:
         :return list of tic positions as datetime objects
         """
         raise NotImplementedError
+
+
+class YearBasedTimeSpacing(TimeSpacing):
+    """ base class to return one entry per X years """
+    _base = 1
+
+    @property
+    def _range(self) -> Iterable:
+        first = (self._start_date.year // self._base + 1) * self._base
+        last = (self._end_date.year // self._base) * self._base
+        return range(first, last + self._base, self._base)
+
+    @property
+    def dates(self) -> list[datetime]:
+        dates = [datetime(year=year, month=1, day=1)
+                 for year in self._range]
+        return dates
+
+    @property
+    def labels(self) -> list[str]:
+        labels = [str(value) for value in self._range]
+        return labels
+
+
+class TimeSpacingPerMillennia(YearBasedTimeSpacing):
+    """ return one entry per 1000 years
+    Note: ISO 8601 only allows years between 0000 and 9999
+    """
+    _base = 1000
+
+
+class TimeSpacingPerCentury(YearBasedTimeSpacing):
+    """ return one entry per 100 years """
+    _base = 100
+
+
+class TimeSpacingPerDecade(YearBasedTimeSpacing):
+    """ return one entry per 10 years """
+    _base = 10
+
+
+class TimeSpacingPerYear(YearBasedTimeSpacing):
+    """ return one entry per year """
+    _base = 1

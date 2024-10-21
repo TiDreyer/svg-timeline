@@ -2,6 +2,7 @@
 from datetime import datetime
 
 from timeliner.time_calculations import TimeGradient
+from timeliner.time_calculations import TimeSpacingPerMillennia, TimeSpacingPerCentury, TimeSpacingPerDecade, TimeSpacingPerYear
 from timeliner.geometry import CanvasPoint, CanvasVector
 
 __DATE_MINUS_ONE = datetime.fromisoformat('2000-01-01T00:00:00')
@@ -77,3 +78,63 @@ def test_timegradient_relative_to_date():
     assert __GRADIENT.relative_to_date(0.5) == __DATE_HALF
     assert __GRADIENT.relative_to_date(1) == __DATE_END
     assert __GRADIENT.relative_to_date(1.2) == __DATE_PLUS_POINT_TWO
+
+
+def test_time_spacing_per_millennia():
+    spacing = TimeSpacingPerMillennia(
+        datetime.fromisoformat('0030-01-02'),
+        datetime.fromisoformat('4005-01-02'),
+    )
+    assert spacing.labels == ['1000', '2000', '3000', '4000']
+    assert spacing.dates == [
+        datetime.fromisoformat('1000-01-01T00:00:00'),
+        datetime.fromisoformat('2000-01-01T00:00:00'),
+        datetime.fromisoformat('3000-01-01T00:00:00'),
+        datetime.fromisoformat('4000-01-01T00:00:00'),
+    ]
+
+
+def test_time_spacing_per_century():
+    spacing = TimeSpacingPerCentury(
+        datetime.fromisoformat('1523-01-02'),
+        datetime.fromisoformat('2105-01-02'),
+    )
+    assert spacing.labels == ['1600', '1700', '1800', '1900', '2000', '2100']
+    assert spacing.dates == [
+        datetime.fromisoformat('1600-01-01T00:00:00'),
+        datetime.fromisoformat('1700-01-01T00:00:00'),
+        datetime.fromisoformat('1800-01-01T00:00:00'),
+        datetime.fromisoformat('1900-01-01T00:00:00'),
+        datetime.fromisoformat('2000-01-01T00:00:00'),
+        datetime.fromisoformat('2100-01-01T00:00:00'),
+    ]
+
+
+def test_time_spacing_per_decade():
+    spacing = TimeSpacingPerDecade(
+        datetime.fromisoformat('1964-01-02'),
+        datetime.fromisoformat('2010-01-02'),
+    )
+    assert spacing.labels == ['1970', '1980', '1990', '2000', '2010']
+    assert spacing.dates == [
+        datetime.fromisoformat('1970-01-01T00:00:00'),
+        datetime.fromisoformat('1980-01-01T00:00:00'),
+        datetime.fromisoformat('1990-01-01T00:00:00'),
+        datetime.fromisoformat('2000-01-01T00:00:00'),
+        datetime.fromisoformat('2010-01-01T00:00:00'),
+    ]
+
+
+def test_time_spacing_per_year():
+    spacing = TimeSpacingPerYear(
+        datetime.fromisoformat('2000-01-02'),
+        datetime.fromisoformat('2005-01-02'),
+    )
+    assert spacing.labels == ['2001', '2002', '2003', '2004', '2005']
+    assert spacing.dates == [
+        datetime.fromisoformat('2001-01-01T00:00:00'),
+        datetime.fromisoformat('2002-01-01T00:00:00'),
+        datetime.fromisoformat('2003-01-01T00:00:00'),
+        datetime.fromisoformat('2004-01-01T00:00:00'),
+        datetime.fromisoformat('2005-01-01T00:00:00'),
+    ]
