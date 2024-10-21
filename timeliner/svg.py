@@ -55,7 +55,7 @@ class SVG:
     def header(self) -> str:
         """ first lines of the .svg file """
         width, height = int(self.width), int(self.height)
-        view_x, view_y = int(-self.width/2), int(-self.height/2)
+        view_x, view_y = 0, 0
         lines = [
             '<?xml version="1.0" encoding="UTF-8"?>',
             '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"',

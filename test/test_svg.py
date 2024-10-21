@@ -32,7 +32,7 @@ def test_svg_header():
     header = dedent('''\
     <?xml version="1.0" encoding="UTF-8"?>
     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-         width="800" height="600" viewBox="-400 -300 800 600">
+         width="800" height="600" viewBox="0 0 800 600">
     ''')
     assert svg.header == header
 
@@ -90,7 +90,7 @@ def test_svg_full():
     full = dedent('''\
     <?xml version="1.0" encoding="UTF-8"?>
     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-         width="800" height="600" viewBox="-400 -300 800 600">
+         width="800" height="600" viewBox="0 0 800 600">
     <defs>
         <x x1="hello" x2="world">asdf</x>
         <y y1="hello" y2="world" />
