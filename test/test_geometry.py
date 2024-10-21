@@ -62,6 +62,16 @@ def test_point_equal():
     assert p_0_0 != CanvasPoint(above_tol, above_tol)
 
 
+def test_vector_init():
+    a_point = CanvasPoint(4, 6)
+    a_tuple = (4, 6)
+    b_point = CanvasPoint(-3.5, -7.89)
+    b_tuple = (-3.5, -7.89)
+    assert CanvasVector(a_point, b_point) == CanvasVector(a_tuple, b_tuple)
+    assert CanvasVector(a_point, b_point) == CanvasVector(a_point, b_tuple)
+    assert CanvasVector(a_point, b_point) == CanvasVector(a_tuple, b_point)
+
+
 def test_vector_equal():
     p_0_0 = CanvasPoint(0, 0)
     p_1_1 = CanvasPoint(1, 1)

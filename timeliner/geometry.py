@@ -54,9 +54,16 @@ ORIGIN = CanvasPoint(0, 0)
 
 class CanvasVector:
     """ a vector between two points on a canvas """
-    def __init__(self, initial_point: CanvasPoint, terminal_point: CanvasPoint):
-        self.initial_point = initial_point
-        self.terminal_point = terminal_point
+    def __init__(self, initial_point: CanvasPoint|tuple[float, float],
+                 terminal_point: CanvasPoint|tuple[float, float]):
+        if isinstance(initial_point, CanvasPoint):
+            self.initial_point = initial_point
+        elif isinstance(initial_point, tuple):
+            self.initial_point = CanvasPoint(*initial_point)
+        if isinstance(terminal_point, CanvasPoint):
+            self.terminal_point = terminal_point
+        elif isinstance(terminal_point, tuple):
+            self.terminal_point = CanvasPoint(*terminal_point)
 
     def __repr__(self) -> str:
         return f"CanvasVector({self.initial_point}, {self.terminal_point})"
