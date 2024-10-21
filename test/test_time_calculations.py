@@ -2,7 +2,8 @@
 from datetime import datetime
 
 from timeliner.time_calculations import TimeGradient
-from timeliner.time_calculations import TimeSpacingPerMillennia, TimeSpacingPerCentury, TimeSpacingPerDecade, TimeSpacingPerYear
+from timeliner.time_calculations import TimeSpacingPerMillennia, TimeSpacingPerCentury, TimeSpacingPerDecade
+from timeliner.time_calculations import TimeSpacingPerYear, TimeSpacingPerMonth, TimeSpacingPerDay
 from timeliner.geometry import CanvasPoint, CanvasVector
 
 __DATE_MINUS_ONE = datetime.fromisoformat('2000-01-01T00:00:00')
@@ -137,4 +138,33 @@ def test_time_spacing_per_year():
         datetime.fromisoformat('2003-01-01T00:00:00'),
         datetime.fromisoformat('2004-01-01T00:00:00'),
         datetime.fromisoformat('2005-01-01T00:00:00'),
+    ]
+
+
+def test_time_spacing_per_month():
+    spacing = TimeSpacingPerMonth(
+        datetime.fromisoformat('1999-10-02'),
+        datetime.fromisoformat('2000-03-02'),
+    )
+    assert spacing.labels == ['Nov', 'Dec', 'Jan', 'Feb', 'Mar']
+    assert spacing.dates == [
+        datetime.fromisoformat('1999-11-01T00:00:00'),
+        datetime.fromisoformat('1999-12-01T00:00:00'),
+        datetime.fromisoformat('2000-01-01T00:00:00'),
+        datetime.fromisoformat('2000-02-01T00:00:00'),
+        datetime.fromisoformat('2000-03-01T00:00:00'),
+    ]
+
+
+def test_time_spacing_per_day():
+    spacing = TimeSpacingPerDay(
+        datetime.fromisoformat('1999-12-29'),
+        datetime.fromisoformat('2000-01-02'),
+    )
+    assert spacing.labels == ['30', '31', '1', '2']
+    assert spacing.dates == [
+        datetime.fromisoformat('1999-12-30T00:00:00'),
+        datetime.fromisoformat('1999-12-31T00:00:00'),
+        datetime.fromisoformat('2000-01-01T00:00:00'),
+        datetime.fromisoformat('2000-01-02T00:00:00'),
     ]

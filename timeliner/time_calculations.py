@@ -1,4 +1,5 @@
 """ classes and functions for easier calculations on datetimes and coordinates """
+import calendar
 from collections.abc import Iterable
 from datetime import datetime
 
@@ -153,3 +154,57 @@ class TimeSpacingPerDecade(YearBasedTimeSpacing):
 class TimeSpacingPerYear(YearBasedTimeSpacing):
     """ return one entry per year """
     _base = 1
+
+
+class TimeSpacingPerMonth(TimeSpacing):
+    """ return one entry per month """
+    @property
+    def dates(self) -> list[datetime]:
+        year = self.start_date.year
+        month = self.start_date.month + 1
+        dates = []
+        while True:
+            if month > 12:
+                year += 1
+                month = 1
+            date = datetime(year=year, month=month, day=1)
+            if date > self.end_date:
+                break
+            dates.append(date)
+            month += 1
+        return dates
+
+    @property
+    def labels(self) -> list[str]:
+        labels = [calendar.month_abbr[date.month] for date in self.dates]
+        return labels
+
+
+class TimeSpacingPerDay(TimeSpacing):
+    """ return one entry per day """
+    @property
+    def dates(self) -> list[datetime]:
+        year = self.start_date.year
+        month = self.start_date.month
+        _, n_days = calendar.monthrange(year, month)
+        day = self.start_date.day + 1
+        dates = []
+        while True:
+            if day > n_days:
+                month += 1
+                day = 1
+                if month > 12:
+                    year += 1
+                    month = 1
+                    _, n_days = calendar.monthrange(year, month)
+            date = datetime(year=year, month=month, day=day)
+            if date > self.end_date:
+                break
+            dates.append(date)
+            day += 1
+        return dates
+
+    @property
+    def labels(self) -> list[str]:
+        labels = [str(date.day) for date in self.dates]
+        return labels
