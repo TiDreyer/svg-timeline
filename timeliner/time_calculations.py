@@ -75,3 +75,36 @@ class TimeGradient:
         """ transform a relative position on the timeline into a date """
         delta = self._end_date - self._start_date
         return self._start_date + relative_position * delta
+
+
+class TimeSpacing:
+    """ base class for semantic datetime spacing within a given range """
+    def __init__(self, start_date: datetime, end_date: datetime):
+        if not start_date < end_date:
+            raise ValueError("start date needs to be smaller than end date")
+        self._start_date = start_date
+        self._end_date = end_date
+
+    @property
+    def start_date(self) -> datetime:
+        """ the datetime that corresponds to the start of the time range """
+        return self._start_date
+
+    @property
+    def end_date(self) -> datetime:
+        """ the datetime that corresponds to the end of the time range """
+        return self._end_date
+
+    @property
+    def labels(self) -> list[str]:
+        """ Tic labels
+        :return list of tic labels as strings
+        """
+        raise NotImplementedError
+
+    @property
+    def dates(self) -> list[datetime]:
+        """ Positions of the tics
+        :return list of tic positions as datetime objects
+        """
+        raise NotImplementedError
