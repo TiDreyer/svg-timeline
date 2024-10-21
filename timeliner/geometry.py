@@ -19,77 +19,35 @@ class Canvas:
 
     def __contains__(self, item) -> bool:
         """ check whether the item is contained within the canvas"""
-        if isinstance(item, CanvasPoint):
+        if isinstance(item, Vector):
             if (item.x < 0 or item.x > self.width or
                 item.y < 0 or item.y > self.height):
-                return False
-            return True
-        if isinstance(item, CanvasVector):
-            # only True if the vector is **completely** contained inside the canvas
-            if item.initial_point not in self or item.terminal_point not in self:
                 return False
             return True
         raise TypeError(f"__contains__ not defined for type '{type(item)}'")
 
 
-class CanvasPoint:
-    """ a point within a canvas """
+class Vector:
+    """ a vector (or point) within a canvas """
     def __init__(self, x: float, y: float):
         self.x = x
         self.y = y
 
     def __repr__(self) -> str:
-        return f"CanvasPoint({self.x}, {self.y})"
+        return f"Vector({self.x}, {self.y})"
 
     def __eq__(self, other) -> bool:
         """ two points are equal, if their coordinates are equal within COORD_TOLERANCE """
-        if not isinstance(other, CanvasPoint):
+        if not isinstance(other, Vector):
             raise TypeError("Can only compare with another CanvasPoint instance")
         return (math.fabs(self.x - other.x) < COORD_TOLERANCE and
                 math.fabs(self.y - other.y) < COORD_TOLERANCE)
 
-
-ORIGIN = CanvasPoint(0, 0)
-
-
-class CanvasVector:
-    """ a vector between two points on a canvas """
-    def __init__(self, initial_point: CanvasPoint|tuple[float, float],
-                 terminal_point: CanvasPoint|tuple[float, float]):
-        if isinstance(initial_point, CanvasPoint):
-            self.initial_point = initial_point
-        elif isinstance(initial_point, tuple):
-            self.initial_point = CanvasPoint(*initial_point)
-        if isinstance(terminal_point, CanvasPoint):
-            self.terminal_point = terminal_point
-        elif isinstance(terminal_point, tuple):
-            self.terminal_point = CanvasPoint(*terminal_point)
-
-    def __repr__(self) -> str:
-        return f"CanvasVector({self.initial_point}, {self.terminal_point})"
-
-    def __eq__(self, other) -> bool:
-        """ two vectors are equal, if their two endpoints are equal within COORD_TOLERANCE """
-        if not isinstance(other, CanvasVector):
-            raise TypeError("Can only compare with another CanvasVector instance")
-        return (self.initial_point == other.initial_point and
-                self.terminal_point == other.terminal_point)
-
     def __mul__(self, other) -> Self:
-        """ scalar multiplication with an integer or float value
-        which leaves the initial_point and direction as-is, and returns a vector
-        which has a scaled magnitude
-        """
+        """ scalar multiplication with an integer or float value"""
         if not isinstance(other, (int, float)):
             return NotImplemented
-        if self.mag == 0:
-            return self
-        direction = self.normalized().terminal_point
-        new_magnitude = self.mag * other
-        new_terminal_x = self.initial_point.x + new_magnitude * direction.x
-        new_terminal_y = self.initial_point.y + new_magnitude * direction.y
-        return CanvasVector(initial_point=self.initial_point,
-                            terminal_point=CanvasPoint(new_terminal_x, new_terminal_y))
+        return Vector(other * self.x, other * self.y)
 
     def __rmul__(self, other) -> Self:
         """ (see __mul__)"""
@@ -107,9 +65,7 @@ class CanvasVector:
     @property
     def mag(self) -> float:
         """ the vector magnitude (length) according to the euclidian norm """
-        delta_x_squared = (self.terminal_point.x - self.initial_point.x)**2
-        delta_y_squared = (self.terminal_point.y - self.initial_point.y)**2
-        norm = math.sqrt(delta_x_squared + delta_y_squared)
+        norm = math.sqrt(self.x**2 + self.y**2)
         return norm
 
     def normalized(self) -> Self:
@@ -119,10 +75,7 @@ class CanvasVector:
         """
         if self.mag == 0:
             raise ZeroDivisionError("Can not normalize a vector of magnitude 0")
-        norm_x = (self.terminal_point.x - self.initial_point.x) / self.mag
-        norm_y = (self.terminal_point.y - self.initial_point.y) / self.mag
-        norm_vec = CanvasVector(ORIGIN, CanvasPoint(norm_x, norm_y))
-        return norm_vec
+        return self / self.mag
 
     def orthogonal(self, ccw: bool = False) -> Self:
         """ return a normalized vector that points in the (counter)clockwise
@@ -132,10 +85,10 @@ class CanvasVector:
         """
         if self.mag == 0:
             raise ZeroDivisionError("Can not normalize a vector of magnitude 0")
-        norm_x = (self.terminal_point.x - self.initial_point.x) / self.mag
-        norm_y = (self.terminal_point.y - self.initial_point.y) / self.mag
+        norm = self.normalized()
         if ccw:
-            vec_orthogonal = CanvasVector(ORIGIN, CanvasPoint(norm_y, -norm_x))
-        else:
-            vec_orthogonal = CanvasVector(ORIGIN, CanvasPoint(-norm_y, norm_x))
-        return vec_orthogonal
+            return Vector(norm.y, -norm.x)
+        return Vector(-norm.y, norm.x)
+
+
+ORIGIN = Vector(0, 0)
