@@ -62,6 +62,16 @@ def test_vector_equal():
     assert v_0_0 != Vector(above_tol, above_tol)
 
 
+def test_vector_addition():
+    assert Vector(1, 2) + Vector(3, 4) == Vector(4, 6)
+    assert Vector(1, -2) + Vector(-3, 4) == Vector(-2, 2)
+
+
+def test_vector_subtraction():
+    assert Vector(1, 2) - Vector(3, 4) == Vector(-2, -2)
+    assert Vector(1, -2) - Vector(-3, 4) == Vector(4, -6)
+
+
 def test_vector_multiplication():
     # normal scaling
     assert Vector(1, 2) * 2 == Vector(2, 4)

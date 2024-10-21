@@ -43,8 +43,20 @@ class Vector:
         return (math.fabs(self.x - other.x) < COORD_TOLERANCE and
                 math.fabs(self.y - other.y) < COORD_TOLERANCE)
 
+    def __add__(self, other) -> Self:
+        """ component-wise addition with another vector """
+        if not isinstance(other, Vector):
+            return NotImplemented
+        return Vector(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other) -> Self:
+        """ component-wise subtraction with another vector """
+        if not isinstance(other, Vector):
+            return NotImplemented
+        return Vector(self.x - other.x, self.y - other.y)
+
     def __mul__(self, other) -> Self:
-        """ scalar multiplication with an integer or float value"""
+        """ scalar multiplication with an integer or float value """
         if not isinstance(other, (int, float)):
             return NotImplemented
         return Vector(other * self.x, other * self.y)
