@@ -2,6 +2,7 @@
 import math
 from mimetypes import guess_type
 from base64 import b64encode
+from html import escape
 from pathlib import Path
 
 from timeliner.geometry import Vector
@@ -29,7 +30,7 @@ class Line(SvgElement):
 class Text(SvgElement):
     """ text at a fixed position on the canvas """
     def __init__(self, coord: Vector, style: SvgTextStyle, text: str):
-        super().__init__(tag='text', content=text)
+        super().__init__(tag='text', content=escape(text))
         self.coord = coord
         self.text_style = style
 
