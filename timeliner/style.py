@@ -37,4 +37,4 @@ class __TimelineStyle:
     timespan_text_size_factor: float = 0.7
 
 
-TimelineStyle = __TimelineStyle()
+Defaults = __TimelineStyle()
