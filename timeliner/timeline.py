@@ -97,8 +97,8 @@ class TimelinePlot:
             Image(top_left=image_top_left, file=image.file_path, height=height, width=width),
         ]
 
-    def add_timespan(self, timespan: TimeSpan, lane: int = 1, color: str = 'red', width: float = 13):
-        text_style = SvgTextStyle(font_size=0.8*width)
+    def add_timespan(self, timespan: TimeSpan, lane: int = 1, color: str = 'red', text_color: str = 'black', width: float = 13):
+        text_style = SvgTextStyle(text_color=text_color, font_size=0.8*width)
         start_corner = self.__to_lane_point(timespan.start_date, lane=lane) + width/2 * self.lane_normal
         end_corner = self.__to_lane_point(timespan.end_date, lane=lane) - width/2 * self.lane_normal
         middle_date = timespan.start_date + (timespan.end_date - timespan.start_date) / 2
