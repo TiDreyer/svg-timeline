@@ -108,6 +108,13 @@ class TimelinePlot:
             Text(text_coord, text_style, timespan.text),
         ]
 
+    def add_title(self, title: str, text_color: str = 'black'):
+        text_style = SvgTextStyle(text_color=text_color, font_size=self._height//15)
+        text_coord = Vector(x=self._width / 2, y=self._height * 0.06)
+        self._svg.elements += [
+            Text(text_coord, text_style, title),
+        ]
+
     @property
     def lane_normal(self) -> Vector:
         return (self._time.target - self._time.source).orthogonal(ccw=True)
