@@ -15,6 +15,13 @@ class Event:
     text: str
 
 
+@dataclass
+class TimeSpan:
+    start_date: datetime
+    end_date: datetime
+    text: str
+
+
 class TimelinePlot:
     def __init__(self, start_date: datetime, end_date: datetime,
                  time_spacing: TimeSpacing,
@@ -63,10 +70,24 @@ class TimelinePlot:
             Text(text_coord, text_style, event.text),
         ]
 
+    def add_timespan(self, timespan: TimeSpan, lane: int = 1, color: str = 'red', width: float = 13):
+        text_style = SvgTextStyle(font_size=0.8*width)
+        start_corner = self.__to_lane_point(timespan.start_date, lane=lane) + width/2 * self.lane_normal
+        end_corner = self.__to_lane_point(timespan.end_date, lane=lane) - width/2 * self.lane_normal
+        middle_date = timespan.start_date + (timespan.end_date - timespan.start_date) / 2
+        text_coord = self.__to_lane_point(middle_date, lane=lane)
+        self._svg.elements += [
+            Rectangle(start_corner, end_corner, color=color),
+            Text(text_coord, text_style, timespan.text),
+        ]
+
+    @property
+    def lane_normal(self) -> Vector:
+        return (self._time.target - self._time.source).orthogonal(ccw=True)
+
     def __to_lane_point(self, date: datetime, lane: float = 1, lane_height: int = 20) -> Vector:
-        lane_normal = (self._time.target - self._time.source).orthogonal(ccw=True)
         date_coord = self._time.date_to_coord(date)
-        lane_point = date_coord + lane * lane_height * lane_normal
+        lane_point = date_coord + lane * lane_height * self.lane_normal
         return lane_point
 
     def save(self, file_path: Path):
