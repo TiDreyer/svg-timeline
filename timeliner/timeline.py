@@ -54,14 +54,20 @@ class TimelinePlot:
     def add_event(self, event: Event, lane: int = 1, color: str = 'red'):
         line_style = SvgPathStyle(stroke_width=2, color=color)
         text_style = SvgTextStyle()
-        lane_shift = 30 * (self._time.target - self._time.source).orthogonal(ccw=True)
         event_base = self._time.date_to_coord(event.date)
-        event_end = event_base + lane * lane_shift
+        event_end = self.__to_lane_point(event.date, lane=lane)
+        text_coord = self.__to_lane_point(event.date, lane=(lane+0.5))
         self._svg.elements += [
             Line(source=event_base, target=event_end, style=line_style),
             Circle(center=event_end, radius=3, color=color),
-            Text(event_end + 0.5 * lane_shift, text_style, event.text),
+            Text(text_coord, text_style, event.text),
         ]
+
+    def __to_lane_point(self, date: datetime, lane: float = 1, lane_height: int = 20) -> Vector:
+        lane_normal = (self._time.target - self._time.source).orthogonal(ccw=True)
+        date_coord = self._time.date_to_coord(date)
+        lane_point = date_coord + lane * lane_height * lane_normal
+        return lane_point
 
     def save(self, file_path: Path):
         self._svg.save_as(file_path=file_path)
