@@ -84,7 +84,7 @@ class TimelinePlot:
         image_top_left = event_end + height * self.lane_normal + width/2 * self.lane_normal.orthogonal(ccw=True)
         self._svg.elements += [
             Line(source=event_base, target=event_end, style=line_style),
-            Image(center=image_top_left, file=image.file_path, height=height, width=width),
+            Image(top_left=image_top_left, file=image.file_path, height=height, width=width),
         ]
 
     def add_timespan(self, timespan: TimeSpan, lane: int = 1, color: str = 'red', width: float = 13):
