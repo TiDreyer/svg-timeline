@@ -5,14 +5,21 @@ from pathlib import Path
 
 from timeliner.geometry import Vector
 from timeliner.svg import SVG
-from timeliner.svg_primitives import Rectangle, Line, Text, Circle
+from timeliner.svg_primitives import Rectangle, Line, Text, Circle, Image
 from timeliner.svg_style import SvgPathStyle, SvgTextStyle
 from timeliner.time_calculations import TimeGradient, TimeSpacing
+
 
 @dataclass
 class Event:
     date: datetime
     text: str
+
+
+@dataclass
+class DatedImage:
+    date: datetime
+    file_path: Path
 
 
 @dataclass
@@ -68,6 +75,16 @@ class TimelinePlot:
             Line(source=event_base, target=event_end, style=line_style),
             Circle(center=event_end, radius=3, color=color),
             Text(text_coord, text_style, event.text),
+        ]
+
+    def add_image(self, image: DatedImage, height: float, width: float, lane: int = 1, color: str = 'black'):
+        line_style = SvgPathStyle(stroke_width=2, color=color)
+        event_base = self._time.date_to_coord(image.date)
+        event_end = self.__to_lane_point(image.date, lane=lane)
+        image_top_left = event_end + height * self.lane_normal + width/2 * self.lane_normal.orthogonal(ccw=True)
+        self._svg.elements += [
+            Line(source=event_base, target=event_end, style=line_style),
+            Image(center=image_top_left, file=image.file_path, height=height, width=width),
         ]
 
     def add_timespan(self, timespan: TimeSpan, lane: int = 1, color: str = 'red', width: float = 13):
