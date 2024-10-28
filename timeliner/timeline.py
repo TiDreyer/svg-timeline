@@ -2,6 +2,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
+from typing import Optional
 
 from timeliner.geometry import Vector
 from timeliner.svg import SVG
@@ -31,7 +32,7 @@ class TimeSpan:
 
 class TimelinePlot:
     def __init__(self, start_date: datetime, end_date: datetime,
-                 time_spacing: TimeSpacing,
+                 time_spacing: TimeSpacing, minor_tics: Optional[TimeSpacing] = None,
                  size: tuple[int, int] = (800, 600)):
         self._width, self._height = size
         self._svg = SVG(self._width, self._height)
@@ -42,6 +43,7 @@ class TimelinePlot:
         self._time = TimeGradient(source=Vector(x1, y), target=Vector(x2, y),
                                   start_date=start_date, end_date=end_date)
         self._tics = time_spacing
+        self._tics_minor = minor_tics
         self._add_timeline()
 
     def _add_background(self):
@@ -52,18 +54,26 @@ class TimelinePlot:
         self._svg.elements.append(background)
 
     def _add_timeline(self):
-        style_major = SvgPathStyle(stroke_width=3)
-        style_minor = SvgPathStyle(stroke_width=2)
+        style_arrow = SvgPathStyle(stroke_width=3)
+        style_major = SvgPathStyle(stroke_width=2)
+        style_minor = SvgPathStyle(stroke_width=1)
         text_style = SvgTextStyle()
-        line = Line(self._time.source, self._time.target, style=style_major)
+        line = Line(self._time.source, self._time.target, style=style_arrow)
         self._svg.elements.append(line)
         timeline_delta = self._time.target - self._time.source
         tic_delta = 10 * timeline_delta.orthogonal()
         for date, label in zip(self._tics.dates, self._tics.labels):
             tic_base = self._time.date_to_coord(date)
             tic_end = tic_base + tic_delta
+            text_start = tic_base + 1.5 * tic_delta
+            self._svg.elements.append(Line(source=tic_base, target=tic_end, style=style_major))
+            self._svg.elements.append(Text(text_start, text_style, label))
+        if self._tics_minor is None:
+            return
+        for date in self._tics_minor.dates:
+            tic_base = self._time.date_to_coord(date)
+            tic_end = tic_base + 0.5 * tic_delta
             self._svg.elements.append(Line(source=tic_base, target=tic_end, style=style_minor))
-            self._svg.elements.append(Text(tic_end, text_style, label))
 
     def add_event(self, event: Event, lane: int = 1, color: str = 'red'):
         line_style = SvgPathStyle(stroke_width=2, color=color)
