@@ -1,5 +1,4 @@
 """ high level timeline API classes """
-from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -10,25 +9,6 @@ from timeliner.svg import SVG
 from timeliner.svg_primitives import Rectangle, Line, Text, Circle, Image
 from timeliner.svg_style import SvgPathStyle, SvgTextStyle
 from timeliner.time_calculations import TimeGradient, TimeSpacing
-
-
-@dataclass
-class Event:
-    date: datetime
-    text: str
-
-
-@dataclass
-class DatedImage:
-    date: datetime
-    file_path: Path
-
-
-@dataclass
-class TimeSpan:
-    start_date: datetime
-    end_date: datetime
-    text: str
 
 
 class TimelinePlot:
@@ -77,42 +57,45 @@ class TimelinePlot:
             tic_end = tic_base + 0.5 * tic_delta
             self._svg.elements.append(Line(source=tic_base, target=tic_end, style=style_minor))
 
-    def add_event(self, event: Event, lane: int = 1, color: Optional[str] = None):
+    def add_event(self, date: datetime, text: str,
+                  lane: int = 1, color: Optional[str] = None):
         color = color or TimelineStyle.event_color
         line_style = SvgPathStyle(stroke_width=TimelineStyle.event_stroke_width, color=color)
         text_style = SvgTextStyle()
-        event_base = self._time.date_to_coord(event.date)
-        event_end = self.__to_lane_point(event.date, lane=lane)
-        text_coord = self.__to_lane_point(event.date, lane=(lane+0.5))
+        event_base = self._time.date_to_coord(date)
+        event_end = self.__to_lane_point(date, lane=lane)
+        text_coord = self.__to_lane_point(date, lane=(lane+0.5))
         self._svg.elements += [
             Line(source=event_base, target=event_end, style=line_style),
             Circle(center=event_end, radius=TimelineStyle.event_dot_radius, color=color),
-            Text(text_coord, text_style, event.text),
+            Text(text_coord, text_style, text),
         ]
 
-    def add_image(self, image: DatedImage, height: float, width: float, lane: int = 1, color: Optional[str] = None):
+    def add_image(self, date: datetime, image_path: Path, height: float, width: float,
+                  lane: int = 1, color: Optional[str] = None):
         line_style = SvgPathStyle(stroke_width=TimelineStyle.image_stroke_width,
                                   color=color or TimelineStyle.image_color)
-        event_base = self._time.date_to_coord(image.date)
-        event_end = self.__to_lane_point(image.date, lane=lane)
+        event_base = self._time.date_to_coord(date)
+        event_end = self.__to_lane_point(date, lane=lane)
         image_top_left = event_end + height * self.lane_normal + width/2 * self.lane_normal.orthogonal(ccw=True)
         self._svg.elements += [
             Line(source=event_base, target=event_end, style=line_style),
-            Image(top_left=image_top_left, file=image.file_path, height=height, width=width),
+            Image(top_left=image_top_left, file=image_path, height=height, width=width),
         ]
 
-    def add_timespan(self, timespan: TimeSpan, lane: int = 1,
-                     color: Optional[str] = None, text_color: Optional[str] = None, width: Optional[int] = None):
+    def add_timespan(self, start_date: datetime, end_date: datetime, text: str,
+                     lane: int = 1, color: Optional[str] = None,
+                     text_color: Optional[str] = None, width: Optional[int] = None):
         width = width or TimelineStyle.timespan_width
         text_style = SvgTextStyle(text_color=text_color or TimelineStyle.timespan_text_color,
                                   font_size=TimelineStyle.timespan_text_size_factor * width)
-        start_corner = self.__to_lane_point(timespan.start_date, lane=lane) + width/2 * self.lane_normal
-        end_corner = self.__to_lane_point(timespan.end_date, lane=lane) - width/2 * self.lane_normal
-        middle_date = timespan.start_date + (timespan.end_date - timespan.start_date) / 2
+        start_corner = self.__to_lane_point(start_date, lane=lane) + width/2 * self.lane_normal
+        end_corner = self.__to_lane_point(end_date, lane=lane) - width/2 * self.lane_normal
+        middle_date = start_date + (end_date - start_date) / 2
         text_coord = self.__to_lane_point(middle_date, lane=lane)
         self._svg.elements += [
             Rectangle(start_corner, end_corner, color=color or TimelineStyle.timespan_bg_color),
-            Text(text_coord, text_style, timespan.text),
+            Text(text_coord, text_style, text),
         ]
 
     def add_title(self, title: str):
