@@ -64,7 +64,7 @@ class TimelinePlot:
         text_style = SvgTextStyle()
         event_base = self._time.date_to_coord(date)
         event_end = self.__to_lane_point(date, lane=lane)
-        text_coord = self.__to_lane_point(date, lane=(lane+0.5))
+        text_coord = self.__to_lane_point(date, lane=(lane+0.5 if lane >= 0 else lane-0.5))
         self._svg.elements += [
             Line(source=event_base, target=event_end, style=line_style),
             Circle(center=event_end, radius=TimelineStyle.event_dot_radius, color=color),
