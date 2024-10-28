@@ -34,7 +34,7 @@ class __TimelineStyle:
     timespan_stilt_stroke_width: float = 1
     timespan_stilt_color: str = 'lightgrey'
     timespan_text_color: str = 'black'
-    timespan_text_size_factor: float = 0.8
+    timespan_text_size_factor: float = 0.7
 
 
 TimelineStyle = __TimelineStyle()
