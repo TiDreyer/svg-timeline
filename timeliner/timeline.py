@@ -87,8 +87,18 @@ class TimelinePlot:
                      lane: int = 1, color: Optional[str] = None,
                      text_color: Optional[str] = None, width: Optional[int] = None):
         width = width or TimelineStyle.timespan_width
+        stilt_style = SvgPathStyle(stroke_width=TimelineStyle.timespan_stilt_stroke_width,
+                                   color=TimelineStyle.timespan_stilt_color)
         text_style = SvgTextStyle(text_color=text_color or TimelineStyle.timespan_text_color,
                                   font_size=TimelineStyle.timespan_text_size_factor * width)
+        if TimelineStyle.timespan_use_start_stilt:
+            self._svg.elements.append(Line(source=self.__to_lane_point(start_date, lane=0),
+                                           target=self.__to_lane_point(start_date, lane=lane) - width/2 * self.lane_normal,
+                                           style=stilt_style))
+        if TimelineStyle.timespan_use_end_stilt:
+            self._svg.elements.append(Line(source=self.__to_lane_point(end_date, lane=0),
+                                           target=self.__to_lane_point(end_date, lane=lane) - width/2 * self.lane_normal,
+                                           style=stilt_style))
         start_corner = self.__to_lane_point(start_date, lane=lane) + width/2 * self.lane_normal
         end_corner = self.__to_lane_point(end_date, lane=lane) - width/2 * self.lane_normal
         middle_date = start_date + (end_date - start_date) / 2

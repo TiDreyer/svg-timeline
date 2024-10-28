@@ -29,6 +29,10 @@ class __TimelineStyle:
 
     timespan_width: float = 18
     timespan_bg_color: str = 'blue'
+    timespan_use_start_stilt: bool = False
+    timespan_use_end_stilt: bool = False
+    timespan_stilt_stroke_width: float = 1
+    timespan_stilt_color: str = 'lightgrey'
     timespan_text_color: str = 'black'
     timespan_text_size_factor: float = 0.8
 
