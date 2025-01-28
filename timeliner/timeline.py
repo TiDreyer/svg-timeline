@@ -82,7 +82,8 @@ class TimelinePlot:
                                   color=color or Defaults.image_color)
         event_base = self._time.date_to_coord(date)
         event_end = self.__to_lane_point(date, lane=lane)
-        image_top_left = event_end + height * self.lane_normal + width/2 * self.lane_normal.orthogonal(ccw=True)
+        image_center_left = event_end + height * self.lane_normal
+        image_top_left = image_center_left + width/2 * self.lane_normal.orthogonal(ccw=True)
         self._svg.elements += [
             Line(source=event_base, target=event_end, style=line_style),
             Image(top_left=image_top_left, file=image_path, height=height, width=width),
@@ -97,16 +98,19 @@ class TimelinePlot:
                                    color=Defaults.timespan_stilt_color)
         text_style = SvgTextStyle(text_color=text_color or Defaults.timespan_text_color,
                                   font_size=Defaults.timespan_text_size_factor * width)
+        half_width_vector = width/2 * self.lane_normal
         if Defaults.timespan_use_start_stilt:
-            self._svg.elements.append(Line(source=self.__to_lane_point(start_date, lane=0),
-                                           target=self.__to_lane_point(start_date, lane=lane) - width/2 * self.lane_normal,
+            on_timeline = self.__to_lane_point(start_date, lane=0)
+            bottom_timespan = self.__to_lane_point(start_date, lane=lane) - half_width_vector
+            self._svg.elements.append(Line(source=on_timeline, target=bottom_timespan,
                                            style=stilt_style))
         if Defaults.timespan_use_end_stilt:
-            self._svg.elements.append(Line(source=self.__to_lane_point(end_date, lane=0),
-                                           target=self.__to_lane_point(end_date, lane=lane) - width/2 * self.lane_normal,
+            on_timeline = self.__to_lane_point(end_date, lane=0)
+            bottom_timespan = self.__to_lane_point(end_date, lane=lane) - half_width_vector
+            self._svg.elements.append(Line(source=on_timeline, target=bottom_timespan,
                                            style=stilt_style))
-        start_corner = self.__to_lane_point(start_date, lane=lane) + width/2 * self.lane_normal
-        end_corner = self.__to_lane_point(end_date, lane=lane) - width/2 * self.lane_normal
+        start_corner = self.__to_lane_point(start_date, lane=lane) + half_width_vector
+        end_corner = self.__to_lane_point(end_date, lane=lane) - half_width_vector
         middle_date = start_date + (end_date - start_date) / 2
         text_coord = self.__to_lane_point(middle_date, lane=lane)
         self._svg.elements += [
