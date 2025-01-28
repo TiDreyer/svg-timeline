@@ -20,7 +20,7 @@ def test_text():
     coord = Vector(300, 400)
     text = Text(coord=coord, style=style, text='asdf\nasdf\nasdf')
     svg = ('<text x="300" y="400"'
-           ' font-size="12" font-family="Liberation Sans"'
+           ' font-size="12" font-family="Liberation Sans" fill="black"'
            ' text-anchor="middle" dominant-baseline="central">'
            'asdf\nasdf\nasdf'
            '</text>')
@@ -45,7 +45,7 @@ def test_circle():
 def test_image():
     center = Vector(300, 400)
     file_path = Path(__file__).parent.joinpath('files/single_pixel.png')
-    image = Image(center=center, width=200, height=300, file=file_path)
+    image = Image(top_left=center, width=200, height=300, file=file_path)
     svg = ('<image x="300" y="400" width="200" height="300"'
            ' xlink:href="data:image/png;base64,'
            'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA'

@@ -8,6 +8,7 @@ class SvgTextStyle:
     """ data class containing style information for SVG text """
     font_size: int|float = 12
     font_family: str = 'Liberation Sans'
+    text_color: str = 'black'
     text_align: Literal['left']|Literal['middle']|Literal['right']|Literal['justify'] = 'middle'
     anchor_vertical: Literal['top']|Literal['center']|Literal['bottom'] = 'center'
 
@@ -22,6 +23,7 @@ class SvgTextStyle:
         return {
             'font-size': str(self.font_size),
             'font-family': self.font_family,
+            'fill': self.text_color,
             'text-anchor': self.text_align,
             'dominant-baseline': dominant_baseline,
         }

@@ -2,6 +2,7 @@
 import math
 from mimetypes import guess_type
 from base64 import b64encode
+from html import escape
 from pathlib import Path
 
 from timeliner.geometry import Vector
@@ -29,7 +30,7 @@ class Line(SvgElement):
 class Text(SvgElement):
     """ text at a fixed position on the canvas """
     def __init__(self, coord: Vector, style: SvgTextStyle, text: str):
-        super().__init__(tag='text', content=text)
+        super().__init__(tag='text', content=escape(text))
         self.coord = coord
         self.text_style = style
 
@@ -79,10 +80,10 @@ class Circle(SvgElement):
 
 class Image(SvgElement):
     """ SVG embedding of the image found at the given file path """
-    def __init__(self, center: Vector, width: float, height: float,
+    def __init__(self, top_left: Vector, width: float, height: float,
                  file: Path):
         super().__init__(tag='image')
-        self.center = center
+        self.top_left = top_left
         self.width = width
         self.height = height
         self.file = file
@@ -93,8 +94,8 @@ class Image(SvgElement):
         with open(self.file, 'rb', encoding=encoding) as image_file:
             image_data = b64encode(image_file.read())
         return {
-            'x': str(self.center.x),
-            'y': str(self.center.y),
+            'x': str(self.top_left.x),
+            'y': str(self.top_left.y),
             'width': str(self.width),
             'height': str(self.height),
             'xlink:href': f'data:{mimetype};base64,{image_data.decode()}',
