@@ -12,6 +12,9 @@ from timeliner.time_calculations import TimeGradient, TimeSpacing
 
 
 class TimelinePlot:
+    """ representation of a timeline plot
+    dates, timespans etc. can be added to this timeline via method calls
+    """
     def __init__(self, start_date: datetime, end_date: datetime,
                  time_spacing: TimeSpacing, minor_tics: Optional[TimeSpacing] = None,
                  size: tuple[int, int] = (800, 600)):
@@ -59,6 +62,7 @@ class TimelinePlot:
 
     def add_event(self, date: datetime, text: str,
                   lane: int = 1, color: Optional[str] = None):
+        """ Add an event to the timeline that happened at a single point in time """
         color = color or Defaults.event_color
         line_style = SvgPathStyle(stroke_width=Defaults.event_stroke_width, color=color)
         text_style = SvgTextStyle()
@@ -73,6 +77,7 @@ class TimelinePlot:
 
     def add_image(self, date: datetime, image_path: Path, height: float, width: float,
                   lane: int = 1, color: Optional[str] = None):
+        """ Add an image to the timeline that is associated with a single point in time """
         line_style = SvgPathStyle(stroke_width=Defaults.image_stroke_width,
                                   color=color or Defaults.image_color)
         event_base = self._time.date_to_coord(date)
@@ -86,6 +91,7 @@ class TimelinePlot:
     def add_timespan(self, start_date: datetime, end_date: datetime, text: str,
                      lane: int = 1, color: Optional[str] = None,
                      text_color: Optional[str] = None, width: Optional[int] = None):
+        """ Add an entry to the timeline that is associated with a certain time span """
         width = width or Defaults.timespan_width
         stilt_style = SvgPathStyle(stroke_width=Defaults.timespan_stilt_stroke_width,
                                    color=Defaults.timespan_stilt_color)
@@ -109,6 +115,7 @@ class TimelinePlot:
         ]
 
     def add_title(self, title: str):
+        """ Add a title that should be printed above the timeline """
         text_style = SvgTextStyle(
             text_color=Defaults.title_text_color,
             font_size=int(self._height * Defaults.title_size_factor),
@@ -119,6 +126,9 @@ class TimelinePlot:
 
     @property
     def lane_normal(self) -> Vector:
+        """ Normal vector orthogonal to the timeline direction
+        This vector is used to calculate the positions of the different lanes.
+        """
         return (self._time.target - self._time.source).orthogonal(ccw=True)
 
     def __to_lane_point(self, date: datetime, lane: float = 1) -> Vector:
@@ -127,4 +137,5 @@ class TimelinePlot:
         return lane_point
 
     def save(self, file_path: Path):
+        """ Save an SVG of the timeline under the given file path """
         self._svg.save_as(file_path=file_path)
