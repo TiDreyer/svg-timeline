@@ -1,9 +1,9 @@
 """ test cases for the classes defined in the svg_primitives module """
 from pathlib import Path
 
-from timeliner.geometry import Vector
-from timeliner.svg_primitives import Line, Text, Rectangle, Circle, Image
-from timeliner.svg_style import SvgPathStyle, SvgTextStyle
+from svg_timeline.geometry import Vector
+from svg_timeline.svg_primitives import Line, Text, Rectangle, Circle, Image
+from svg_timeline.svg_style import SvgPathStyle, SvgTextStyle
 
 
 def test_line():

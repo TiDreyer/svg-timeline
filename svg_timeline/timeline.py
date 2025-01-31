@@ -3,12 +3,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-from timeliner.geometry import Vector
-from timeliner.style import Defaults
-from timeliner.svg import SVG
-from timeliner.svg_primitives import Rectangle, Line, Text, Circle, Image
-from timeliner.svg_style import SvgPathStyle, SvgTextStyle
-from timeliner.time_calculations import TimeGradient, TimeSpacing
+from svg_timeline.geometry import Vector
+from svg_timeline.style import Defaults
+from svg_timeline.svg import SVG
+from svg_timeline.svg_primitives import Rectangle, Line, Text, Circle, Image
+from svg_timeline.svg_style import SvgPathStyle, SvgTextStyle
+from svg_timeline.time_calculations import TimeGradient, TimeSpacing
 
 
 class TimelinePlot:

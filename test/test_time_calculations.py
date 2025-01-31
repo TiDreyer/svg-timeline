@@ -1,10 +1,10 @@
 """ test cases for the classes defined in the time_calculation module """
 from datetime import datetime
 
-from timeliner.time_calculations import TimeGradient
-from timeliner.time_calculations import TimeSpacingPerMillennia, TimeSpacingPerCentury, TimeSpacingPerDecade
-from timeliner.time_calculations import TimeSpacingPerYear, TimeSpacingPerMonth, TimeSpacingPerDay
-from timeliner.geometry import Vector
+from svg_timeline.time_calculations import TimeGradient
+from svg_timeline.time_calculations import TimeSpacingPerMillennia, TimeSpacingPerCentury, TimeSpacingPerDecade
+from svg_timeline.time_calculations import TimeSpacingPerYear, TimeSpacingPerMonth, TimeSpacingPerDay
+from svg_timeline.geometry import Vector
 
 __DATE_MINUS_ONE = datetime.fromisoformat('2000-01-01T00:00:00')
 __DATE_START = datetime.fromisoformat('2000-01-01T10:00:00')

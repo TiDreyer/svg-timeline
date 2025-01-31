@@ -3,7 +3,7 @@ import calendar
 from collections.abc import Iterable
 from datetime import datetime
 
-from timeliner.geometry import Vector
+from svg_timeline.geometry import Vector
 
 
 class TimeGradient:

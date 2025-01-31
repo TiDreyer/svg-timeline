@@ -1,7 +1,7 @@
 """ test cases for the classes defined in the svg module """
 from textwrap import dedent
 
-from timeliner.svg import SVG, SvgElement
+from svg_timeline.svg import SVG, SvgElement
 
 def test_svg_element_getters():
     empty = SvgElement(tag='empty')
