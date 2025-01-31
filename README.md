@@ -1,4 +1,4 @@
-# Timeliner
+# svg_timeline
 
 Python library to create timeline graphics.
 

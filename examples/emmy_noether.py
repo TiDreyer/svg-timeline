@@ -3,9 +3,9 @@ from datetime import datetime
 from enum import StrEnum
 from pathlib import Path
 
-from timeliner.style import Defaults
-from timeliner.time_calculations import TimeSpacingPerDecade, TimeSpacingPerYear
-from timeliner.timeline import TimelinePlot
+from svg_timeline.style import Defaults
+from svg_timeline.time_calculations import TimeSpacingPerDecade, TimeSpacingPerYear
+from svg_timeline.timeline import TimelinePlot
 
 # defining important dates for easier usage later on
 _BIRTH = datetime.fromisoformat('1882-03-23')

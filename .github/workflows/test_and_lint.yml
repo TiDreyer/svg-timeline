@@ -36,4 +36,4 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Run pylint
-        run: python -m pylint timeliner
+        run: python -m pylint svg_timeline

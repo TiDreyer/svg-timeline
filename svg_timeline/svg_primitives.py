@@ -5,9 +5,9 @@ from base64 import b64encode
 from html import escape
 from pathlib import Path
 
-from timeliner.geometry import Vector
-from timeliner.svg import SvgElement
-from timeliner.svg_style import SvgTextStyle, SvgPathStyle
+from svg_timeline.geometry import Vector
+from svg_timeline.svg import SvgElement
+from svg_timeline.svg_style import SvgTextStyle, SvgPathStyle
 
 
 class Line(SvgElement):

@@ -3,7 +3,7 @@ import math
 
 import pytest
 
-from timeliner.geometry import Canvas, Vector, COORD_TOLERANCE
+from svg_timeline.geometry import Canvas, Vector, COORD_TOLERANCE
 
 
 def test_vector_in_canvas():
