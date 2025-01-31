@@ -7,7 +7,7 @@ authors = [
 description = "A pure python library to create timeline plots"
 readme = "README.md"
 license = "MIT"
-license-files = ["LICENSE.md"]
+license-files = ["LICENSE"]
 requires-python = ">=3.8"
 repository = "https://github.com/TiDreyer/svg_timeline"
 
