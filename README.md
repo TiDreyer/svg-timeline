@@ -1,7 +1,7 @@
-# svg_timeline
+# svg-timeline
 
-Python library to create timeline graphics.
+A pure python library to create timeline plots.
 
 This is the result of `examples/emmy_noether.py`:
 
-![a timeline of Emmy Noether's life](docs/emmy_noether.svg)
+![a timeline of Emmy Noether's life](https://github.com/TiDreyer/svg-timeline/raw/main/docs/emmy_noether.svg)
