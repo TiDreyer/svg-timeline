@@ -1,2 +1,23 @@
+[project]
+name = "svg-timeline"
+version = "0.1.0"
+authors = [
+  { name="Timo Dreyer", email="dev@timodreyer.de" },
+]
+description = "A pure python library to create timeline plots"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE.md"]
+requires-python = ">=3.8"
+repository = "https://github.com/TiDreyer/svg_timeline"
+
+[tool.poetry]
+requires-poetry = ">=2.0"
+packages = [{include = "svg_timeline"}]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+pylint = "^3.2.6"
+
 [tool.pylint.main]
 fail-under = 9.5
