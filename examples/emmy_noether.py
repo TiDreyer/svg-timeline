@@ -81,7 +81,7 @@ def main():
     timeline.add_title("Emmy Noether")
 
     # saving the SVG
-    svg_path = Path(__file__).parent.joinpath('../output/emmy_noether.svg')
+    svg_path = Path(__file__).parent.joinpath('emmy_noether.svg')
     timeline.save(svg_path)
 
 
