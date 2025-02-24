@@ -67,11 +67,11 @@ DEFAULT_CSS = {
         'fill': 'none',
     },
     'text': {
-        'font-size': '12pt',
+        'font-size': '10pt',
         'font-family': 'Liberation Sans',
         'fill': 'black',
         'text-anchor': 'middle',
-        'dominant-baseline': 'center',
+        'dominant-baseline': 'central',
     },
     'circle, rect': {
         'fill': 'black',
@@ -98,7 +98,7 @@ DEFAULT_CSS = {
         'stroke-width': '1pt',
     },
     f'text.{ClassNames.timespan}': {
-        'font-size': '11pt',
+        'font-size': '9pt',
     },
     f'path.{ClassNames.image}': {
         'stroke-width': '2pt',
