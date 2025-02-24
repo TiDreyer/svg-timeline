@@ -19,7 +19,6 @@ class TimelinePlot:
                  size: tuple[int, int] = (800, 600)):
         self._width, self._height = size
         self._svg = SVG(self._width, self._height, style=DEFAULT_CSS)
-        self._add_background()
 
         y = Defaults.arrow_y_position * self._height
         x1 = Defaults.arrow_x_padding * self._width
@@ -29,13 +28,6 @@ class TimelinePlot:
         self._tics = time_spacing
         self._tics_minor = minor_tics
         self._add_timeline()
-
-    def _add_background(self):
-        background = Rectangle(
-            Vector(0, 0), Vector(self._width, self._height),
-            Defaults.bg_clor,
-        )
-        self._svg.elements.append(background)
 
     def _add_timeline(self):
         line = Line(self._time.source, self._time.target, classes=[ClassNames.time_axis])
