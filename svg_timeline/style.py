@@ -25,19 +25,20 @@ Defaults = __TimelineStyle()
 
 
 class ClassNames(StrEnum):
-    title = 'title'
-    time_axis = 'time_axis'
-    minor_tick = 'minor_tick'
-    major_tick = 'major_tick'
-    event = 'event'
-    timespan = 'timespan'
-    image = 'image'
-    white_text = 'white_text'
-    cat_a = 'category_a'
-    cat_b = 'category_b'
-    cat_c = 'category_c'
-    cat_d = 'category_d'
-    cat_e = 'category_e'
+    """ string constants for all the class names that are commonly used for styling via CSS """
+    TITLE = 'title'
+    TIMEAXIS = 'time_axis'
+    MINOR_TICK = 'minor_tick'
+    MAJOR_TICK = 'major_tick'
+    EVENT = 'event'
+    TIMESPAN = 'timespan'
+    IMAGE = 'image'
+    WHITE_TEXT = 'white_text'
+    COLOR_A = 'color_a'
+    COLOR_B = 'color_b'
+    COLOR_C = 'color_c'
+    COLOR_D = 'color_d'
+    COLOR_E = 'color_e'
 
 
 DEFAULT_CSS = {
@@ -48,16 +49,16 @@ DEFAULT_CSS = {
         '--color_d': '#ff6361',
         '--color_e': '#ffa600',
     },
-    f'path.{ClassNames.cat_a}': {'stroke': 'var(--color_a)'},
-    f'path.{ClassNames.cat_b}': {'stroke': 'var(--color_b)'},
-    f'path.{ClassNames.cat_c}': {'stroke': 'var(--color_c)'},
-    f'path.{ClassNames.cat_d}': {'stroke': 'var(--color_d)'},
-    f'path.{ClassNames.cat_e}': {'stroke': 'var(--color_e)'},
-    f'rect.{ClassNames.cat_a}, circle.{ClassNames.cat_a}': {'fill': 'var(--color_a)'},
-    f'rect.{ClassNames.cat_b}, circle.{ClassNames.cat_b}': {'fill': 'var(--color_b)'},
-    f'rect.{ClassNames.cat_c}, circle.{ClassNames.cat_c}': {'fill': 'var(--color_c)'},
-    f'rect.{ClassNames.cat_d}, circle.{ClassNames.cat_d}': {'fill': 'var(--color_d)'},
-    f'rect.{ClassNames.cat_e}, circle.{ClassNames.cat_e}': {'fill': 'var(--color_e)'},
+    f'path.{ClassNames.COLOR_A}': {'stroke': 'var(--color_a)'},
+    f'path.{ClassNames.COLOR_B}': {'stroke': 'var(--color_b)'},
+    f'path.{ClassNames.COLOR_C}': {'stroke': 'var(--color_c)'},
+    f'path.{ClassNames.COLOR_D}': {'stroke': 'var(--color_d)'},
+    f'path.{ClassNames.COLOR_E}': {'stroke': 'var(--color_e)'},
+    f'rect.{ClassNames.COLOR_A}, circle.{ClassNames.COLOR_A}': {'fill': 'var(--color_a)'},
+    f'rect.{ClassNames.COLOR_B}, circle.{ClassNames.COLOR_B}': {'fill': 'var(--color_b)'},
+    f'rect.{ClassNames.COLOR_C}, circle.{ClassNames.COLOR_C}': {'fill': 'var(--color_c)'},
+    f'rect.{ClassNames.COLOR_D}, circle.{ClassNames.COLOR_D}': {'fill': 'var(--color_d)'},
+    f'rect.{ClassNames.COLOR_E}, circle.{ClassNames.COLOR_E}': {'fill': 'var(--color_e)'},
     'svg': {
         'background': 'white',
     },
@@ -76,34 +77,34 @@ DEFAULT_CSS = {
     'circle, rect': {
         'fill': 'black',
     },
-    f'text.{ClassNames.title}': {
+    f'text.{ClassNames.TITLE}': {
         'font-size': '20pt',
     },
-    f'path.{ClassNames.time_axis}': {
+    f'path.{ClassNames.TIMEAXIS}': {
         'stroke-width': '3pt',
     },
-    f'path.{ClassNames.major_tick}': {
+    f'path.{ClassNames.MAJOR_TICK}': {
         'stroke-width': '2pt',
     },
-    f'path.{ClassNames.minor_tick}': {
+    f'path.{ClassNames.MINOR_TICK}': {
         'stroke-width': '1pt',
     },
-    f'path.{ClassNames.event}': {
+    f'path.{ClassNames.EVENT}': {
         'stroke-width': '2pt',
     },
-    f'circle.{ClassNames.event}': {
+    f'circle.{ClassNames.EVENT}': {
         'radius': '3pt',
     },
-    f'path.{ClassNames.timespan}': {
+    f'path.{ClassNames.TIMESPAN}': {
         'stroke-width': '1pt',
     },
-    f'text.{ClassNames.timespan}': {
+    f'text.{ClassNames.TIMESPAN}': {
         'font-size': '9pt',
     },
-    f'path.{ClassNames.image}': {
+    f'path.{ClassNames.IMAGE}': {
         'stroke-width': '2pt',
     },
-    f'text.{ClassNames.white_text}': {
+    f'text.{ClassNames.WHITE_TEXT}': {
         'fill': 'white',
     },
 }

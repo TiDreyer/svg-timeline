@@ -30,7 +30,7 @@ class TimelinePlot:
         self._add_timeline()
 
     def _add_timeline(self):
-        line = Line(self._time.source, self._time.target, classes=[ClassNames.time_axis])
+        line = Line(self._time.source, self._time.target, classes=[ClassNames.TIMEAXIS])
         self._svg.elements.append(line)
         timeline_delta = self._time.target - self._time.source
         tic_delta = 10 * timeline_delta.orthogonal()
@@ -38,20 +38,20 @@ class TimelinePlot:
             tic_base = self._time.date_to_coord(date)
             tic_end = tic_base + tic_delta
             text_start = tic_base + 1.5 * tic_delta
-            self._svg.elements.append(Line(source=tic_base, target=tic_end, classes=[ClassNames.major_tick]))
-            self._svg.elements.append(Text(text_start, label, classes=[ClassNames.major_tick]))
+            self._svg.elements.append(Line(source=tic_base, target=tic_end, classes=[ClassNames.MAJOR_TICK]))
+            self._svg.elements.append(Text(text_start, label, classes=[ClassNames.MAJOR_TICK]))
         if self._tics_minor is None:
             return
         for date in self._tics_minor.dates:
             tic_base = self._time.date_to_coord(date)
             tic_end = tic_base + 0.5 * tic_delta
-            self._svg.elements.append(Line(source=tic_base, target=tic_end, classes=[ClassNames.minor_tick]))
+            self._svg.elements.append(Line(source=tic_base, target=tic_end, classes=[ClassNames.MINOR_TICK]))
 
     def add_event(self, date: datetime, text: str,
                   lane: int = 1, classes: Optional[list[str]] = None):
         """ Add an event to the timeline that happened at a single point in time """
         classes = classes or []
-        classes += [ClassNames.event]
+        classes += [ClassNames.EVENT]
         event_base = self._time.date_to_coord(date)
         event_end = self.__to_lane_point(date, lane=lane)
         text_coord = self.__to_lane_point(date, lane=(lane+0.5 if lane >= 0 else lane-0.5))
@@ -65,7 +65,7 @@ class TimelinePlot:
                   lane: int = 1, classes: Optional[list[str]] = None):
         """ Add an image to the timeline that is associated with a single point in time """
         classes = classes or []
-        classes += [ClassNames.image]
+        classes += [ClassNames.IMAGE]
         event_base = self._time.date_to_coord(date)
         event_end = self.__to_lane_point(date, lane=lane)
         image_center_left = event_end + height * self.lane_normal
@@ -79,7 +79,7 @@ class TimelinePlot:
                      lane: int = 1, width: Optional[int] = None, classes: Optional[list[str]] = None):
         """ Add an entry to the timeline that is associated with a certain time span """
         classes = classes or []
-        classes += [ClassNames.timespan]
+        classes += [ClassNames.TIMESPAN]
         width = width or Defaults.timespan_width
         half_width_vector = width/2 * self.lane_normal
         if Defaults.timespan_use_start_stilt:
@@ -102,7 +102,7 @@ class TimelinePlot:
     def add_title(self, title: str, classes: Optional[list[str]] = None):
         """ Add a title that should be printed above the timeline """
         classes = classes or []
-        classes += [ClassNames.title]
+        classes += [ClassNames.TITLE]
         text_coord = Vector(x=int(self._width * Defaults.title_x_position),
                             y=int(self._height * Defaults.title_y_position))
         self._svg.elements += [Text(text_coord, title, classes=classes)]
