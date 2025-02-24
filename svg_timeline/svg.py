@@ -44,10 +44,12 @@ class SVG:
     and save them into a .svg along with the necessary meta-data
     """
     def __init__(self, width: int, height: int,
+                 style: Optional[dict[str, dict[str, str]]] = None,
                  elements: Optional[list[SvgElement]] = None,
                  definitions: Optional[list[SvgElement]] = None):
         self.width = width
         self.height = height
+        self.style = style or {}
         self.elements = elements or []
         self.defs = definitions or []
 
@@ -62,6 +64,19 @@ class SVG:
             f'     width="{width}" height="{height}" viewBox="{view_x} {view_y} {width} {height}">',
         ]
         return '\n'.join(lines) + '\n'
+
+    @property
+    def style_section(self) -> str:
+        """ style section lines of the .svg file """
+        style_section = '<style>\n'
+        indent = ' ' * 4
+        for selector, props in self.style.items():
+            style_section += f'{selector} {{\n'
+            for name, value in props.items():
+                style_section += f'{indent}{name}: {value};\n'
+            style_section += '}\n'
+        style_section += '</style>\n'
+        return style_section
 
     @property
     def defs_section(self) -> str:
@@ -91,6 +106,7 @@ class SVG:
     def full(self) -> str:
         """ the full raw .svg file """
         full = self.header
+        full += self.style_section
         full += self.defs_section
         full += self.element_section
         full += self.footer
