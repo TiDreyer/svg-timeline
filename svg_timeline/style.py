@@ -32,9 +32,32 @@ class ClassNames(StrEnum):
     event = 'event'
     timespan = 'timespan'
     image = 'image'
+    white_text = 'white_text'
+    cat_a = 'category_a'
+    cat_b = 'category_b'
+    cat_c = 'category_c'
+    cat_d = 'category_d'
+    cat_e = 'category_e'
 
 
 DEFAULT_CSS = {
+    ':root': {
+        '--color_a': '#003f5c',
+        '--color_b': '#58508d',
+        '--color_c': '#bc5090',
+        '--color_d': '#ff6361',
+        '--color_e': '#ffa600',
+    },
+    f'path.{ClassNames.cat_a}': {'stroke': 'var(--color_a)'},
+    f'path.{ClassNames.cat_b}': {'stroke': 'var(--color_b)'},
+    f'path.{ClassNames.cat_c}': {'stroke': 'var(--color_c)'},
+    f'path.{ClassNames.cat_d}': {'stroke': 'var(--color_d)'},
+    f'path.{ClassNames.cat_e}': {'stroke': 'var(--color_e)'},
+    f'rect.{ClassNames.cat_a}, circle.{ClassNames.cat_a}': {'fill': 'var(--color_a)'},
+    f'rect.{ClassNames.cat_b}, circle.{ClassNames.cat_b}': {'fill': 'var(--color_b)'},
+    f'rect.{ClassNames.cat_c}, circle.{ClassNames.cat_c}': {'fill': 'var(--color_c)'},
+    f'rect.{ClassNames.cat_d}, circle.{ClassNames.cat_d}': {'fill': 'var(--color_d)'},
+    f'rect.{ClassNames.cat_e}, circle.{ClassNames.cat_e}': {'fill': 'var(--color_e)'},
     'svg': {
         'background': 'white',
     },
@@ -50,6 +73,9 @@ DEFAULT_CSS = {
         'text-anchor': 'middle',
         'dominant-baseline': 'center',
     },
+    'circle, rect': {
+        'fill': 'black',
+    },
     f'text.{ClassNames.title}': {
         'font-size': '20pt',
     },
@@ -63,26 +89,21 @@ DEFAULT_CSS = {
         'stroke-width': '1pt',
     },
     f'path.{ClassNames.event}': {
-        'fill': 'black',
         'stroke-width': '2pt',
     },
     f'circle.{ClassNames.event}': {
-        'fill': 'black',
         'radius': '3pt',
     },
-    f'rect.{ClassNames.timespan}': {
-        'fill': 'black',
-    },
     f'path.{ClassNames.timespan}': {
-        'fill': 'black',
         'stroke-width': '1pt',
     },
     f'text.{ClassNames.timespan}': {
         'font-size': '11pt',
-        'fill': 'white',
     },
     f'path.{ClassNames.image}': {
-        'fill': 'black',
         'stroke-width': '2pt',
+    },
+    f'text.{ClassNames.white_text}': {
+        'fill': 'white',
     },
 }
