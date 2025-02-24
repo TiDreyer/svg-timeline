@@ -7,21 +7,44 @@ from typing import Optional
 class SvgElement:
     """ general class for describing an element in an SVG and transforming it into
     its XML representation for saving it """
-    def __init__(self, tag: str, attributes: Optional[dict[str, str]] = None,
-                 content: Optional[str] = None):
+    def __init__(self, tag: str,
+                 attributes: Optional[dict[str, str]] = None,
+                 content: Optional[str] = None,
+                 classes: Optional[list[str]] = None,
+                 ):
         self._tag = tag
         self._attributes = attributes or {}
         self._content = content
+        self._add_classes(classes)
 
     @property
     def tag(self) -> str:
         """ the element's tag as a string """
         return self._tag
 
+    def _add_classes(self, classes: Optional[list[str]] = None) -> None:
+        """ add new classes to the element's attributes """
+        if classes is None or len(classes) == 0:
+            return
+        if 'class' not in self._attributes:
+            self._attributes['class'] = ' '.join(classes)
+            return
+        for class_name in classes:
+            if class_name in self._attributes['class']:
+                continue
+            self._attributes['class'] += ' ' + class_name
+
     @property
     def attributes(self) -> dict[str, str]:
         """ dictionary of the element's attributes """
         return self._attributes
+
+    @property
+    def classes(self) -> list[str]:
+        """ list of the element's classes """
+        if 'class' in self._attributes:
+            return self._attributes['class'].split(' ')
+        return []
 
     @property
     def content(self) -> Optional[str]:

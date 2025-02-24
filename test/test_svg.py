@@ -9,14 +9,18 @@ def test_svg_element_getters():
     assert isinstance(empty.attributes, dict)
     assert len(empty.attributes) == 0
     assert empty.content is None
+    assert empty.classes == []
 
-    full_attr = {'a': 'asdf', 'b': 'av;eiojoia'}
+    full_attr = {'a': 'asdf', 'b': 'av;eiojoia', 'class': 'a b c'}
+    classes = ['1', 'b', '3']
     full_content = ";alsdkjf;lasjdf;lksajdf;lkjas;dflja;sldf;lasdjf"
-    full = SvgElement(tag='full', attributes=full_attr, content=full_content)
+    full = SvgElement(tag='full', attributes=full_attr, content=full_content, classes=classes)
+    expected_attr = {'a': 'asdf', 'b': 'av;eiojoia', 'class': 'a b c 1 3'}
     assert full.tag == 'full'
     assert isinstance(full.attributes, dict)
-    assert len(full.attributes) == len(full_attr)
-    assert full.attributes == full_attr
+    assert len(full.attributes) == len(expected_attr)
+    assert full.attributes == expected_attr
+    assert full.classes == ['a', 'b', 'c', '1', '3']
     assert full.content == full_content
 
 
