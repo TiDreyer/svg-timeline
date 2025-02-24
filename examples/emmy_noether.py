@@ -1,9 +1,9 @@
 """ Example script to create a timeline of Emmy Noether's life """
 from datetime import datetime
-from enum import StrEnum
 from pathlib import Path
 
 from svg_timeline.style import Defaults
+from svg_timeline.style import ClassNames as Cl
 from svg_timeline.time_calculations import TimeSpacingPerDecade, TimeSpacingPerYear
 from svg_timeline.timeline import TimelinePlot
 
@@ -21,14 +21,6 @@ _EPOCH_3 = datetime.fromisoformat('1927-01-01')
 _AWARD = datetime.fromisoformat('1932-01-01')
 _MOVE_USA = datetime.fromisoformat('1933-01-01')
 _DEATH = datetime.fromisoformat('1935-04-14')
-
-# defining colors to be used in the plot
-class Color(StrEnum):
-    a='#003f5c'
-    b='#58508d'
-    c='#bc5090'
-    d='#ff6361'
-    e='#ffa600'
 
 
 def main():
@@ -58,24 +50,24 @@ def main():
     timeline.add_image(_PHOTO, _image_path, width=_image_scale*473, height=_image_scale*720, lane=1)
 
     # some important dates in her life
-    timeline.add_event(_BIRTH, 'Birth', lane=1, color=Color.a)
-    timeline.add_event(_THESIS, 'PhD Thesis', lane=3, color=Color.b)
-    timeline.add_event(_THEOREM, 'Noether\'s Theorem', lane=4, color=Color.e)
-    timeline.add_event(_HABIL, 'Habilitation', lane=3, color=Color.c)
-    timeline.add_event(_AWARD, 'Ackermann-Teuber Memorial Award', lane=4, color=Color.e)
+    timeline.add_event(_BIRTH, 'Birth', lane=1, classes=[Cl.COLOR_A])
+    timeline.add_event(_THESIS, 'PhD Thesis', lane=3, classes=[Cl.COLOR_B])
+    timeline.add_event(_THEOREM, 'Noether\'s Theorem', lane=4, classes=[Cl.COLOR_E])
+    timeline.add_event(_HABIL, 'Habilitation', lane=3, classes=[Cl.COLOR_C])
+    timeline.add_event(_AWARD, 'Ackermann-Teuber Memorial Award', lane=4, classes=[Cl.COLOR_E])
 
     # the universities she was associated with
-    timeline.add_timespan(_TEACH_ERL, _MOVE_GOE, "Erlangen", lane=1, color=Color.b)
-    timeline.add_timespan(_MOVE_GOE, _MOVE_USA, "Göttingen", lane=1, color=Color.c)
-    timeline.add_timespan(_MOVE_USA, _DEATH, "USA", lane=1, color=Color.d)
+    timeline.add_timespan(_TEACH_ERL, _MOVE_GOE, "Erlangen", lane=1, classes=[Cl.COLOR_B, Cl.WHITE_TEXT])
+    timeline.add_timespan(_MOVE_GOE, _MOVE_USA, "Göttingen", lane=1, classes=[Cl.COLOR_C, Cl.WHITE_TEXT])
+    timeline.add_timespan(_MOVE_USA, _DEATH, "USA", lane=1, classes=[Cl.COLOR_D, Cl.WHITE_TEXT])
 
     # scholars distinguish three "epochs" in her work
-    timeline.add_timespan(_EPOCH_1, _EPOCH_2, '"1st epoch"', lane=2, color=Color.b)
-    timeline.add_timespan(_EPOCH_2, _EPOCH_3, '"2nd epoch"', lane=2, color=Color.c)
-    timeline.add_timespan(_EPOCH_3, _DEATH, '"3rd epoch"', lane=2, color=Color.d)
+    timeline.add_timespan(_EPOCH_1, _EPOCH_2, '"1st epoch"', lane=2, classes=[Cl.COLOR_B, Cl.WHITE_TEXT])
+    timeline.add_timespan(_EPOCH_2, _EPOCH_3, '"2nd epoch"', lane=2, classes=[Cl.COLOR_C, Cl.WHITE_TEXT])
+    timeline.add_timespan(_EPOCH_3, _DEATH, '"3rd epoch"', lane=2, classes=[Cl.COLOR_D, Cl.WHITE_TEXT])
 
     # adding this date last so it is plotted on top of the time spans
-    timeline.add_event(_DEATH, 'Death', lane=3, color=Color.a)
+    timeline.add_event(_DEATH, 'Death', lane=3, classes=[Cl.COLOR_A])
 
     # adding a title to the plot
     timeline.add_title("Emmy Noether")
