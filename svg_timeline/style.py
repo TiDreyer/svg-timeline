@@ -38,3 +38,18 @@ class __TimelineStyle:
 
 
 Defaults = __TimelineStyle()
+
+DEFAULT_CSS = {
+    'path': {
+        'stroke': 'black',
+        'stroke-width': '2pt',
+        'fill': 'none',
+    },
+    'text': {
+        'font-size': '12pt',
+        'font-family': 'Liberation Sans',
+        'fill': 'black',
+        'text-anchor': 'middle',
+        'dominant-baseline': 'center',
+    }
+}
