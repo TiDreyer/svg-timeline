@@ -1,5 +1,6 @@
 """ Singleton to store styling defaults """
 from dataclasses import dataclass
+from enum import StrEnum
 
 
 @dataclass
@@ -38,6 +39,17 @@ class __TimelineStyle:
 
 
 Defaults = __TimelineStyle()
+
+
+class ClassNames(StrEnum):
+    title = 'title'
+    time_axis = 'time_axis'
+    minor_tick = 'minor_tick'
+    major_tick = 'major_tick'
+    event = 'event'
+    timespan = 'timespan'
+    image = 'image'
+
 
 DEFAULT_CSS = {
     'path': {
