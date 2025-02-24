@@ -48,56 +48,64 @@ class TimelinePlot:
             self._svg.elements.append(Line(source=tic_base, target=tic_end, classes=[ClassNames.minor_tick]))
 
     def add_event(self, date: datetime, text: str,
-                  lane: int = 1):
+                  lane: int = 1, classes: Optional[list[str]] = None):
         """ Add an event to the timeline that happened at a single point in time """
+        classes = classes or []
+        classes += [ClassNames.event]
         event_base = self._time.date_to_coord(date)
         event_end = self.__to_lane_point(date, lane=lane)
         text_coord = self.__to_lane_point(date, lane=(lane+0.5 if lane >= 0 else lane-0.5))
         self._svg.elements += [
-            Line(source=event_base, target=event_end, classes=[ClassNames.event]),
-            Circle(center=event_end, radius=Defaults.event_dot_radius, classes=[ClassNames.event]),
-            Text(text_coord, text, classes=[ClassNames.event]),
+            Line(source=event_base, target=event_end, classes=classes),
+            Circle(center=event_end, radius=Defaults.event_dot_radius, classes=classes),
+            Text(text_coord, text, classes=classes),
         ]
 
     def add_image(self, date: datetime, image_path: Path, height: float, width: float,
-                  lane: int = 1):
+                  lane: int = 1, classes: Optional[list[str]] = None):
         """ Add an image to the timeline that is associated with a single point in time """
+        classes = classes or []
+        classes += [ClassNames.image]
         event_base = self._time.date_to_coord(date)
         event_end = self.__to_lane_point(date, lane=lane)
         image_center_left = event_end + height * self.lane_normal
         image_top_left = image_center_left + width/2 * self.lane_normal.orthogonal(ccw=True)
         self._svg.elements += [
-            Line(source=event_base, target=event_end, classes=[ClassNames.image]),
-            Image(top_left=image_top_left, file=image_path, height=height, width=width),
+            Line(source=event_base, target=event_end, classes=classes),
+            Image(top_left=image_top_left, file=image_path, height=height, width=width, classes=classes),
         ]
 
     def add_timespan(self, start_date: datetime, end_date: datetime, text: str,
-                     lane: int = 1, width: Optional[int] = None):
+                     lane: int = 1, width: Optional[int] = None, classes: Optional[list[str]] = None):
         """ Add an entry to the timeline that is associated with a certain time span """
+        classes = classes or []
+        classes += [ClassNames.timespan]
         width = width or Defaults.timespan_width
         half_width_vector = width/2 * self.lane_normal
         if Defaults.timespan_use_start_stilt:
             on_timeline = self.__to_lane_point(start_date, lane=0)
             bottom_timespan = self.__to_lane_point(start_date, lane=lane) - half_width_vector
-            self._svg.elements.append(Line(source=on_timeline, target=bottom_timespan, classes=[ClassNames.timespan]))
+            self._svg.elements.append(Line(source=on_timeline, target=bottom_timespan, classes=classes))
         if Defaults.timespan_use_end_stilt:
             on_timeline = self.__to_lane_point(end_date, lane=0)
             bottom_timespan = self.__to_lane_point(end_date, lane=lane) - half_width_vector
-            self._svg.elements.append(Line(source=on_timeline, target=bottom_timespan, classes=[ClassNames.timespan]))
+            self._svg.elements.append(Line(source=on_timeline, target=bottom_timespan, classes=classes))
         start_corner = self.__to_lane_point(start_date, lane=lane) + half_width_vector
         end_corner = self.__to_lane_point(end_date, lane=lane) - half_width_vector
         middle_date = start_date + (end_date - start_date) / 2
         text_coord = self.__to_lane_point(middle_date, lane=lane)
         self._svg.elements += [
-            Rectangle(start_corner, end_corner, classes=[ClassNames.timespan]),
-            Text(text_coord, text, classes=[ClassNames.timespan]),
+            Rectangle(start_corner, end_corner, classes=classes),
+            Text(text_coord, text, classes=classes),
         ]
 
-    def add_title(self, title: str):
+    def add_title(self, title: str, classes: Optional[list[str]] = None):
         """ Add a title that should be printed above the timeline """
+        classes = classes or []
+        classes += [ClassNames.title]
         text_coord = Vector(x=int(self._width * Defaults.title_x_position),
                             y=int(self._height * Defaults.title_y_position))
-        self._svg.elements += [Text(text_coord, title, classes=[ClassNames.title])]
+        self._svg.elements += [Text(text_coord, title, classes=classes)]
 
     @property
     def lane_normal(self) -> Vector:
