@@ -3,7 +3,6 @@ from pathlib import Path
 
 from svg_timeline.geometry import Vector
 from svg_timeline.svg_primitives import Line, Text, Rectangle, Circle, Image
-from svg_timeline.svg_style import SvgPathStyle, SvgTextStyle
 
 
 def test_line():
