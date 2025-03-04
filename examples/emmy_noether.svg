@@ -171,12 +171,15 @@ text.white_text {
 <path class="color_e event" d="M900.7931868574884,255.0 L900.7931868574884,135.0" />
 <circle class="color_e event" cx="900.7931868574884" cy="135.0" r="3" />
 <text class="color_e event" x="900.7931868574884" y="120.0">Ackermann-Teuber Memorial Award</text>
-<rect class="color_b white_text timespan" x="485.5523080024189" y="216.0" width="125.38701874622046" height="18.0" />
-<text class="color_b white_text timespan" x="548.2458173755291" y="225.0">Erlangen</text>
-<rect class="color_c white_text timespan" x="610.9393267486394" y="216.0" width="307.19109050594636" height="18.0" />
-<text class="color_c white_text timespan" x="764.5348720016126" y="225.0">Göttingen</text>
-<rect class="color_d white_text timespan" x="918.1304172545857" y="216.0" width="39.45877847208226" height="18.0" />
-<text class="color_d white_text timespan" x="937.8598064906269" y="225.0">USA</text>
+<path class="color_b" d="M485.5523080024189,225.0 L610.9393267486394,225.0" />
+<path class="color_c" d="M610.9393267486394,225.0 L918.1304172545857,225.0" />
+<path class="color_d" d="M918.1304172545857,225.0 L957.589195726668,225.0" />
+<circle class="color_b" cx="485.5523080024189" cy="225.0" r="3" />
+<circle class="color_c" cx="610.9393267486394" cy="225.0" r="3" />
+<circle class="color_d" cx="918.1304172545857" cy="225.0" r="3" />
+<text class="color_b" x="485.5523080024189" y="210.0">Erlangen</text>
+<text class="color_c" x="610.9393267486394" y="210.0">Göttingen</text>
+<text class="color_d" x="918.1304172545857" y="210.0">USA</text>
 <rect class="color_b white_text timespan" x="485.5523080024189" y="186.0" width="207.62043942753468" height="18.0" />
 <text class="color_b white_text timespan" x="589.3625277161863" y="195.0">&quot;1st epoch&quot;</text>
 <rect class="color_c white_text timespan" x="693.1727474299536" y="186.0" width="121.12376536988518" height="18.0" />
