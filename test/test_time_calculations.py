@@ -168,3 +168,14 @@ def test_time_spacing_per_day():
         datetime.fromisoformat('2000-01-01T00:00:00'),
         datetime.fromisoformat('2000-01-02T00:00:00'),
     ]
+
+
+def test_time_spacing_per_day_bug_01():
+    """ With these dates, the properties dates and values threw an ValueError """
+    spacing = TimeSpacingPerDay(
+        datetime.fromisoformat('2024-12-31'),
+        datetime.fromisoformat('2025-04-02'),
+    )
+    dates = spacing.dates
+    labels = spacing.labels
+    assert len(dates) == len(labels)

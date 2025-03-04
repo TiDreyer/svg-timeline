@@ -204,7 +204,7 @@ class TimeSpacingPerDay(TimeSpacing):
                 if month > 12:
                     year += 1
                     month = 1
-                    _, n_days = calendar.monthrange(year, month)
+                _, n_days = calendar.monthrange(year, month)
             date = datetime(year=year, month=month, day=day)
             if date > self.end_date:
                 break
