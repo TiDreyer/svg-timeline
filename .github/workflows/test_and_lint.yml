@@ -33,7 +33,9 @@ jobs:
           path: ./.venv
           key: venv-${{ hashFiles('poetry.lock') }}
       - name: Install the project dependencies
-        run: poetry install
+        run: |
+          poetry env use ${{ matrix.python-version }}
+          poetry install
       - name: Run the automated tests
         run: poetry run pytest
   run-pylint:
@@ -64,6 +66,8 @@ jobs:
           path: ./.venv
           key: venv-${{ hashFiles('poetry.lock') }}
       - name: Install the project dependencies
-        run: poetry install
+        run: |
+          poetry env use ${{ matrix.python-version }}
+          poetry install
       - name: Run the linting
         run: poetry run pylint svg_timeline
