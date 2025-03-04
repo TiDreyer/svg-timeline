@@ -1,6 +1,6 @@
 [project]
 name = "svg-timeline"
-version = "0.2.0"
+version = "0.2.1"
 authors = [
   { name="Timo Dreyer", email="dev@timodreyer.de" },
 ]
