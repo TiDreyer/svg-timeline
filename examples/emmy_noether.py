@@ -26,8 +26,8 @@ _DEATH = datetime.fromisoformat('1935-04-14')
 def main():
     """ main script function for the creation of the plot """
     # defining the range of the timeline
-    start_date = datetime.fromisoformat('1881-09-01')
-    end_date = datetime.fromisoformat('1936-01-01')
+    start_date = datetime.fromisoformat('1879-12-01')
+    end_date = datetime.fromisoformat('1935-12-31')
 
     # setting what percentage of the page width the arrow occupies
     Defaults.arrow_y_position = 0.85
@@ -50,24 +50,27 @@ def main():
     timeline.add_image(_PHOTO, _image_path, width=_image_scale*473, height=_image_scale*720, lane=1)
 
     # some important dates in her life
-    timeline.add_event(_BIRTH, 'Birth', lane=1, classes=[Cl.COLOR_A])
+    timeline.add_event(_BIRTH, 'Birth', lane=2, classes=[Cl.COLOR_A])
     timeline.add_event(_THESIS, 'PhD Thesis', lane=3, classes=[Cl.COLOR_B])
-    timeline.add_event(_THEOREM, 'Noether\'s Theorem', lane=4, classes=[Cl.COLOR_E])
+    timeline.add_event(_THEOREM, 'Noether\'s Theorem', lane=5, classes=[Cl.COLOR_E])
     timeline.add_event(_HABIL, 'Habilitation', lane=3, classes=[Cl.COLOR_C])
-    timeline.add_event(_AWARD, 'Ackermann-Teuber Memorial Award', lane=4, classes=[Cl.COLOR_E])
-
-    # the universities she was associated with
-    timeline.add_timespan(_TEACH_ERL, _MOVE_GOE, "Erlangen", lane=1, classes=[Cl.COLOR_B, Cl.WHITE_TEXT])
-    timeline.add_timespan(_MOVE_GOE, _MOVE_USA, "Göttingen", lane=1, classes=[Cl.COLOR_C, Cl.WHITE_TEXT])
-    timeline.add_timespan(_MOVE_USA, _DEATH, "USA", lane=1, classes=[Cl.COLOR_D, Cl.WHITE_TEXT])
+    timeline.add_event(_AWARD, 'Ackermann-Teuber Memorial Award', lane=5, classes=[Cl.COLOR_E])
 
     # scholars distinguish three "epochs" in her work
-    timeline.add_timespan(_EPOCH_1, _EPOCH_2, '"1st epoch"', lane=2, classes=[Cl.COLOR_B, Cl.WHITE_TEXT])
-    timeline.add_timespan(_EPOCH_2, _EPOCH_3, '"2nd epoch"', lane=2, classes=[Cl.COLOR_C, Cl.WHITE_TEXT])
-    timeline.add_timespan(_EPOCH_3, _DEATH, '"3rd epoch"', lane=2, classes=[Cl.COLOR_D, Cl.WHITE_TEXT])
+    timeline.add_timespan(_EPOCH_1, _EPOCH_2, '"1st epoch"', lane=1, classes=[Cl.COLOR_B, Cl.WHITE_TEXT])
+    timeline.add_timespan(_EPOCH_2, _EPOCH_3, '"2nd epoch"', lane=1, classes=[Cl.COLOR_C, Cl.WHITE_TEXT])
+    timeline.add_timespan(_EPOCH_3, _DEATH, '"3rd epoch"', lane=1, classes=[Cl.COLOR_D, Cl.WHITE_TEXT])
+
+    # the universities she was associated with
+    timeline.add_connected_events(
+        dates=[_TEACH_ERL, _MOVE_GOE, _MOVE_USA, _DEATH],
+        labels=["Erlangen", "Göttingen", "USA", None],
+        classes=[[Cl.COLOR_B], [Cl.COLOR_C], [Cl.COLOR_D], []],
+        lane=2,
+    )
 
     # adding this date last so it is plotted on top of the time spans
-    timeline.add_event(_DEATH, 'Death', lane=3, classes=[Cl.COLOR_A])
+    timeline.add_event(_DEATH, 'Death', lane=4, classes=[Cl.COLOR_A])
 
     # adding a title to the plot
     timeline.add_title("Emmy Noether")

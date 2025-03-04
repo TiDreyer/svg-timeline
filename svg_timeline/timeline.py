@@ -61,6 +61,31 @@ class TimelinePlot:
             Text(text_coord, text, classes=classes),
         ]
 
+    def add_connected_events(self, dates: list[datetime], labels: list[str],
+                             classes: Optional[list[Optional[list[str]]]] = None,
+                             lane: int = 1,
+                             ) -> None:
+        """ Add a series of events connected via lines """
+        if classes is None:
+            classes = [[] for _ in range(len(dates))]
+        if not len(dates) == len(labels) == len(classes):
+            raise RuntimeError("dates, labels and classes need to be of the same length")
+        self._svg.elements += [Line(
+            source=self.__to_lane_point(dates[i], lane=lane),
+            target=self.__to_lane_point(dates[i+1], lane=lane),
+            classes=classes[i],
+        ) for i in range(len(dates)-1)]
+        self._svg.elements += [Circle(
+            center=self.__to_lane_point(dates[i], lane=lane),
+            radius=Defaults.event_dot_radius,
+            classes=classes[i],
+        ) for i, label in enumerate(labels) if label is not None]
+        self._svg.elements += [Text(
+            coord=self.__to_lane_point(dates[i], lane=(lane+0.5 if lane >= 0 else lane-0.5)),
+            text=label,
+            classes=classes[i],
+        ) for i, label in enumerate(labels) if label is not None]
+
     def add_image(self, date: datetime, image_path: Path, height: float, width: float,
                   lane: int = 1, classes: Optional[list[str]] = None):
         """ Add an image to the timeline that is associated with a single point in time """
