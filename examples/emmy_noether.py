@@ -57,9 +57,12 @@ def main():
     timeline.add_event(_AWARD, 'Ackermann-Teuber Memorial Award', lane=4, classes=[Cl.COLOR_E])
 
     # the universities she was associated with
-    timeline.add_timespan(_TEACH_ERL, _MOVE_GOE, "Erlangen", lane=1, classes=[Cl.COLOR_B, Cl.WHITE_TEXT])
-    timeline.add_timespan(_MOVE_GOE, _MOVE_USA, "Göttingen", lane=1, classes=[Cl.COLOR_C, Cl.WHITE_TEXT])
-    timeline.add_timespan(_MOVE_USA, _DEATH, "USA", lane=1, classes=[Cl.COLOR_D, Cl.WHITE_TEXT])
+    timeline.add_connected_events(
+        dates=[_TEACH_ERL, _MOVE_GOE, _MOVE_USA, _DEATH],
+        labels=["Erlangen", "Göttingen", "USA", None],
+        classes=[[Cl.COLOR_B], [Cl.COLOR_C], [Cl.COLOR_D], []],
+        lane=1,
+    )
 
     # scholars distinguish three "epochs" in her work
     timeline.add_timespan(_EPOCH_1, _EPOCH_2, '"1st epoch"', lane=2, classes=[Cl.COLOR_B, Cl.WHITE_TEXT])

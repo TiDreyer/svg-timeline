@@ -61,6 +61,12 @@ class TimelinePlot:
             Text(text_coord, text, classes=classes),
         ]
 
+    def add_connected_events(self, dates: list[datetime], labels: list[str],
+                             classes: Optional[list[Optional[list[str]]]] = None,
+                             lane: int = 1,
+                             ) -> None:
+        pass
+
     def add_image(self, date: datetime, image_path: Path, height: float, width: float,
                   lane: int = 1, classes: Optional[list[str]] = None):
         """ Add an image to the timeline that is associated with a single point in time """
