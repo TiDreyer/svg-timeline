@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.11", "3.12", "3.13"]
         poetry-version: ["2.0.1"]
     steps:
       - name: Checkout code
@@ -31,9 +31,11 @@ jobs:
         name: Define a cache for the virtual environment based on the dependencies lock file
         with:
           path: ./.venv
-          key: venv-${{ hashFiles('poetry.lock') }}
+          key: venv-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Install the project dependencies
-        run: poetry install
+        run: |
+          poetry env use ${{ matrix.python-version }}
+          poetry install
       - name: Run the automated tests
         run: poetry run pytest
   run-pylint:
@@ -41,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.11", "3.12", "3.13"]
         poetry-version: ["2.0.1"]
     steps:
       - name: Checkout code
@@ -62,8 +64,10 @@ jobs:
         name: Define a cache for the virtual environment based on the dependencies lock file
         with:
           path: ./.venv
-          key: venv-${{ hashFiles('poetry.lock') }}
+          key: venv-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Install the project dependencies
-        run: poetry install
+        run: |
+          poetry env use ${{ matrix.python-version }}
+          poetry install
       - name: Run the linting
         run: poetry run pylint svg_timeline
