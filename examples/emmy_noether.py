@@ -2,8 +2,7 @@
 from datetime import datetime
 from pathlib import Path
 
-from svg_timeline.style import Defaults
-from svg_timeline.style import ClassNames as Cl
+from svg_timeline.style import Defaults, Colors
 from svg_timeline.time_calculations import TimeSpacingPerDecade, TimeSpacingPerYear
 from svg_timeline.timeline import TimelinePlot
 
@@ -50,27 +49,27 @@ def main():
     timeline.add_image(_PHOTO, _image_path, width=_image_scale*473, height=_image_scale*720, lane=1)
 
     # some important dates in her life
-    timeline.add_event(_BIRTH, 'Birth', lane=2, classes=[Cl.COLOR_A])
-    timeline.add_event(_THESIS, 'PhD Thesis', lane=3, classes=[Cl.COLOR_B])
-    timeline.add_event(_THEOREM, 'Noether\'s Theorem', lane=5, classes=[Cl.COLOR_E])
-    timeline.add_event(_HABIL, 'Habilitation', lane=3, classes=[Cl.COLOR_C])
-    timeline.add_event(_AWARD, 'Ackermann-Teuber Memorial Award', lane=5, classes=[Cl.COLOR_E])
+    timeline.add_event(_BIRTH, 'Birth', lane=2, classes=[Colors.COLOR_A.name.lower()])
+    timeline.add_event(_THESIS, 'PhD Thesis', lane=3, classes=[Colors.COLOR_B.name.lower()])
+    timeline.add_event(_THEOREM, 'Noether\'s Theorem', lane=5, classes=[Colors.COLOR_E.name.lower()])
+    timeline.add_event(_HABIL, 'Habilitation', lane=3, classes=[Colors.COLOR_C.name.lower()])
+    timeline.add_event(_AWARD, 'Ackermann-Teuber Memorial Award', lane=5, classes=[Colors.COLOR_E.name.lower()])
 
     # scholars distinguish three "epochs" in her work
-    timeline.add_timespan(_EPOCH_1, _EPOCH_2, '"1st epoch"', lane=1, classes=[Cl.COLOR_B, Cl.WHITE_TEXT])
-    timeline.add_timespan(_EPOCH_2, _EPOCH_3, '"2nd epoch"', lane=1, classes=[Cl.COLOR_C, Cl.WHITE_TEXT])
-    timeline.add_timespan(_EPOCH_3, _DEATH, '"3rd epoch"', lane=1, classes=[Cl.COLOR_D, Cl.WHITE_TEXT])
+    timeline.add_timespan(_EPOCH_1, _EPOCH_2, '"1st epoch"', lane=1, classes=[Colors.COLOR_B.name.lower(), 'white_text'])
+    timeline.add_timespan(_EPOCH_2, _EPOCH_3, '"2nd epoch"', lane=1, classes=[Colors.COLOR_C.name.lower(), 'white_text'])
+    timeline.add_timespan(_EPOCH_3, _DEATH, '"3rd epoch"', lane=1, classes=[Colors.COLOR_D.name.lower(), 'white_text'])
 
     # the universities she was associated with
     timeline.add_connected_events(
         dates=[_TEACH_ERL, _MOVE_GOE, _MOVE_USA, _DEATH],
         labels=["Erlangen", "Göttingen", "USA", None],
-        classes=[[Cl.COLOR_B], [Cl.COLOR_C], [Cl.COLOR_D], []],
+        classes=[[Colors.COLOR_B.name.lower()], [Colors.COLOR_C.name.lower()], [Colors.COLOR_D.name.lower()], []],
         lane=2,
     )
 
     # adding this date last so it is plotted on top of the time spans
-    timeline.add_event(_DEATH, 'Death', lane=4, classes=[Cl.COLOR_A])
+    timeline.add_event(_DEATH, 'Death', lane=4, classes=[Colors.COLOR_A.name.lower()])
 
     # adding a title to the plot
     timeline.add_title("Emmy Noether")

@@ -2,43 +2,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
      width="1000" height="300" viewBox="0 0 1000 300">
 <style>
-:root {
-  --color_a: #003f5c;
-  --color_b: #58508d;
-  --color_c: #bc5090;
-  --color_d: #ff6361;
-  --color_e: #ffa600;
-}
-path.color_a {
-  stroke: var(--color_a);
-}
-path.color_b {
-  stroke: var(--color_b);
-}
-path.color_c {
-  stroke: var(--color_c);
-}
-path.color_d {
-  stroke: var(--color_d);
-}
-path.color_e {
-  stroke: var(--color_e);
-}
-rect.color_a, circle.color_a {
-  fill: var(--color_a);
-}
-rect.color_b, circle.color_b {
-  fill: var(--color_b);
-}
-rect.color_c, circle.color_c {
-  fill: var(--color_c);
-}
-rect.color_d, circle.color_d {
-  fill: var(--color_d);
-}
-rect.color_e, circle.color_e {
-  fill: var(--color_e);
-}
 svg {
   background: white;
 }
@@ -84,8 +47,54 @@ text.timespan {
 path.image {
   stroke-width: 2pt;
 }
+path.white, rect.white, circle.white {
+  stroke: #ffffff;
+  fill: #ffffff;
+}
 text.white_text {
-  fill: white;
+  fill: #ffffff;
+}
+path.black, rect.black, circle.black {
+  stroke: #000000;
+  fill: #000000;
+}
+text.black_text {
+  fill: #000000;
+}
+path.color_a, rect.color_a, circle.color_a {
+  stroke: #003f5c;
+  fill: #003f5c;
+}
+text.color_a_text {
+  fill: #003f5c;
+}
+path.color_b, rect.color_b, circle.color_b {
+  stroke: #58508d;
+  fill: #58508d;
+}
+text.color_b_text {
+  fill: #58508d;
+}
+path.color_c, rect.color_c, circle.color_c {
+  stroke: #bc5090;
+  fill: #bc5090;
+}
+text.color_c_text {
+  fill: #bc5090;
+}
+path.color_d, rect.color_d, circle.color_d {
+  stroke: #ff6361;
+  fill: #ff6361;
+}
+text.color_d_text {
+  fill: #ff6361;
+}
+path.color_e, rect.color_e, circle.color_e {
+  stroke: #ffa600;
+  fill: #ffa600;
+}
+text.color_e_text {
+  fill: #ffa600;
 }
 </style>
 <g id="timeline_001">
