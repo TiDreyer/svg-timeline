@@ -33,11 +33,12 @@ class ClassNames(StrEnum):
     EVENT = 'event'
     TIMESPAN = 'timespan'
     IMAGE = 'image'
-    WHITE_TEXT = 'white_text'
 
 
 class Colors(StrEnum):
     """ string constants for all the colors that are pre-defined as class names """
+    WHITE = '#ffffff'
+    BLACK = '#000000'
     COLOR_A = '#003f5c'
     COLOR_B = '#58508d'
     COLOR_C = '#bc5090'
@@ -91,14 +92,15 @@ DEFAULT_CSS = {
     f'path.{ClassNames.IMAGE}': {
         'stroke-width': '2pt',
     },
-    f'text.{ClassNames.WHITE_TEXT}': {
-        'fill': 'white',
-    },
 }
 
 for __COLOR in Colors:
     __SELECTOR = f'path.{__COLOR.name.lower()}, rect.{__COLOR.name.lower()}, circle.{__COLOR.name.lower()}'
     DEFAULT_CSS[__SELECTOR] = {
         'stroke': str(__COLOR),
+        'fill': str(__COLOR),
+    }
+    __SELECTOR = f'text.{__COLOR.name.lower()}_text'
+    DEFAULT_CSS[__SELECTOR] = {
         'fill': str(__COLOR),
     }
