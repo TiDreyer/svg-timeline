@@ -133,7 +133,8 @@ def _normalize_month(year: int, month: int = 1) -> (int, int, int):
 
 
 def _normalize_date(year: int, month: int = 1, day: int = 1) -> (int, int, int):
-    """ Helper function to normalize a date after the days or months have been manually counted up or down
+    """ Helper function to normalize a date
+    after the days or months have been manually counted up or down
     :returns (normalized year, normalized month, normalized day)
     """
     year, month, n_days = _normalize_month(year=year, month=month)
@@ -149,7 +150,8 @@ def _normalize_date(year: int, month: int = 1, day: int = 1) -> (int, int, int):
 
 
 def _normalize_time(hour: int = 0, minute: int = 0, second: int = 0) -> (int, int, int, int):
-    """ Helper function to normalize a time after the hours, minutes or seconds have been manually counted up or down
+    """ Helper function to normalize a time
+    after the hours, minutes or seconds have been manually counted up or down
     Note: might lead to a day overflow that this function does not handle
     :returns (day overflow, normalized hour, normalized minute, normalized second)
     """
@@ -213,7 +215,8 @@ class TimeSpacingPerMonth(TimeSpacing):
     """ return one entry per month """
     @property
     def dates(self) -> list[datetime]:
-        year, month, _ = _normalize_month(year=self.start_date.year, month=self.start_date.month + 1)
+        year, month, _ = _normalize_month(year=self.start_date.year,
+                                          month=self.start_date.month + 1)
         date = datetime(year=year, month=month, day=1)
         dates = []
         while date <= self.end_date:
@@ -254,7 +257,9 @@ class TimeSpacingPerDay(TimeSpacing):
     """ return one entry per day """
     @property
     def dates(self) -> list[datetime]:
-        date_tuple = _normalize_date(year=self.start_date.year, month=self.start_date.month, day=self.start_date.day + 1)
+        date_tuple = _normalize_date(year=self.start_date.year,
+                                     month=self.start_date.month,
+                                     day=self.start_date.day + 1)
         date = datetime(*date_tuple)
         dates = []
         while date <= self.end_date:
@@ -274,13 +279,17 @@ class TimeSpacingPerHour(TimeSpacing):
     @property
     def dates(self) -> list[datetime]:
         day_overflow, hour, _, _ = _normalize_time(hour=self.start_date.hour + 1)
-        date_tuple = _normalize_date(year=self.start_date.year, month=self.start_date.month, day=self.start_date.day + day_overflow)
+        date_tuple = _normalize_date(year=self.start_date.year,
+                                     month=self.start_date.month,
+                                     day=self.start_date.day + day_overflow)
         date = datetime(*date_tuple, hour=hour)
         dates = []
         while date <= self.end_date:
             dates.append(date)
             day_overflow, hour, _, _ = _normalize_time(hour=date.hour + 1)
-            date_tuple = _normalize_date(year=date.year, month=date.month, day=date.day + day_overflow)
+            date_tuple = _normalize_date(year=date.year,
+                                         month=date.month,
+                                         day=date.day + day_overflow)
             date = datetime(*date_tuple, hour=hour)
         return dates
 
@@ -294,14 +303,19 @@ class TimeSpacingPerMinute(TimeSpacing):
     """ return one entry per minute """
     @property
     def dates(self) -> list[datetime]:
-        day_overflow, hour, minute, _ = _normalize_time(hour=self.start_date.hour, minute=self.start_date.minute + 1)
-        date_tuple = _normalize_date(year=self.start_date.year, month=self.start_date.month, day=self.start_date.day + day_overflow)
+        day_overflow, hour, minute, _ = _normalize_time(hour=self.start_date.hour,
+                                                        minute=self.start_date.minute + 1)
+        date_tuple = _normalize_date(year=self.start_date.year,
+                                     month=self.start_date.month,
+                                     day=self.start_date.day + day_overflow)
         date = datetime(*date_tuple, hour=hour, minute=minute)
         dates = []
         while date <= self.end_date:
             dates.append(date)
             day_overflow, hour, minute, _ = _normalize_time(hour=date.hour, minute=date.minute + 1)
-            date_tuple = _normalize_date(year=date.year, month=date.month, day=date.day + day_overflow)
+            date_tuple = _normalize_date(year=date.year,
+                                         month=date.month,
+                                         day=date.day + day_overflow)
             date = datetime(*date_tuple, hour=hour, minute=minute)
         return dates
 
@@ -315,14 +329,22 @@ class TimeSpacingPerSecond(TimeSpacing):
     """ return one entry per second """
     @property
     def dates(self) -> list[datetime]:
-        day_overflow, hour, minute, second = _normalize_time(hour=self.start_date.hour, minute=self.start_date.minute, second=self.start_date.second + 1)
-        date_tuple = _normalize_date(year=self.start_date.year, month=self.start_date.month, day=self.start_date.day + day_overflow)
+        day_overflow, hour, minute, second = _normalize_time(hour=self.start_date.hour,
+                                                             minute=self.start_date.minute,
+                                                             second=self.start_date.second + 1)
+        date_tuple = _normalize_date(year=self.start_date.year,
+                                     month=self.start_date.month,
+                                     day=self.start_date.day + day_overflow)
         date = datetime(*date_tuple, hour=hour, minute=minute, second=second)
         dates = []
         while date <= self.end_date:
             dates.append(date)
-            day_overflow, hour, minute, second = _normalize_time(hour=date.hour, minute=date.minute, second=date.second + 1)
-            date_tuple = _normalize_date(year=date.year, month=date.month, day=date.day + day_overflow)
+            day_overflow, hour, minute, second = _normalize_time(hour=date.hour,
+                                                                 minute=date.minute,
+                                                                 second=date.second + 1)
+            date_tuple = _normalize_date(year=date.year,
+                                         month=date.month,
+                                         day=date.day + day_overflow)
             date = datetime(*date_tuple, hour=hour, minute=minute, second=second)
         return dates
 
