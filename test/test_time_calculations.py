@@ -4,7 +4,7 @@ from datetime import datetime
 from svg_timeline.time_calculations import TimeGradient
 from svg_timeline.time_calculations import _normalize_month, _normalize_date
 from svg_timeline.time_calculations import TimeSpacingPerMillennia, TimeSpacingPerCentury, TimeSpacingPerDecade
-from svg_timeline.time_calculations import TimeSpacingPerYear, TimeSpacingPerMonth, TimeSpacingPerDay
+from svg_timeline.time_calculations import TimeSpacingPerYear, TimeSpacingPerMonth, TimeSpacingPerWeek, TimeSpacingPerDay
 from svg_timeline.geometry import Vector
 
 __DATE_MINUS_ONE = datetime.fromisoformat('2000-01-01T00:00:00')
@@ -185,6 +185,22 @@ def test_time_spacing_per_month():
         datetime.fromisoformat('2000-01-01T00:00:00'),
         datetime.fromisoformat('2000-02-01T00:00:00'),
         datetime.fromisoformat('2000-03-01T00:00:00'),
+    ]
+
+
+def test_time_spacing_per_week():
+    spacing = TimeSpacingPerWeek(
+        datetime.fromisoformat('2024-12-12'),
+        datetime.fromisoformat('2025-01-22'),
+    )
+    assert spacing.labels == ['51', '52', '01', '02', '03', '04']
+    assert spacing.dates == [
+        datetime.fromisoformat('2024-12-16T00:00:00'),
+        datetime.fromisoformat('2024-12-23T00:00:00'),
+        datetime.fromisoformat('2024-12-30T00:00:00'),
+        datetime.fromisoformat('2025-01-06T00:00:00'),
+        datetime.fromisoformat('2025-01-13T00:00:00'),
+        datetime.fromisoformat('2025-01-20T00:00:00'),
     ]
 
 

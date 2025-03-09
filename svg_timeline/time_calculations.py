@@ -1,5 +1,6 @@
 """ classes and functions for easier calculations on datetimes and coordinates """
 import calendar
+from calendar import weekday
 from collections.abc import Iterable
 from datetime import datetime
 
@@ -207,6 +208,28 @@ class TimeSpacingPerMonth(TimeSpacing):
     @property
     def labels(self) -> list[str]:
         labels = [calendar.month_abbr[date.month] for date in self.dates]
+        return labels
+
+
+class TimeSpacingPerWeek(TimeSpacing):
+    """ return one entry per week """
+    @property
+    def dates(self) -> list[datetime]:
+        year, month, day = self.start_date.year, self.start_date.month, self.start_date.day
+        year, month, day = _normalize_date(year=year, month=month, day=day + 1)
+        while weekday(year, month, day) != 0:
+            year, month, day = _normalize_date(year=year, month=month, day=day + 1)
+        dates = []
+        date = datetime(year=year, month=month, day=day)
+        while date <= self.end_date:
+            dates.append(date)
+            year, month, day = _normalize_date(year=year, month=month, day=day + 7)
+            date = datetime(year=year, month=month, day=day)
+        return dates
+
+    @property
+    def labels(self) -> list[str]:
+        labels = [f"{date.isocalendar().week:02}" for date in self.dates]
         return labels
 
 
