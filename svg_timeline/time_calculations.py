@@ -120,6 +120,33 @@ class TimeSpacing:
         raise NotImplementedError
 
 
+def _normalize_month(year: int, month: int = 1) -> (int, int, int):
+    """ Helper function to normalize a date after the months have been manually counted up or down
+    Note: Does NOT correct the day
+    :returns (normalized year, normalized month, n_days in month)
+    """
+    year += (month - 1) // 12
+    month = ((month - 1) % 12) + 1
+    _, n_days = calendar.monthrange(year, month)
+    return year, month, n_days
+
+
+def _normalize_date(year: int, month: int = 1, day: int = 1) -> (int, int, int):
+    """ Helper function to normalize a date after the days or months have been manually counted up or down
+    :returns (normalized year, normalized month, normalized day)
+    """
+    year, month, n_days = _normalize_month(year=year, month=month)
+    while day > n_days:
+        month += 1
+        day -= n_days
+        year, month, n_days = _normalize_month(year=year, month=month)
+    while day < 1:
+        month -= 1
+        year, month, n_days = _normalize_month(year=year, month=month)
+        day += n_days
+    return year, month, day
+
+
 class YearBasedTimeSpacing(TimeSpacing):
     """ base class to return one entry per X years """
     _base = 1

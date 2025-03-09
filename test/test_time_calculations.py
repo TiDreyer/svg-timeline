@@ -2,6 +2,7 @@
 from datetime import datetime
 
 from svg_timeline.time_calculations import TimeGradient
+from svg_timeline.time_calculations import _normalize_month, _normalize_date
 from svg_timeline.time_calculations import TimeSpacingPerMillennia, TimeSpacingPerCentury, TimeSpacingPerDecade
 from svg_timeline.time_calculations import TimeSpacingPerYear, TimeSpacingPerMonth, TimeSpacingPerDay
 from svg_timeline.geometry import Vector
@@ -79,6 +80,37 @@ def test_timegradient_relative_to_date():
     assert __GRADIENT.relative_to_date(0.5) == __DATE_HALF
     assert __GRADIENT.relative_to_date(1) == __DATE_END
     assert __GRADIENT.relative_to_date(1.2) == __DATE_PLUS_POINT_TWO
+
+
+def test_normalize_month():
+    # month too low
+    assert _normalize_month(year=2020, month=-20) == (2018, 4, 30)
+    assert _normalize_month(year=2020, month=-12) == (2018, 12, 31)
+    assert _normalize_month(year=2020, month=-11) == (2019, 1, 31)
+    assert _normalize_month(year=2020, month=-2) == (2019, 10, 31)
+    assert _normalize_month(year=2020, month=0) == (2019, 12, 31)
+    # month ok
+    assert _normalize_month(year=2020, month=1) == (2020, 1, 31)
+    assert _normalize_month(year=2020, month=12) == (2020, 12, 31)
+    # month too high
+    assert _normalize_month(year=2020, month=13) == (2021, 1, 31)
+    assert _normalize_month(year=2020, month=15) == (2021, 3, 31)
+    assert _normalize_month(year=2020, month=30) == (2022, 6, 30)
+
+
+def test_normalize_date():
+    # non-leap year
+    assert _normalize_date(year=2021, month=2, day=29) == (2021, 3, 1)
+    assert _normalize_date(year=2021, month=1, day=182) == (2021, 7, 1)
+    # leap year
+    assert _normalize_date(year=2020, month=2, day=29) == (2020, 2, 29)
+    assert _normalize_date(year=2020, month=1, day=182) == (2020, 6, 30)
+    # negative days
+    assert _normalize_date(year=2020, month=1, day=0) == (2019, 12, 31)
+    assert _normalize_date(year=2020, month=1, day=-31) == (2019, 11, 30)
+    # combination of days and months
+    assert _normalize_date(year=2020, month=13, day=32) == (2021, 2, 1)
+    assert _normalize_date(year=2020, month=0, day=0) == (2019, 11, 30)
 
 
 def test_time_spacing_per_millennia():
