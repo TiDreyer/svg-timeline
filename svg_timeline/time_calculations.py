@@ -195,18 +195,13 @@ class TimeSpacingPerMonth(TimeSpacing):
     """ return one entry per month """
     @property
     def dates(self) -> list[datetime]:
-        year = self.start_date.year
-        month = self.start_date.month + 1
+        year, month, _ = _normalize_month(year=self.start_date.year, month=self.start_date.month + 1)
+        date = datetime(year=year, month=month, day=1)
         dates = []
-        while True:
-            if month > 12:
-                year += 1
-                month = 1
-            date = datetime(year=year, month=month, day=1)
-            if date > self.end_date:
-                break
+        while date <= self.end_date:
             dates.append(date)
-            month += 1
+            year, month, _ = _normalize_month(year=year, month=month + 1)
+            date = datetime(year=year, month=month, day=1)
         return dates
 
     @property
