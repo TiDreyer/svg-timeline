@@ -219,24 +219,13 @@ class TimeSpacingPerDay(TimeSpacing):
     """ return one entry per day """
     @property
     def dates(self) -> list[datetime]:
-        year = self.start_date.year
-        month = self.start_date.month
-        _, n_days = calendar.monthrange(year, month)
-        day = self.start_date.day + 1
+        date_tuple = _normalize_date(year=self.start_date.year, month=self.start_date.month, day=self.start_date.day + 1)
+        date = datetime(*date_tuple)
         dates = []
-        while True:
-            if day > n_days:
-                month += 1
-                day = 1
-                if month > 12:
-                    year += 1
-                    month = 1
-                _, n_days = calendar.monthrange(year, month)
-            date = datetime(year=year, month=month, day=day)
-            if date > self.end_date:
-                break
+        while date <= self.end_date:
             dates.append(date)
-            day += 1
+            date_tuple = _normalize_date(year=date.year, month=date.month, day=date.day + 1)
+            date = datetime(*date_tuple)
         return dates
 
     @property
