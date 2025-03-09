@@ -5,7 +5,7 @@ from svg_timeline.time_calculations import TimeGradient
 from svg_timeline.time_calculations import _normalize_month, _normalize_date, _normalize_time
 from svg_timeline.time_calculations import TimeSpacingPerMillennia, TimeSpacingPerCentury, TimeSpacingPerDecade
 from svg_timeline.time_calculations import TimeSpacingPerYear, TimeSpacingPerMonth, TimeSpacingPerWeek, TimeSpacingPerDay
-from svg_timeline.time_calculations import TimeSpacingPerHour, TimeSpacingPerMinute
+from svg_timeline.time_calculations import TimeSpacingPerHour, TimeSpacingPerMinute, TimeSpacingPerSecond
 from svg_timeline.geometry import Vector
 
 __DATE_MINUS_ONE = datetime.fromisoformat('2000-01-01T00:00:00')
@@ -278,4 +278,22 @@ def test_time_spacing_per_minute():
         datetime.fromisoformat('2000-01-01T00:01:00'),
         datetime.fromisoformat('2000-01-01T00:02:00'),
         datetime.fromisoformat('2000-01-01T00:03:00'),
+    ]
+
+
+def test_time_spacing_per_second():
+    spacing = TimeSpacingPerSecond(
+        datetime.fromisoformat('1999-12-31T23:59:56'),
+        datetime.fromisoformat('2000-01-01T00:00:04'),
+    )
+    assert spacing.labels == ['23:59:57', '23:59:58', '23:59:59', '00:00:00', '00:00:01', '00:00:02', '00:00:03', '00:00:04']
+    assert spacing.dates == [
+        datetime.fromisoformat('1999-12-31T23:59:57'),
+        datetime.fromisoformat('1999-12-31T23:59:58'),
+        datetime.fromisoformat('1999-12-31T23:59:59'),
+        datetime.fromisoformat('2000-01-01T00:00:00'),
+        datetime.fromisoformat('2000-01-01T00:00:01'),
+        datetime.fromisoformat('2000-01-01T00:00:02'),
+        datetime.fromisoformat('2000-01-01T00:00:03'),
+        datetime.fromisoformat('2000-01-01T00:00:04'),
     ]
