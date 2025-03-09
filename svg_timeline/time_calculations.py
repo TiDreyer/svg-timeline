@@ -273,8 +273,8 @@ class TimeSpacingPerHour(TimeSpacing):
     """ return one entry per hour """
     @property
     def dates(self) -> list[datetime]:
-        date_tuple = (self.start_date.year, self.start_date.month, self.start_date.day)
-        _, hour, _, _ = _normalize_time(hour=self.start_date.hour + 1)
+        day_overflow, hour, _, _ = _normalize_time(hour=self.start_date.hour + 1)
+        date_tuple = _normalize_date(year=self.start_date.year, month=self.start_date.month, day=self.start_date.day + day_overflow)
         date = datetime(*date_tuple, hour=hour)
         dates = []
         while date <= self.end_date:
@@ -294,8 +294,8 @@ class TimeSpacingPerMinute(TimeSpacing):
     """ return one entry per minute """
     @property
     def dates(self) -> list[datetime]:
-        date_tuple = (self.start_date.year, self.start_date.month, self.start_date.day)
-        _, hour, minute, _ = _normalize_time(hour=self.start_date.hour, minute=self.start_date.minute + 1)
+        day_overflow, hour, minute, _ = _normalize_time(hour=self.start_date.hour, minute=self.start_date.minute + 1)
+        date_tuple = _normalize_date(year=self.start_date.year, month=self.start_date.month, day=self.start_date.day + day_overflow)
         date = datetime(*date_tuple, hour=hour, minute=minute)
         dates = []
         while date <= self.end_date:
@@ -315,8 +315,8 @@ class TimeSpacingPerSecond(TimeSpacing):
     """ return one entry per second """
     @property
     def dates(self) -> list[datetime]:
-        date_tuple = (self.start_date.year, self.start_date.month, self.start_date.day)
-        _, hour, minute, second = _normalize_time(hour=self.start_date.hour, minute=self.start_date.minute, second=self.start_date.second + 1)
+        day_overflow, hour, minute, second = _normalize_time(hour=self.start_date.hour, minute=self.start_date.minute, second=self.start_date.second + 1)
+        date_tuple = _normalize_date(year=self.start_date.year, month=self.start_date.month, day=self.start_date.day + day_overflow)
         date = datetime(*date_tuple, hour=hour, minute=minute, second=second)
         dates = []
         while date <= self.end_date:
