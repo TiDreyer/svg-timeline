@@ -5,6 +5,7 @@ from svg_timeline.time_calculations import TimeGradient
 from svg_timeline.time_calculations import _normalize_month, _normalize_date, _normalize_time
 from svg_timeline.time_calculations import TimeSpacingPerMillennia, TimeSpacingPerCentury, TimeSpacingPerDecade
 from svg_timeline.time_calculations import TimeSpacingPerYear, TimeSpacingPerMonth, TimeSpacingPerWeek, TimeSpacingPerDay
+from svg_timeline.time_calculations import TimeSpacingPerHour
 from svg_timeline.geometry import Vector
 
 __DATE_MINUS_ONE = datetime.fromisoformat('2000-01-01T00:00:00')
@@ -243,3 +244,20 @@ def test_time_spacing_per_day_bug_01():
     dates = spacing.dates
     labels = spacing.labels
     assert len(dates) == len(labels)
+
+
+def test_time_spacing_per_hour():
+    spacing = TimeSpacingPerHour(
+        datetime.fromisoformat('1999-12-31T20:35:56'),
+        datetime.fromisoformat('2000-01-01T03:35:56'),
+    )
+    assert spacing.labels == ['21:00', '22:00', '23:00', '00:00', '01:00', '02:00', '03:00']
+    assert spacing.dates == [
+        datetime.fromisoformat('1999-12-31T21:00:00'),
+        datetime.fromisoformat('1999-12-31T22:00:00'),
+        datetime.fromisoformat('1999-12-31T23:00:00'),
+        datetime.fromisoformat('2000-01-01T00:00:00'),
+        datetime.fromisoformat('2000-01-01T01:00:00'),
+        datetime.fromisoformat('2000-01-01T02:00:00'),
+        datetime.fromisoformat('2000-01-01T03:00:00'),
+    ]

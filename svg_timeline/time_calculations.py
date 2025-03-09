@@ -267,3 +267,24 @@ class TimeSpacingPerDay(TimeSpacing):
     def labels(self) -> list[str]:
         labels = [str(date.day) for date in self.dates]
         return labels
+
+
+class TimeSpacingPerHour(TimeSpacing):
+    """ return one entry per hour """
+    @property
+    def dates(self) -> list[datetime]:
+        date_tuple = (self.start_date.year, self.start_date.month, self.start_date.day)
+        _, hour, _, _ = _normalize_time(hour=self.start_date.hour + 1)
+        date = datetime(*date_tuple, hour=hour)
+        dates = []
+        while date <= self.end_date:
+            dates.append(date)
+            day_overflow, hour, _, _ = _normalize_time(hour=date.hour + 1)
+            date_tuple = _normalize_date(year=date.year, month=date.month, day=date.day + day_overflow)
+            date = datetime(*date_tuple, hour=hour)
+        return dates
+
+    @property
+    def labels(self) -> list[str]:
+        labels = [f"{date.hour:02}:00" for date in self.dates]
+        return labels
