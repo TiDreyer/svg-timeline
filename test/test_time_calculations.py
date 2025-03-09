@@ -297,3 +297,25 @@ def test_time_spacing_per_second():
         datetime.fromisoformat('2000-01-01T00:00:03'),
         datetime.fromisoformat('2000-01-01T00:00:04'),
     ]
+
+
+def test_time_spacing_initial_date_overflow():
+    """ dates need to be updated even on the initial spacing step """
+    hour_spacing = TimeSpacingPerHour(
+        datetime.fromisoformat('1999-12-31T23:59:59'),
+        datetime.fromisoformat('2000-01-01T00:00:01'),
+    )
+    minute_spacing = TimeSpacingPerMinute(
+        datetime.fromisoformat('1999-12-31T23:59:59'),
+        datetime.fromisoformat('2000-01-01T00:00:01'),
+    )
+    second_spacing = TimeSpacingPerSecond(
+        datetime.fromisoformat('1999-12-31T23:59:59'),
+        datetime.fromisoformat('2000-01-01T00:00:01'),
+    )
+    assert hour_spacing.labels[0] == '00:00'
+    assert minute_spacing.labels[0] == '00:00'
+    assert second_spacing.labels[0] == '00:00:00'
+    assert hour_spacing.dates[0] == datetime.fromisoformat('2000-01-01T00:00:00')
+    assert minute_spacing.dates[0] == datetime.fromisoformat('2000-01-01T00:00:00')
+    assert second_spacing.dates[0] == datetime.fromisoformat('2000-01-01T00:00:00')
