@@ -2,7 +2,7 @@
 from datetime import datetime
 
 from svg_timeline.time_calculations import TimeGradient
-from svg_timeline.time_calculations import _normalize_month, _normalize_date
+from svg_timeline.time_calculations import _normalize_month, _normalize_date, _normalize_time
 from svg_timeline.time_calculations import TimeSpacingPerMillennia, TimeSpacingPerCentury, TimeSpacingPerDecade
 from svg_timeline.time_calculations import TimeSpacingPerYear, TimeSpacingPerMonth, TimeSpacingPerWeek, TimeSpacingPerDay
 from svg_timeline.geometry import Vector
@@ -111,6 +111,22 @@ def test_normalize_date():
     # combination of days and months
     assert _normalize_date(year=2020, month=13, day=32) == (2021, 2, 1)
     assert _normalize_date(year=2020, month=0, day=0) == (2019, 11, 30)
+
+
+def test_normalize_time():
+    # unchanged time
+    assert _normalize_time(hour=2, minute=34, second=56) == (0, 2, 34, 56)
+    # single overflow
+    assert _normalize_time(hour=0, minute=0, second=0) == (0, 0, 0, 0)
+    assert _normalize_time(hour=0, minute=0, second=60) == (0, 0, 1, 0)
+    assert _normalize_time(hour=0, minute=60, second=0) == (0, 1, 0, 0)
+    assert _normalize_time(hour=24, minute=0, second=0) == (1, 0, 0, 0)
+    # multiple overflows
+    assert _normalize_time(hour=24, minute=60, second=60) == (1, 1, 1, 0)
+    assert _normalize_time(hour=100, minute=123, second=123) == (4, 6, 5, 3)
+    # negative overflows
+    assert _normalize_time(hour=0, minute=0, second=-1) == (-1, 23, 59, 59)
+    assert _normalize_time(hour=-100, minute=-123, second=-123) == (-5, 17, 54, 57)
 
 
 def test_time_spacing_per_millennia():

@@ -148,6 +148,23 @@ def _normalize_date(year: int, month: int = 1, day: int = 1) -> (int, int, int):
     return year, month, day
 
 
+def _normalize_time(hour: int = 0, minute: int = 0, second: int = 0) -> (int, int, int, int):
+    """ Helper function to normalize a time after the hours, minutes or seconds have been manually counted up or down
+    Note: might lead to a day overflow that this function does not handle
+    :returns (day overflow, normalized hour, normalized minute, normalized second)
+    """
+    # normalize seconds
+    minute += second // 60
+    second = second % 60
+    # normalize minutes
+    hour += minute // 60
+    minute = minute % 60
+    # normalize hours
+    day_overflow = hour // 24
+    hour = hour % 24
+    return day_overflow, hour, minute, second
+
+
 class YearBasedTimeSpacing(TimeSpacing):
     """ base class to return one entry per X years """
     _base = 1
