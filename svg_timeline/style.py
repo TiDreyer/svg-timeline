@@ -28,8 +28,8 @@ class ClassNames(StrEnum):
     """ string constants for all the class names that are commonly used for styling via CSS """
     TITLE = 'title'
     TIMEAXIS = 'time_axis'
-    MINOR_TICK = 'minor_tick'
-    MAJOR_TICK = 'major_tick'
+    MINOR_TICK = 'minor_tic'
+    MAJOR_TICK = 'major_tic'
     EVENT = 'event'
     TIMESPAN = 'timespan'
     IMAGE = 'image'
