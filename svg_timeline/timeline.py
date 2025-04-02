@@ -31,23 +31,27 @@ class TimelinePlot:
 
     def _add_timeline(self):
         timeline = SvgGroup(id_base='timeline')
+        self._svg.elements.append(timeline)
         line = Line(self._time.source, self._time.target, classes=[ClassNames.TIMEAXIS])
         timeline.append(line)
         timeline_delta = self._time.target - self._time.source
         tic_delta = 10 * timeline_delta.orthogonal()
+        major_tics = SvgGroup(id_base='tics')
         for date, label in zip(self._tics.dates, self._tics.labels):
             tic_base = self._time.date_to_coord(date)
             tic_end = tic_base + tic_delta
             text_start = tic_base + 1.5 * tic_delta
-            timeline.append(Line(source=tic_base, target=tic_end, classes=[ClassNames.MAJOR_TICK]))
-            timeline.append(Text(text_start, label, classes=[ClassNames.MAJOR_TICK]))
+            major_tics.append(Line(source=tic_base, target=tic_end, classes=[ClassNames.MAJOR_TICK]))
+            major_tics.append(Text(text_start, label, classes=[ClassNames.MAJOR_TICK]))
+        timeline.append(major_tics)
         if self._tics_minor is None:
             return
+        minor_tics = SvgGroup(id_base='tics')
         for date in self._tics_minor.dates:
             tic_base = self._time.date_to_coord(date)
             tic_end = tic_base + 0.5 * tic_delta
-            timeline.append(Line(source=tic_base, target=tic_end, classes=[ClassNames.MINOR_TICK]))
-        self._svg.elements.append(timeline)
+            minor_tics.append(Line(source=tic_base, target=tic_end, classes=[ClassNames.MINOR_TICK]))
+        timeline.append(minor_tics)
 
     def add_event(self, date: datetime, text: str,
                   lane: int = 1, classes: Optional[list[str]] = None):
