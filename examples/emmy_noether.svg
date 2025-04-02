@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
      width="1000" height="300" viewBox="0 0 1000 300">
 <style>
-svg {
-  background: white;
+rect.background {
+  fill: white;
 }
 path {
   stroke: black;
@@ -97,6 +97,7 @@ text.color_e_text {
   fill: #ffa600;
 }
 </style>
+<rect class="background" x="0" y="0" width="1000.0" height="300.0" />
 <g id="timeline_001">
   <path class="time_axis" d="M30.0,255.0 L970.0,255.0" />
   <g id="tics_001">
