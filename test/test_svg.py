@@ -56,14 +56,14 @@ def test_svg_style_section():
     style_section = dedent('''\
     <style>
     svg {
-        background: white;
+      background: white;
     }
     text {
-        font-family: Liberation Sans;
-        font-size: 12pt;
-        fill: black;
-        dominant-baseline: central;
-        text-anchor: middle;
+      font-family: Liberation Sans;
+      font-size: 12pt;
+      fill: black;
+      dominant-baseline: central;
+      text-anchor: middle;
     }
     </style>
     ''')
@@ -79,8 +79,8 @@ def test_svg_defs_section():
     svg_without = SVG(width=800, height=600)
     defs_section = dedent('''\
     <defs>
-        <a a1="hello" a2="world">asdf</a>
-        <b b1="hello" b2="world" />
+      <a a1="hello" a2="world">asdf</a>
+      <b b1="hello" b2="world" />
     </defs>
     ''')
     assert svg_with.defs_section == defs_section
@@ -136,19 +136,19 @@ def test_svg_full():
          width="800" height="600" viewBox="0 0 800 600">
     <style>
     svg {
-        background: white;
+      background: white;
     }
     text {
-        font-family: Liberation Sans;
-        font-size: 12pt;
-        fill: black;
-        dominant-baseline: central;
-        text-anchor: middle;
+      font-family: Liberation Sans;
+      font-size: 12pt;
+      fill: black;
+      dominant-baseline: central;
+      text-anchor: middle;
     }
     </style>
     <defs>
-        <x x1="hello" x2="world">asdf</x>
-        <y y1="hello" y2="world" />
+      <x x1="hello" x2="world">asdf</x>
+      <y y1="hello" y2="world" />
     </defs>
     <a a1="hello" a2="world">asdf</a>
     <b b1="hello" b2="world" />

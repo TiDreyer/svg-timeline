@@ -5,6 +5,9 @@ from textwrap import indent
 from typing import Optional
 
 
+_INDENT = 2 * ' '
+
+
 class SvgElement:
     """ general class for describing an element in an SVG and transforming it into
     its XML representation for saving it """
@@ -84,7 +87,7 @@ class SvgGroup(SvgElement):
         """ the contained elements """
         if len(self._elements) == 0:
             return None
-        content_lines = [indent(str(element), '  ') for element in self._elements]
+        content_lines = [indent(str(element), _INDENT) for element in self._elements]
         return '\n' + '\n'.join(content_lines) + '\n'
 
     def append(self, element: SvgElement) -> None:
@@ -122,11 +125,10 @@ class SVG:
     def style_section(self) -> str:
         """ style section lines of the .svg file """
         style_section = '<style>\n'
-        indent = ' ' * 4
         for selector, props in self.style.items():
             style_section += f'{selector} {{\n'
             for name, value in props.items():
-                style_section += f'{indent}{name}: {value};\n'
+                style_section += f'{_INDENT}{name}: {value};\n'
             style_section += '}\n'
         style_section += '</style>\n'
         return style_section
@@ -135,10 +137,9 @@ class SVG:
     def defs_section(self) -> str:
         """ definition section lines of the .svg file """
         defs_section = ''
-        indent = ' ' * 4
         if len(self.defs) > 0:
             defs_section += '<defs>\n'
-            defs_section += ''.join(indent + str(element) + '\n'
+            defs_section += ''.join(_INDENT + str(element) + '\n'
                                     for element in self.defs)
             defs_section += '</defs>\n'
         return defs_section
