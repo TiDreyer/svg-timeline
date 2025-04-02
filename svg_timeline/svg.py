@@ -62,6 +62,28 @@ class SvgElement:
         return svg_element
 
 
+class SvgGroup(SvgElement):
+    """ a group of SVG elements inside a g-container """
+    def __init__(self,
+                 elements: Optional[list[SvgElement]] = None,
+                 attributes: Optional[dict[str, str]] = None,
+                 classes: Optional[list[str]] = None,
+                 ):
+        super().__init__(tag='g', attributes=attributes, classes=classes)
+        self._elements = elements or []
+
+    @property
+    def content(self) -> Optional[str]:
+        """ the contained elements """
+        if len(self._elements) == 0:
+            return None
+        return '\n' + '\n'.join(str(el) for el in self._elements) + '\n'
+
+    def append(self, element: SvgElement) -> None:
+        """ add an element to this group """
+        self._elements.append(element)
+
+
 class SVG:
     """ representation of an SVG file used to collect the contained elements
     and save them into a .svg along with the necessary meta-data
