@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+
+## [0.2.2] - 2025-04-02
+
+### Added
 - TimeSpacing classes based on weeks, hours, minutes and seconds (#16)
 - This changelog (#17)
 
@@ -17,8 +28,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - For better compatibility, colors are no longer defined in CSS via `:root` (#19)
 - For better compatibility, the background color is no longer defined in CSS via `svg` (#19)
-
-### Removed
 
 
 ## [0.2.1] - 2025-03-04
