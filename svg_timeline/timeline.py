@@ -19,6 +19,8 @@ class TimelinePlot:
                  size: tuple[int, int] = (800, 600)):
         self._width, self._height = size
         self._svg = SVG(self._width, self._height, style=DEFAULT_CSS)
+        # set a white background
+        self._svg.elements.append(Rectangle(Vector(0, 0), Vector(*size), classes=['background']))
 
         y = Defaults.arrow_y_position * self._height
         x1 = Defaults.arrow_x_padding * self._width

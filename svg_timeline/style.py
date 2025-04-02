@@ -47,8 +47,8 @@ class Colors(StrEnum):
 
 
 DEFAULT_CSS = {
-    'svg': {
-        'background': 'white',
+    'rect.background': {
+        'fill': 'white',
     },
     'path': {
         'stroke': 'black',
