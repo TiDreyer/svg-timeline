@@ -33,32 +33,20 @@ class ClassNames(StrEnum):
     EVENT = 'event'
     TIMESPAN = 'timespan'
     IMAGE = 'image'
-    WHITE_TEXT = 'white_text'
-    COLOR_A = 'color_a'
-    COLOR_B = 'color_b'
-    COLOR_C = 'color_c'
-    COLOR_D = 'color_d'
-    COLOR_E = 'color_e'
+
+
+class Colors(StrEnum):
+    """ string constants for all the colors that are pre-defined as class names """
+    WHITE = '#ffffff'
+    BLACK = '#000000'
+    COLOR_A = '#003f5c'
+    COLOR_B = '#58508d'
+    COLOR_C = '#bc5090'
+    COLOR_D = '#ff6361'
+    COLOR_E = '#ffa600'
 
 
 DEFAULT_CSS = {
-    ':root': {
-        '--color_a': '#003f5c',
-        '--color_b': '#58508d',
-        '--color_c': '#bc5090',
-        '--color_d': '#ff6361',
-        '--color_e': '#ffa600',
-    },
-    f'path.{ClassNames.COLOR_A}': {'stroke': 'var(--color_a)'},
-    f'path.{ClassNames.COLOR_B}': {'stroke': 'var(--color_b)'},
-    f'path.{ClassNames.COLOR_C}': {'stroke': 'var(--color_c)'},
-    f'path.{ClassNames.COLOR_D}': {'stroke': 'var(--color_d)'},
-    f'path.{ClassNames.COLOR_E}': {'stroke': 'var(--color_e)'},
-    f'rect.{ClassNames.COLOR_A}, circle.{ClassNames.COLOR_A}': {'fill': 'var(--color_a)'},
-    f'rect.{ClassNames.COLOR_B}, circle.{ClassNames.COLOR_B}': {'fill': 'var(--color_b)'},
-    f'rect.{ClassNames.COLOR_C}, circle.{ClassNames.COLOR_C}': {'fill': 'var(--color_c)'},
-    f'rect.{ClassNames.COLOR_D}, circle.{ClassNames.COLOR_D}': {'fill': 'var(--color_d)'},
-    f'rect.{ClassNames.COLOR_E}, circle.{ClassNames.COLOR_E}': {'fill': 'var(--color_e)'},
     'svg': {
         'background': 'white',
     },
@@ -104,7 +92,15 @@ DEFAULT_CSS = {
     f'path.{ClassNames.IMAGE}': {
         'stroke-width': '2pt',
     },
-    f'text.{ClassNames.WHITE_TEXT}': {
-        'fill': 'white',
-    },
 }
+
+for __COLOR in Colors:
+    __SELECTOR = f'path.{__COLOR.name.lower()}, rect.{__COLOR.name.lower()}, circle.{__COLOR.name.lower()}'
+    DEFAULT_CSS[__SELECTOR] = {
+        'stroke': str(__COLOR),
+        'fill': str(__COLOR),
+    }
+    __SELECTOR = f'text.{__COLOR.name.lower()}_text'
+    DEFAULT_CSS[__SELECTOR] = {
+        'fill': str(__COLOR),
+    }
