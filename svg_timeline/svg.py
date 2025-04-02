@@ -64,17 +64,19 @@ class SvgElement:
 
 class SvgGroup(SvgElement):
     """ a group of SVG elements inside a g-container """
-    n_groups = 0
+    id_counters = {}
 
     def __init__(self,
                  elements: Optional[list[SvgElement]] = None,
                  attributes: Optional[dict[str, str]] = None,
                  classes: Optional[list[str]] = None,
+                 id_base: str = 'group',
                  ):
         super().__init__(tag='g', attributes=attributes, classes=classes)
         self._elements = elements or []
-        self._attributes['id'] = f'group{SvgGroup.n_groups:03}'
-        SvgGroup.n_groups += 1
+        counter = SvgGroup.id_counters.setdefault(id_base, 1)
+        self._attributes['id'] = f'{id_base}_{counter:03}'
+        SvgGroup.id_counters[id_base] += 1
 
     @property
     def content(self) -> Optional[str]:

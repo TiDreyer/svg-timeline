@@ -30,7 +30,7 @@ class TimelinePlot:
         self._add_timeline()
 
     def _add_timeline(self):
-        timeline = SvgGroup()
+        timeline = SvgGroup(id_base='timeline')
         line = Line(self._time.source, self._time.target, classes=[ClassNames.TIMEAXIS])
         timeline.append(line)
         timeline_delta = self._time.target - self._time.source
@@ -61,7 +61,7 @@ class TimelinePlot:
             Line(source=event_base, target=event_end, classes=classes),
             Circle(center=event_end, radius=Defaults.event_dot_radius, classes=classes),
             Text(text_coord, text, classes=classes),
-        ])
+        ], id_base='event')
         self._svg.elements.append(event)
 
     def add_connected_events(self, dates: list[datetime], labels: list[str],
@@ -88,7 +88,7 @@ class TimelinePlot:
             text=label,
             classes=classes[i],
         ) for i, label in enumerate(labels) if label is not None])
-        connected_events = SvgGroup([lines, circles, texts])
+        connected_events = SvgGroup([lines, circles, texts], id_base='connected_events')
         self._svg.elements.append(connected_events)
 
     def add_image(self, date: datetime, image_path: Path, height: float, width: float,
@@ -103,7 +103,7 @@ class TimelinePlot:
         image = SvgGroup([
             Line(source=event_base, target=event_end, classes=classes),
             Image(top_left=image_top_left, file=image_path, height=height, width=width, classes=classes),
-        ])
+        ], id_base='image')
         self._svg.elements.append(image)
 
     def add_timespan(self, start_date: datetime, end_date: datetime, text: str,
@@ -120,7 +120,7 @@ class TimelinePlot:
         timespan = SvgGroup([
             Rectangle(start_corner, end_corner, classes=classes),
             Text(text_coord, text, classes=classes),
-        ])
+        ], id_base='timespan')
         if Defaults.timespan_use_start_stilt:
             on_timeline = self.__to_lane_point(start_date, lane=0)
             bottom_timespan = self.__to_lane_point(start_date, lane=lane) - half_width_vector
