@@ -1,6 +1,7 @@
 """ base classes for creating SVG files """
 from html import escape
 from pathlib import Path
+from textwrap import indent
 from typing import Optional
 
 
@@ -83,7 +84,8 @@ class SvgGroup(SvgElement):
         """ the contained elements """
         if len(self._elements) == 0:
             return None
-        return '\n' + '\n'.join(str(el) for el in self._elements) + '\n'
+        content_lines = [indent(str(element), '  ') for element in self._elements]
+        return '\n' + '\n'.join(content_lines) + '\n'
 
     def append(self, element: SvgElement) -> None:
         """ add an element to this group """
