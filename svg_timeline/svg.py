@@ -64,6 +64,8 @@ class SvgElement:
 
 class SvgGroup(SvgElement):
     """ a group of SVG elements inside a g-container """
+    n_groups = 0
+
     def __init__(self,
                  elements: Optional[list[SvgElement]] = None,
                  attributes: Optional[dict[str, str]] = None,
@@ -71,6 +73,8 @@ class SvgGroup(SvgElement):
                  ):
         super().__init__(tag='g', attributes=attributes, classes=classes)
         self._elements = elements or []
+        self._attributes['id'] = f'group{SvgGroup.n_groups:03}'
+        SvgGroup.n_groups += 1
 
     @property
     def content(self) -> Optional[str]:
