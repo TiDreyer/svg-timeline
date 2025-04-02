@@ -12,8 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - This changelog (#17)
 
 ### Changed
+- `TimeLinePlot` uses `<g>` to group related SVG elements (#17)
 
 ### Fixed
+- For better compatibility, colors are no longer defined in CSS via `:root` (#19)
+- For better compatibility, the background color is no longer defined in CSS via `svg` (#19)
 
 ### Removed
 
