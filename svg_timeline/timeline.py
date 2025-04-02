@@ -5,7 +5,7 @@ from typing import Optional
 
 from svg_timeline.geometry import Vector
 from svg_timeline.style import Defaults, DEFAULT_CSS, ClassNames
-from svg_timeline.svg import SVG
+from svg_timeline.svg import SVG, SvgGroup
 from svg_timeline.svg_primitives import Rectangle, Line, Text, Circle, Image
 from svg_timeline.time_calculations import TimeGradient, TimeSpacing
 
@@ -30,22 +30,28 @@ class TimelinePlot:
         self._add_timeline()
 
     def _add_timeline(self):
+        timeline = SvgGroup(id_base='timeline')
+        self._svg.elements.append(timeline)
         line = Line(self._time.source, self._time.target, classes=[ClassNames.TIMEAXIS])
-        self._svg.elements.append(line)
+        timeline.append(line)
         timeline_delta = self._time.target - self._time.source
         tic_delta = 10 * timeline_delta.orthogonal()
+        major_tics = SvgGroup(id_base='tics')
         for date, label in zip(self._tics.dates, self._tics.labels):
             tic_base = self._time.date_to_coord(date)
             tic_end = tic_base + tic_delta
             text_start = tic_base + 1.5 * tic_delta
-            self._svg.elements.append(Line(source=tic_base, target=tic_end, classes=[ClassNames.MAJOR_TICK]))
-            self._svg.elements.append(Text(text_start, label, classes=[ClassNames.MAJOR_TICK]))
+            major_tics.append(Line(source=tic_base, target=tic_end, classes=[ClassNames.MAJOR_TICK]))
+            major_tics.append(Text(text_start, label, classes=[ClassNames.MAJOR_TICK]))
+        timeline.append(major_tics)
         if self._tics_minor is None:
             return
+        minor_tics = SvgGroup(id_base='tics')
         for date in self._tics_minor.dates:
             tic_base = self._time.date_to_coord(date)
             tic_end = tic_base + 0.5 * tic_delta
-            self._svg.elements.append(Line(source=tic_base, target=tic_end, classes=[ClassNames.MINOR_TICK]))
+            minor_tics.append(Line(source=tic_base, target=tic_end, classes=[ClassNames.MINOR_TICK]))
+        timeline.append(minor_tics)
 
     def add_event(self, date: datetime, text: str,
                   lane: int = 1, classes: Optional[list[str]] = None):
@@ -55,11 +61,12 @@ class TimelinePlot:
         event_base = self._time.date_to_coord(date)
         event_end = self.__to_lane_point(date, lane=lane)
         text_coord = self.__to_lane_point(date, lane=(lane+0.5 if lane >= 0 else lane-0.5))
-        self._svg.elements += [
+        event = SvgGroup([
             Line(source=event_base, target=event_end, classes=classes),
             Circle(center=event_end, radius=Defaults.event_dot_radius, classes=classes),
             Text(text_coord, text, classes=classes),
-        ]
+        ], id_base='event')
+        self._svg.elements.append(event)
 
     def add_connected_events(self, dates: list[datetime], labels: list[str],
                              classes: Optional[list[Optional[list[str]]]] = None,
@@ -70,21 +77,23 @@ class TimelinePlot:
             classes = [[] for _ in range(len(dates))]
         if not len(dates) == len(labels) == len(classes):
             raise RuntimeError("dates, labels and classes need to be of the same length")
-        self._svg.elements += [Line(
+        lines = SvgGroup([Line(
             source=self.__to_lane_point(dates[i], lane=lane),
             target=self.__to_lane_point(dates[i+1], lane=lane),
             classes=classes[i],
-        ) for i in range(len(dates)-1)]
-        self._svg.elements += [Circle(
+        ) for i in range(len(dates)-1)])
+        circles = SvgGroup([Circle(
             center=self.__to_lane_point(dates[i], lane=lane),
             radius=Defaults.event_dot_radius,
             classes=classes[i],
-        ) for i, label in enumerate(labels) if label is not None]
-        self._svg.elements += [Text(
+        ) for i, label in enumerate(labels) if label is not None])
+        texts = SvgGroup([Text(
             coord=self.__to_lane_point(dates[i], lane=(lane+0.5 if lane >= 0 else lane-0.5)),
             text=label,
             classes=classes[i],
-        ) for i, label in enumerate(labels) if label is not None]
+        ) for i, label in enumerate(labels) if label is not None])
+        connected_events = SvgGroup([lines, circles, texts], id_base='connected_events')
+        self._svg.elements.append(connected_events)
 
     def add_image(self, date: datetime, image_path: Path, height: float, width: float,
                   lane: int = 1, classes: Optional[list[str]] = None):
@@ -95,10 +104,11 @@ class TimelinePlot:
         event_end = self.__to_lane_point(date, lane=lane)
         image_center_left = event_end + height * self.lane_normal
         image_top_left = image_center_left + width/2 * self.lane_normal.orthogonal(ccw=True)
-        self._svg.elements += [
+        image = SvgGroup([
             Line(source=event_base, target=event_end, classes=classes),
             Image(top_left=image_top_left, file=image_path, height=height, width=width, classes=classes),
-        ]
+        ], id_base='image')
+        self._svg.elements.append(image)
 
     def add_timespan(self, start_date: datetime, end_date: datetime, text: str,
                      lane: int = 1, width: Optional[int] = None, classes: Optional[list[str]] = None):
@@ -107,22 +117,23 @@ class TimelinePlot:
         classes += [ClassNames.TIMESPAN]
         width = width or Defaults.timespan_width
         half_width_vector = width/2 * self.lane_normal
-        if Defaults.timespan_use_start_stilt:
-            on_timeline = self.__to_lane_point(start_date, lane=0)
-            bottom_timespan = self.__to_lane_point(start_date, lane=lane) - half_width_vector
-            self._svg.elements.append(Line(source=on_timeline, target=bottom_timespan, classes=classes))
-        if Defaults.timespan_use_end_stilt:
-            on_timeline = self.__to_lane_point(end_date, lane=0)
-            bottom_timespan = self.__to_lane_point(end_date, lane=lane) - half_width_vector
-            self._svg.elements.append(Line(source=on_timeline, target=bottom_timespan, classes=classes))
         start_corner = self.__to_lane_point(start_date, lane=lane) + half_width_vector
         end_corner = self.__to_lane_point(end_date, lane=lane) - half_width_vector
         middle_date = start_date + (end_date - start_date) / 2
         text_coord = self.__to_lane_point(middle_date, lane=lane)
-        self._svg.elements += [
+        timespan = SvgGroup([
             Rectangle(start_corner, end_corner, classes=classes),
             Text(text_coord, text, classes=classes),
-        ]
+        ], id_base='timespan')
+        if Defaults.timespan_use_start_stilt:
+            on_timeline = self.__to_lane_point(start_date, lane=0)
+            bottom_timespan = self.__to_lane_point(start_date, lane=lane) - half_width_vector
+            timespan.append(Line(source=on_timeline, target=bottom_timespan, classes=classes))
+        if Defaults.timespan_use_end_stilt:
+            on_timeline = self.__to_lane_point(end_date, lane=0)
+            bottom_timespan = self.__to_lane_point(end_date, lane=lane) - half_width_vector
+            timespan.append(Line(source=on_timeline, target=bottom_timespan, classes=classes))
+        self._svg.elements.append(timespan)
 
     def add_title(self, title: str, classes: Optional[list[str]] = None):
         """ Add a title that should be printed above the timeline """

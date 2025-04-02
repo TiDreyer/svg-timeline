@@ -1,7 +1,11 @@
 """ base classes for creating SVG files """
 from html import escape
 from pathlib import Path
+from textwrap import indent
 from typing import Optional
+
+
+_INDENT = 2 * ' '
 
 
 class SvgElement:
@@ -62,6 +66,35 @@ class SvgElement:
         return svg_element
 
 
+class SvgGroup(SvgElement):
+    """ a group of SVG elements inside a g-container """
+    id_counters = {}
+
+    def __init__(self,
+                 elements: Optional[list[SvgElement]] = None,
+                 attributes: Optional[dict[str, str]] = None,
+                 classes: Optional[list[str]] = None,
+                 id_base: str = 'group',
+                 ):
+        super().__init__(tag='g', attributes=attributes, classes=classes)
+        self._elements = elements or []
+        counter = SvgGroup.id_counters.setdefault(id_base, 1)
+        self._attributes['id'] = f'{id_base}_{counter:03}'
+        SvgGroup.id_counters[id_base] += 1
+
+    @property
+    def content(self) -> Optional[str]:
+        """ the contained elements """
+        if len(self._elements) == 0:
+            return None
+        content_lines = [indent(str(element), _INDENT) for element in self._elements]
+        return '\n' + '\n'.join(content_lines) + '\n'
+
+    def append(self, element: SvgElement) -> None:
+        """ add an element to this group """
+        self._elements.append(element)
+
+
 class SVG:
     """ representation of an SVG file used to collect the contained elements
     and save them into a .svg along with the necessary meta-data
@@ -92,11 +125,10 @@ class SVG:
     def style_section(self) -> str:
         """ style section lines of the .svg file """
         style_section = '<style>\n'
-        indent = ' ' * 4
         for selector, props in self.style.items():
             style_section += f'{selector} {{\n'
             for name, value in props.items():
-                style_section += f'{indent}{name}: {value};\n'
+                style_section += f'{_INDENT}{name}: {value};\n'
             style_section += '}\n'
         style_section += '</style>\n'
         return style_section
@@ -105,10 +137,9 @@ class SVG:
     def defs_section(self) -> str:
         """ definition section lines of the .svg file """
         defs_section = ''
-        indent = ' ' * 4
         if len(self.defs) > 0:
             defs_section += '<defs>\n'
-            defs_section += ''.join(indent + str(element) + '\n'
+            defs_section += ''.join(_INDENT + str(element) + '\n'
                                     for element in self.defs)
             defs_section += '</defs>\n'
         return defs_section
