@@ -1,32 +1,31 @@
 """ Example script to create a timeline of Emmy Noether's life """
-from datetime import datetime
 from pathlib import Path
 
 from svg_timeline.style import Defaults, Colors
-from svg_timeline.time_calculations import TimeSpacingPerDecade, TimeSpacingPerYear
+from svg_timeline.time_calculations import TimeSpacingPerDecade, TimeSpacingPerYear, dt
 from svg_timeline.timeline import TimelinePlot
 
 # defining important dates for easier usage later on
-_BIRTH = datetime.fromisoformat('1882-03-23')
-_PHOTO = datetime.fromisoformat('1900-01-01')
-_THESIS = datetime.fromisoformat('1907-01-01')
-_TEACH_ERL = datetime.fromisoformat('1908-01-01')
-_EPOCH_1 = datetime.fromisoformat('1908-01-01')
-_MOVE_GOE = datetime.fromisoformat('1915-04-01')
-_THEOREM = datetime.fromisoformat('1918-01-01')
-_HABIL = datetime.fromisoformat('1919-01-01')
-_EPOCH_2 = datetime.fromisoformat('1920-01-01')
-_EPOCH_3 = datetime.fromisoformat('1927-01-01')
-_AWARD = datetime.fromisoformat('1932-01-01')
-_MOVE_USA = datetime.fromisoformat('1933-01-01')
-_DEATH = datetime.fromisoformat('1935-04-14')
+_BIRTH = dt('1882-03-23')
+_PHOTO = dt('1900')
+_THESIS = dt('1907')
+_TEACH_ERL = dt('1908')
+_EPOCH_1 = dt('1908')
+_MOVE_GOE = dt('1915-04')
+_THEOREM = dt('1918')
+_HABIL = dt('1919')
+_EPOCH_2 = dt('1920')
+_EPOCH_3 = dt('1927')
+_AWARD = dt('1932')
+_MOVE_USA = dt('1933')
+_DEATH = dt('1935-04-14')
 
 
 def main():
     """ main script function for the creation of the plot """
     # defining the range of the timeline
-    start_date = datetime.fromisoformat('1879-12-01')
-    end_date = datetime.fromisoformat('1935-12-31')
+    start_date = dt('1879-12-01')
+    end_date = dt('1935-12-31')
 
     # setting what percentage of the page width the arrow occupies
     Defaults.arrow_y_position = 0.85
