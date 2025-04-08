@@ -8,7 +8,7 @@ Because I still expect the API to undergo larger changes until version `1.0`,
 there is no extensive user documentation yet.
 
 - For a rough usage overview, please take a look at the example below.
-- For more technical information, you can read the [ADRs](https://github.com/TiDreyer/svg-timeline/main/ADRS/).
+- For more technical information, you can read the [ADRs](https://github.com/TiDreyer/svg-timeline/tree/main/ADRs).
 
 ### Example
 This is the result of running the script [`examples/emmy_noether.py`](https://github.com/TiDreyer/svg-timeline/blob/main/examples/emmy_noether.py):
