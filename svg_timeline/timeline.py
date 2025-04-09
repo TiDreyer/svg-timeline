@@ -8,7 +8,7 @@ from svg_timeline.style import Defaults, DEFAULT_CSS, ClassNames
 from svg_timeline.svg import SVG, SvgGroup
 from svg_timeline.svg_primitives import Rectangle, Line, Text, Circle, Image
 from svg_timeline.time_calculations import TimeSpacing
-from svg_timeline.timeline_elements import TimeLineCoordinates, Event
+from svg_timeline.timeline_elements import TimeLineCoordinates, Event, ConnectedEvents
 
 
 class TimelinePlot:
@@ -41,27 +41,8 @@ class TimelinePlot:
                              lane: int = 1,
                              ) -> None:
         """ Add a series of events connected via lines """
-        if classes is None:
-            classes = [[] for _ in range(len(dates))]
-        if not len(dates) == len(labels) == len(classes):
-            raise RuntimeError("dates, labels and classes need to be of the same length")
-        lines = SvgGroup([Line(
-            source=self._coordinates.as_coord(dates[i], lane=lane),
-            target=self._coordinates.as_coord(dates[i + 1], lane=lane),
-            classes=classes[i],
-        ) for i in range(len(dates)-1)])
-        circles = SvgGroup([Circle(
-            center=self._coordinates.as_coord(dates[i], lane=lane),
-            radius=Defaults.event_dot_radius,
-            classes=classes[i],
-        ) for i, label in enumerate(labels) if label is not None])
-        texts = SvgGroup([Text(
-            coord=self._coordinates.as_coord(dates[i], lane=(lane + 0.5 if lane >= 0 else lane - 0.5)),
-            text=label,
-            classes=classes[i],
-        ) for i, label in enumerate(labels) if label is not None])
-        connected_events = SvgGroup([lines, circles, texts], id_base='connected_events')
-        self._svg.elements.append(connected_events)
+        connected_events = ConnectedEvents(dates=dates, labels=labels, classes=classes, lane=lane)
+        self._svg.elements.append(connected_events.svg(self._coordinates))
 
     def add_image(self, date: datetime, image_path: Path, height: float, width: float,
                   lane: int = 1, classes: Optional[list[str]] = None):

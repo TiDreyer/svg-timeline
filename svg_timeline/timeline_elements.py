@@ -106,3 +106,34 @@ class Event(TimeLineElement):
             Text(text_coord, self.text, classes=classes),
         ], id_base='event')
         return event
+
+
+@dataclass
+class ConnectedEvents(TimeLineElement):
+    """ a series of events connected via lines """
+    dates: list[datetime]
+    labels: list[str]
+    lane: float = 1
+    classes: Optional[list[Classes]] = None
+
+    def svg(self, coord: TimeLineCoordinates) -> SvgGroup:
+        classes = [[] for _ in range(len(self.dates))] if self.classes is None else self.classes
+        if not len(self.dates) == len(self.labels) == len(classes):
+            raise RuntimeError("dates, labels and classes need to be of the same length")
+        lines = SvgGroup([Line(
+            source=coord.as_coord(self.dates[i], lane=self.lane),
+            target=coord.as_coord(self.dates[i + 1], lane=self.lane),
+            classes=classes[i],
+        ) for i in range(len(self.dates)-1)])
+        circles = SvgGroup([Circle(
+            center=coord.as_coord(self.dates[i], lane=self.lane),
+            radius=Defaults.event_dot_radius,
+            classes=classes[i],
+        ) for i, label in enumerate(self.labels) if label is not None])
+        texts = SvgGroup([Text(
+            coord=coord.as_coord(self.dates[i], lane=(self.lane + 0.5 if self.lane >= 0 else self.lane - 0.5)),
+            text=label,
+            classes=classes[i],
+        ) for i, label in enumerate(self.labels) if label is not None])
+        connected_events = SvgGroup([lines, circles, texts], id_base='connected_events')
+        return connected_events
