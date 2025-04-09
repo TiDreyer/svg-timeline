@@ -1,11 +1,16 @@
+from abc import ABC
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
 
 from svg_timeline.geometry import Vector
 from svg_timeline.style import Defaults, ClassNames
 from svg_timeline.svg import SvgGroup
-from svg_timeline.svg_primitives import Line, Text
+from svg_timeline.svg_primitives import Line, Text, Circle
 from svg_timeline.time_calculations import TimeGradient, TimeSpacing
+
+
+Classes = Optional[list[str]]
 
 
 class TimeLineCoordinates:
@@ -73,3 +78,31 @@ class TimeLineCoordinates:
             minor_tics.append(Line(source=tic_base, target=tic_end, classes=[ClassNames.MINOR_TICK]))
         timeline.append(minor_tics)
         return timeline
+
+
+class TimeLineElement(ABC):
+    """ interface definition for timeline elements """
+    def svg(self, coord: TimeLineCoordinates) -> SvgGroup:
+        raise NotImplementedError
+
+
+@dataclass
+class Event(TimeLineElement):
+    """ an event that happened at a single point in time """
+    date: datetime
+    text: str
+    lane: float = 1
+    classes: Classes = None
+
+    def svg(self, coord: TimeLineCoordinates) -> SvgGroup:
+        classes = self.classes or []
+        classes += [ClassNames.EVENT]
+        event_base = coord.as_coord(self.date)
+        event_end = coord.as_coord(self.date, lane=self.lane)
+        text_coord = coord.as_coord(self.date, lane=(self.lane + 0.5 if self.lane >= 0 else self.lane - 0.5))
+        event = SvgGroup([
+            Line(source=event_base, target=event_end, classes=classes),
+            Circle(center=event_end, radius=Defaults.event_dot_radius, classes=classes),
+            Text(text_coord, self.text, classes=classes),
+        ], id_base='event')
+        return event

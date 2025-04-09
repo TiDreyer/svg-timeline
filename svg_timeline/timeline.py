@@ -8,7 +8,7 @@ from svg_timeline.style import Defaults, DEFAULT_CSS, ClassNames
 from svg_timeline.svg import SVG, SvgGroup
 from svg_timeline.svg_primitives import Rectangle, Line, Text, Circle, Image
 from svg_timeline.time_calculations import TimeSpacing
-from svg_timeline.timeline_elements import TimeLineCoordinates
+from svg_timeline.timeline_elements import TimeLineCoordinates, Event
 
 
 class TimelinePlot:
@@ -33,17 +33,8 @@ class TimelinePlot:
     def add_event(self, date: datetime, text: str,
                   lane: int = 1, classes: Optional[list[str]] = None):
         """ Add an event to the timeline that happened at a single point in time """
-        classes = classes or []
-        classes += [ClassNames.EVENT]
-        event_base = self._coordinates.as_coord(date)
-        event_end = self._coordinates.as_coord(date, lane=lane)
-        text_coord = self._coordinates.as_coord(date, lane=(lane + 0.5 if lane >= 0 else lane - 0.5))
-        event = SvgGroup([
-            Line(source=event_base, target=event_end, classes=classes),
-            Circle(center=event_end, radius=Defaults.event_dot_radius, classes=classes),
-            Text(text_coord, text, classes=classes),
-        ], id_base='event')
-        self._svg.elements.append(event)
+        event = Event(date=date, text=text, lane=lane, classes=classes)
+        self._svg.elements.append(event.svg(self._coordinates))
 
     def add_connected_events(self, dates: list[datetime], labels: list[str],
                              classes: Optional[list[Optional[list[str]]]] = None,
