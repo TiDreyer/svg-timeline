@@ -8,7 +8,7 @@ from svg_timeline.style import Defaults, DEFAULT_CSS, ClassNames
 from svg_timeline.svg import SVG, SvgGroup
 from svg_timeline.svg_primitives import Rectangle, Line, Text, Circle, Image
 from svg_timeline.time_calculations import TimeSpacing
-from svg_timeline.timeline_elements import TimeLineCoordinates, Event, ConnectedEvents, DatedImage
+from svg_timeline.timeline_elements import TimeLineCoordinates, Event, ConnectedEvents, DatedImage, TimeSpan
 
 
 class TimelinePlot:
@@ -54,27 +54,9 @@ class TimelinePlot:
     def add_timespan(self, start_date: datetime, end_date: datetime, text: str,
                      lane: int = 1, width: Optional[int] = None, classes: Optional[list[str]] = None):
         """ Add an entry to the timeline that is associated with a certain time span """
-        classes = classes or []
-        classes += [ClassNames.TIMESPAN]
-        width = width or Defaults.timespan_width
-        half_width_vector = width/2 * self._coordinates.lane_normal
-        start_corner = self._coordinates.as_coord(start_date, lane=lane) + half_width_vector
-        end_corner = self._coordinates.as_coord(end_date, lane=lane) - half_width_vector
-        middle_date = start_date + (end_date - start_date) / 2
-        text_coord = self._coordinates.as_coord(middle_date, lane=lane)
-        timespan = SvgGroup([
-            Rectangle(start_corner, end_corner, classes=classes),
-            Text(text_coord, text, classes=classes),
-        ], id_base='timespan')
-        if Defaults.timespan_use_start_stilt:
-            on_timeline = self._coordinates.as_coord(start_date, lane=0)
-            bottom_timespan = self._coordinates.as_coord(start_date, lane=lane) - half_width_vector
-            timespan.append(Line(source=on_timeline, target=bottom_timespan, classes=classes))
-        if Defaults.timespan_use_end_stilt:
-            on_timeline = self._coordinates.as_coord(end_date, lane=0)
-            bottom_timespan = self._coordinates.as_coord(end_date, lane=lane) - half_width_vector
-            timespan.append(Line(source=on_timeline, target=bottom_timespan, classes=classes))
-        self._svg.elements.append(timespan)
+        timespan = TimeSpan(start_date=start_date, end_date=end_date, text=text,
+                            lane=lane, width=width, classes=classes)
+        self._svg.elements.append(timespan.svg(self._coordinates))
 
     def add_title(self, title: str, classes: Optional[list[str]] = None):
         """ Add a title that should be printed above the timeline """

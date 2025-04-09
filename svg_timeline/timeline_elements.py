@@ -7,7 +7,7 @@ from typing import Optional
 from svg_timeline.geometry import Vector
 from svg_timeline.style import Defaults, ClassNames
 from svg_timeline.svg import SvgGroup
-from svg_timeline.svg_primitives import Line, Text, Circle, Image
+from svg_timeline.svg_primitives import Line, Text, Circle, Image, Rectangle
 from svg_timeline.time_calculations import TimeGradient, TimeSpacing
 
 
@@ -162,3 +162,37 @@ class DatedImage(TimeLineElement):
             Image(top_left=image_top_left, file=self.image_path, height=self.height, width=self.width, classes=classes),
         ], id_base='image')
         return image
+
+
+@dataclass
+class TimeSpan(TimeLineElement):
+    """ an entry that is associated with a certain time span """
+    start_date: datetime
+    end_date: datetime
+    text: str
+    lane: float = 1
+    width: Optional[int] = None
+    classes: Classes = None
+
+    def svg(self, coord: TimeLineCoordinates) -> SvgGroup:
+        classes = self.classes or []
+        classes += [ClassNames.TIMESPAN]
+        width = self.width or Defaults.timespan_width
+        half_width_vector = width/2 * coord.lane_normal
+        start_corner = coord.as_coord(self.start_date, lane=self.lane) + half_width_vector
+        end_corner = coord.as_coord(self.end_date, lane=self.lane) - half_width_vector
+        middle_date = self.start_date + (self.end_date - self.start_date) / 2
+        text_coord = coord.as_coord(middle_date, lane=self.lane)
+        timespan = SvgGroup([
+            Rectangle(start_corner, end_corner, classes=classes),
+            Text(text_coord, self.text, classes=classes),
+        ], id_base='timespan')
+        if Defaults.timespan_use_start_stilt:
+            on_timeline = coord.as_coord(self.start_date, lane=0)
+            bottom_timespan = coord.as_coord(self.start_date, lane=self.lane) - half_width_vector
+            timespan.append(Line(source=on_timeline, target=bottom_timespan, classes=classes))
+        if Defaults.timespan_use_end_stilt:
+            on_timeline = coord.as_coord(self.end_date, lane=0)
+            bottom_timespan = coord.as_coord(self.end_date, lane=self.lane) - half_width_vector
+            timespan.append(Line(source=on_timeline, target=bottom_timespan, classes=classes))
+        return timespan
