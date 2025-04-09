@@ -7,7 +7,7 @@ from svg_timeline.geometry import Vector
 from svg_timeline.style import Defaults, DEFAULT_CSS, ClassNames
 from svg_timeline.svg import SVG, SvgGroup
 from svg_timeline.svg_primitives import Rectangle, Line, Text, Circle, Image
-from svg_timeline.time_calculations import TimeGradient, TimeSpacing
+from svg_timeline.time_calculations import TimeSpacing
 from svg_timeline.timeline_elements import TimeLineCoordinates
 
 
@@ -23,12 +23,11 @@ class TimelinePlot:
         # set a white background
         self._svg.elements.append(Rectangle(Vector(0, 0), Vector(*size), classes=['background']))
 
-        y = Defaults.arrow_y_position * self._height
-        x1 = Defaults.arrow_x_padding * self._width
-        x2 = (1 - Defaults.arrow_x_padding) * self._width
-        gradient = TimeGradient(source=Vector(x1, y), target=Vector(x2, y),
-                                  start_date=start_date, end_date=end_date)
-        self._coordinates = TimeLineCoordinates(gradient=gradient, major_tics=time_spacing, minor_tics=minor_tics)
+        self._coordinates = TimeLineCoordinates(
+            start_date=start_date, end_date=end_date,
+            canvas_size=size,
+            major_tics=time_spacing, minor_tics=minor_tics,
+        )
         self._svg.elements.append(self._coordinates.time_arrow)
 
     def add_event(self, date: datetime, text: str,

@@ -11,16 +11,25 @@ from svg_timeline.time_calculations import TimeGradient, TimeSpacing
 class TimeLineCoordinates:
     """ class for the transfer of dates and lanes to canvas coordinates """
     def __init__(self,
-                 gradient: TimeGradient,
+                 start_date: datetime,
+                 end_date: datetime,
+                 canvas_size: tuple[int, int],
                  major_tics: TimeSpacing,
                  minor_tics: Optional[TimeSpacing] = None,
                  ):
         """
-        :param gradient: the gradient on which this coordinate system is based
+        :param start_date: the lower boundary of the timeline
+        :param end_date: the upper boundary of the timeline
+        :param canvas_size: the width and height of the canvas in pixel
         :param major_tics: the spacing of the major tics drawn on the time arrow
         :param minor_tics: [optional] the spacing of the minor tics drawn on the time arrow
         """
-        self._gradient = gradient
+        width, height = canvas_size
+        y = Defaults.arrow_y_position * height
+        x1 = Defaults.arrow_x_padding * width
+        x2 = (1 - Defaults.arrow_x_padding) * width
+        self._gradient = TimeGradient(source=Vector(x1, y), target=Vector(x2, y),
+                                      start_date=start_date, end_date=end_date)
         self._tics_major = major_tics
         self._tics_minor = minor_tics
 
