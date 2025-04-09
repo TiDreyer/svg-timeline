@@ -1,12 +1,13 @@
 from abc import ABC
 from dataclasses import dataclass
 from datetime import datetime
+from pathlib import Path
 from typing import Optional
 
 from svg_timeline.geometry import Vector
 from svg_timeline.style import Defaults, ClassNames
 from svg_timeline.svg import SvgGroup
-from svg_timeline.svg_primitives import Line, Text, Circle
+from svg_timeline.svg_primitives import Line, Text, Circle, Image
 from svg_timeline.time_calculations import TimeGradient, TimeSpacing
 
 
@@ -137,3 +138,27 @@ class ConnectedEvents(TimeLineElement):
         ) for i, label in enumerate(self.labels) if label is not None])
         connected_events = SvgGroup([lines, circles, texts], id_base='connected_events')
         return connected_events
+
+
+@dataclass
+class DatedImage(TimeLineElement):
+    """ an image that is associated with a single point in time """
+    date: datetime
+    image_path: Path
+    height: float
+    width: float
+    lane: float = 1
+    classes: Classes = None
+
+    def svg(self, coord: TimeLineCoordinates) -> SvgGroup:
+        classes = self.classes or []
+        classes += [ClassNames.IMAGE]
+        event_base = coord.as_coord(self.date)
+        event_end = coord.as_coord(self.date, lane=self.lane)
+        image_center_left = event_end + self.height * coord.lane_normal
+        image_top_left = image_center_left + self.width/2 * coord.lane_normal.orthogonal(ccw=True)
+        image = SvgGroup([
+            Line(source=event_base, target=event_end, classes=classes),
+            Image(top_left=image_top_left, file=self.image_path, height=self.height, width=self.width, classes=classes),
+        ], id_base='image')
+        return image

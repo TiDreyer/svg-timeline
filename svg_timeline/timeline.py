@@ -8,7 +8,7 @@ from svg_timeline.style import Defaults, DEFAULT_CSS, ClassNames
 from svg_timeline.svg import SVG, SvgGroup
 from svg_timeline.svg_primitives import Rectangle, Line, Text, Circle, Image
 from svg_timeline.time_calculations import TimeSpacing
-from svg_timeline.timeline_elements import TimeLineCoordinates, Event, ConnectedEvents
+from svg_timeline.timeline_elements import TimeLineCoordinates, Event, ConnectedEvents, DatedImage
 
 
 class TimelinePlot:
@@ -47,17 +47,9 @@ class TimelinePlot:
     def add_image(self, date: datetime, image_path: Path, height: float, width: float,
                   lane: int = 1, classes: Optional[list[str]] = None):
         """ Add an image to the timeline that is associated with a single point in time """
-        classes = classes or []
-        classes += [ClassNames.IMAGE]
-        event_base = self._coordinates.as_coord(date)
-        event_end = self._coordinates.as_coord(date, lane=lane)
-        image_center_left = event_end + height * self._coordinates.lane_normal
-        image_top_left = image_center_left + width/2 * self._coordinates.lane_normal.orthogonal(ccw=True)
-        image = SvgGroup([
-            Line(source=event_base, target=event_end, classes=classes),
-            Image(top_left=image_top_left, file=image_path, height=height, width=width, classes=classes),
-        ], id_base='image')
-        self._svg.elements.append(image)
+        image = DatedImage(date=date, image_path=image_path, height=height, width=width,
+                           lane=lane, classes=classes)
+        self._svg.elements.append(image.svg(self._coordinates))
 
     def add_timespan(self, start_date: datetime, end_date: datetime, text: str,
                      lane: int = 1, width: Optional[int] = None, classes: Optional[list[str]] = None):
