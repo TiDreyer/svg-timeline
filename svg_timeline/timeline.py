@@ -26,9 +26,9 @@ class TimelinePlot:
         y = Defaults.arrow_y_position * self._height
         x1 = Defaults.arrow_x_padding * self._width
         x2 = (1 - Defaults.arrow_x_padding) * self._width
-        self._time = TimeGradient(source=Vector(x1, y), target=Vector(x2, y),
+        gradient = TimeGradient(source=Vector(x1, y), target=Vector(x2, y),
                                   start_date=start_date, end_date=end_date)
-        self._coordinates = TimeLineCoordinates(gradient=self._time, major_tics=time_spacing, minor_tics=minor_tics)
+        self._coordinates = TimeLineCoordinates(gradient=gradient, major_tics=time_spacing, minor_tics=minor_tics)
         self._svg.elements.append(self._coordinates.time_arrow)
 
     def add_event(self, date: datetime, text: str,
@@ -36,9 +36,9 @@ class TimelinePlot:
         """ Add an event to the timeline that happened at a single point in time """
         classes = classes or []
         classes += [ClassNames.EVENT]
-        event_base = self._time.date_to_coord(date)
-        event_end = self._coordinates.to_lane_point(date, lane=lane)
-        text_coord = self._coordinates.to_lane_point(date, lane=(lane+0.5 if lane >= 0 else lane-0.5))
+        event_base = self._coordinates.as_coord(date)
+        event_end = self._coordinates.as_coord(date, lane=lane)
+        text_coord = self._coordinates.as_coord(date, lane=(lane + 0.5 if lane >= 0 else lane - 0.5))
         event = SvgGroup([
             Line(source=event_base, target=event_end, classes=classes),
             Circle(center=event_end, radius=Defaults.event_dot_radius, classes=classes),
@@ -56,17 +56,17 @@ class TimelinePlot:
         if not len(dates) == len(labels) == len(classes):
             raise RuntimeError("dates, labels and classes need to be of the same length")
         lines = SvgGroup([Line(
-            source=self._coordinates.to_lane_point(dates[i], lane=lane),
-            target=self._coordinates.to_lane_point(dates[i+1], lane=lane),
+            source=self._coordinates.as_coord(dates[i], lane=lane),
+            target=self._coordinates.as_coord(dates[i + 1], lane=lane),
             classes=classes[i],
         ) for i in range(len(dates)-1)])
         circles = SvgGroup([Circle(
-            center=self._coordinates.to_lane_point(dates[i], lane=lane),
+            center=self._coordinates.as_coord(dates[i], lane=lane),
             radius=Defaults.event_dot_radius,
             classes=classes[i],
         ) for i, label in enumerate(labels) if label is not None])
         texts = SvgGroup([Text(
-            coord=self._coordinates.to_lane_point(dates[i], lane=(lane+0.5 if lane >= 0 else lane-0.5)),
+            coord=self._coordinates.as_coord(dates[i], lane=(lane + 0.5 if lane >= 0 else lane - 0.5)),
             text=label,
             classes=classes[i],
         ) for i, label in enumerate(labels) if label is not None])
@@ -78,8 +78,8 @@ class TimelinePlot:
         """ Add an image to the timeline that is associated with a single point in time """
         classes = classes or []
         classes += [ClassNames.IMAGE]
-        event_base = self._time.date_to_coord(date)
-        event_end = self._coordinates.to_lane_point(date, lane=lane)
+        event_base = self._coordinates.as_coord(date)
+        event_end = self._coordinates.as_coord(date, lane=lane)
         image_center_left = event_end + height * self._coordinates.lane_normal
         image_top_left = image_center_left + width/2 * self._coordinates.lane_normal.orthogonal(ccw=True)
         image = SvgGroup([
@@ -95,21 +95,21 @@ class TimelinePlot:
         classes += [ClassNames.TIMESPAN]
         width = width or Defaults.timespan_width
         half_width_vector = width/2 * self._coordinates.lane_normal
-        start_corner = self._coordinates.to_lane_point(start_date, lane=lane) + half_width_vector
-        end_corner = self._coordinates.to_lane_point(end_date, lane=lane) - half_width_vector
+        start_corner = self._coordinates.as_coord(start_date, lane=lane) + half_width_vector
+        end_corner = self._coordinates.as_coord(end_date, lane=lane) - half_width_vector
         middle_date = start_date + (end_date - start_date) / 2
-        text_coord = self._coordinates.to_lane_point(middle_date, lane=lane)
+        text_coord = self._coordinates.as_coord(middle_date, lane=lane)
         timespan = SvgGroup([
             Rectangle(start_corner, end_corner, classes=classes),
             Text(text_coord, text, classes=classes),
         ], id_base='timespan')
         if Defaults.timespan_use_start_stilt:
-            on_timeline = self._coordinates.to_lane_point(start_date, lane=0)
-            bottom_timespan = self._coordinates.to_lane_point(start_date, lane=lane) - half_width_vector
+            on_timeline = self._coordinates.as_coord(start_date, lane=0)
+            bottom_timespan = self._coordinates.as_coord(start_date, lane=lane) - half_width_vector
             timespan.append(Line(source=on_timeline, target=bottom_timespan, classes=classes))
         if Defaults.timespan_use_end_stilt:
-            on_timeline = self._coordinates.to_lane_point(end_date, lane=0)
-            bottom_timespan = self._coordinates.to_lane_point(end_date, lane=lane) - half_width_vector
+            on_timeline = self._coordinates.as_coord(end_date, lane=0)
+            bottom_timespan = self._coordinates.as_coord(end_date, lane=lane) - half_width_vector
             timespan.append(Line(source=on_timeline, target=bottom_timespan, classes=classes))
         self._svg.elements.append(timespan)
 

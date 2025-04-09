@@ -31,7 +31,10 @@ class TimeLineCoordinates:
         """
         return (self._gradient.target - self._gradient.source).orthogonal(ccw=True)
 
-    def to_lane_point(self, date: datetime, lane: float = 1) -> Vector:
+    def as_coord(self, date: datetime, lane: float = 0) -> Vector:
+        """ return the coordinates responding to this date on a given lane
+        (default: on the time arrow)
+        """
         date_coord = self._gradient.date_to_coord(date)
         lane_point = date_coord + lane * Defaults.lane_width * self.lane_normal
         return lane_point
