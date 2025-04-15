@@ -30,6 +30,8 @@ class TimeLineCoordinates:
         :param major_tics: the spacing of the major tics drawn on the time arrow
         :param minor_tics: [optional] the spacing of the minor tics drawn on the time arrow
         """
+        self._first = start_date
+        self._last = end_date
         self._width, self._height = canvas_size
         y = Defaults.arrow_y_position * self._height
         x1 = Defaults.arrow_x_padding * self._width
@@ -38,6 +40,16 @@ class TimeLineCoordinates:
                                       start_date=start_date, end_date=end_date)
         self._tics_major = major_tics
         self._tics_minor = minor_tics
+
+    @property
+    def first(self) -> datetime:
+        """ first date of the timeline """
+        return self._first
+
+    @property
+    def last(self) -> datetime:
+        """ last date of the timeline """
+        return self._last
 
     @property
     def width(self) -> int:
