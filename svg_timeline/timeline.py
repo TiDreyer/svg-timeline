@@ -8,7 +8,7 @@ from svg_timeline.style import Defaults, DEFAULT_CSS, ClassNames
 from svg_timeline.svg import SVG, SvgGroup
 from svg_timeline.svg_primitives import Rectangle, Text
 from svg_timeline.time_calculations import TimeSpacing
-from svg_timeline.timeline_elements import TimeLineElement
+from svg_timeline.timeline_elements import TimeLineElement, Title
 from svg_timeline.timeline_elements import TimeLineCoordinates, Event, ConnectedEvents, DatedImage, TimeSpan
 
 
@@ -66,11 +66,8 @@ class TimelinePlot:
 
     def add_title(self, title: str, classes: Optional[list[str]] = None):
         """ Add a title that should be printed above the timeline """
-        classes = classes or []
-        classes += [ClassNames.TITLE]
-        text_coord = Vector(x=int(self._width * Defaults.title_x_position),
-                            y=int(self._height * Defaults.title_y_position))
-        self._svg.elements += [Text(text_coord, title, classes=classes)]
+        title = Title(text=title, classes=classes)
+        self.add_element(title, layer=0)
 
     def save(self, file_path: Path):
         """ Save an SVG of the timeline under the given file path """

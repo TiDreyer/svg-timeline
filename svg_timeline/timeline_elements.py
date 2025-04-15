@@ -98,6 +98,24 @@ class TimeLineElement(ABC):
 
 
 @dataclass
+class Title(TimeLineElement):
+    """ the text of the title """
+    text: str
+    classes: Classes = None
+
+    def svg(self, coord: TimeLineCoordinates) -> SvgGroup:
+        classes = self.classes or []
+        classes += [ClassNames.TITLE]
+        text_coord = Vector(x=int(coord.width * Defaults.title_x_position),
+                            y=int(coord.height * Defaults.title_y_position))
+        title = SvgGroup(
+            [Text(text_coord, self.text, classes=classes)],
+            exact_id='title'
+        )
+        return title
+
+
+@dataclass
 class Event(TimeLineElement):
     """ an event that happened at a single point in time """
     date: datetime
