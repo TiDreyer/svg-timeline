@@ -8,6 +8,7 @@ from svg_timeline.style import Defaults, DEFAULT_CSS, ClassNames
 from svg_timeline.svg import SVG
 from svg_timeline.svg_primitives import Rectangle, Text
 from svg_timeline.time_calculations import TimeSpacing
+from svg_timeline.timeline_elements import TimeLineElement
 from svg_timeline.timeline_elements import TimeLineCoordinates, Event, ConnectedEvents, DatedImage, TimeSpan
 
 
@@ -19,6 +20,8 @@ class TimelinePlot:
                  time_spacing: TimeSpacing, minor_tics: Optional[TimeSpacing] = None,
                  size: tuple[int, int] = (800, 600)):
         self._width, self._height = size
+        self._layer: dict[int, list[TimeLineElement]] = dict()
+
         self._svg = SVG(self._width, self._height, style=DEFAULT_CSS)
         # set a white background
         self._svg.elements.append(Rectangle(Vector(0, 0), Vector(*size), classes=['background']))
@@ -30,11 +33,14 @@ class TimelinePlot:
         )
         self._svg.elements.append(self._coordinates.time_arrow)
 
+    def add_element(self, element: TimeLineElement, layer: int = 1) -> None:
+        self._layer.setdefault(layer, []).append(element)
+
     def add_event(self, date: datetime, text: str,
                   lane: int = 1, classes: Optional[list[str]] = None):
         """ Add an event to the timeline that happened at a single point in time """
         event = Event(date=date, text=text, lane=lane, classes=classes)
-        self._svg.elements.append(event.svg(self._coordinates))
+        self.add_element(event)
 
     def add_connected_events(self, dates: list[datetime], labels: list[str],
                              classes: Optional[list[Optional[list[str]]]] = None,
@@ -42,21 +48,21 @@ class TimelinePlot:
                              ) -> None:
         """ Add a series of events connected via lines """
         connected_events = ConnectedEvents(dates=dates, labels=labels, classes=classes, lane=lane)
-        self._svg.elements.append(connected_events.svg(self._coordinates))
+        self.add_element(connected_events)
 
     def add_image(self, date: datetime, image_path: Path, height: float, width: float,
                   lane: int = 1, classes: Optional[list[str]] = None):
         """ Add an image to the timeline that is associated with a single point in time """
         image = DatedImage(date=date, image_path=image_path, height=height, width=width,
                            lane=lane, classes=classes)
-        self._svg.elements.append(image.svg(self._coordinates))
+        self.add_element(image)
 
     def add_timespan(self, start_date: datetime, end_date: datetime, text: str,
                      lane: int = 1, width: Optional[int] = None, classes: Optional[list[str]] = None):
         """ Add an entry to the timeline that is associated with a certain time span """
         timespan = TimeSpan(start_date=start_date, end_date=end_date, text=text,
                             lane=lane, width=width, classes=classes)
-        self._svg.elements.append(timespan.svg(self._coordinates))
+        self.add_element(timespan)
 
     def add_title(self, title: str, classes: Optional[list[str]] = None):
         """ Add a title that should be printed above the timeline """
@@ -68,4 +74,7 @@ class TimelinePlot:
 
     def save(self, file_path: Path):
         """ Save an SVG of the timeline under the given file path """
+        for i_layer in sorted(self._layer.keys()):
+            for element in self._layer[i_layer]:
+                self._svg.elements.append(element.svg(self._coordinates))
         self._svg.save_as(file_path=file_path)
