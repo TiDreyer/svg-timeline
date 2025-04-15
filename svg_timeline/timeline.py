@@ -4,9 +4,9 @@ from pathlib import Path
 from typing import Optional
 
 from svg_timeline.geometry import Vector
-from svg_timeline.style import Defaults, DEFAULT_CSS, ClassNames
+from svg_timeline.style import DEFAULT_CSS
 from svg_timeline.svg import SVG, SvgGroup
-from svg_timeline.svg_primitives import Rectangle, Text
+from svg_timeline.svg_primitives import Rectangle
 from svg_timeline.time_calculations import TimeSpacing
 from svg_timeline.timeline_elements import TimeLineElement, Title, TimeArrow
 from svg_timeline.timeline_elements import TimeLineCoordinates, Event, ConnectedEvents, DatedImage, TimeSpan
