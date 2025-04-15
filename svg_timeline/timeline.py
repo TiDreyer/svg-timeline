@@ -19,12 +19,7 @@ class TimelinePlot:
     def __init__(self, start_date: datetime, end_date: datetime,
                  time_spacing: TimeSpacing, minor_tics: Optional[TimeSpacing] = None,
                  size: tuple[int, int] = (800, 600)):
-        self._width, self._height = size
         self._layer: dict[int, list[TimeLineElement]] = dict()
-
-        self._svg = SVG(self._width, self._height, style=DEFAULT_CSS)
-        # set a white background
-        self._svg.elements.append(Rectangle(Vector(0, 0), Vector(*size), classes=['background']))
 
         self._coordinates = TimeLineCoordinates(
             start_date=start_date, end_date=end_date,
@@ -71,9 +66,13 @@ class TimelinePlot:
 
     def save(self, file_path: Path):
         """ Save an SVG of the timeline under the given file path """
+        width, height = self._coordinates.width, self._coordinates.height
+        svg = SVG(width, height, style=DEFAULT_CSS)
+        # first, set a white background
+        svg.elements.append(Rectangle(Vector(0, 0), Vector(width, height), classes=['background']))
         for i_layer in sorted(self._layer.keys()):
             layer = SvgGroup(exact_id=f'layer_{i_layer:03}')
             for element in self._layer[i_layer]:
                 layer.append(element.svg(self._coordinates))
-            self._svg.elements.append(layer)
-        self._svg.save_as(file_path=file_path)
+            svg.elements.append(layer)
+        svg.save_as(file_path=file_path)
