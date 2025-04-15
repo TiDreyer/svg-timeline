@@ -5,7 +5,7 @@ from typing import Optional
 
 from svg_timeline.geometry import Vector
 from svg_timeline.style import Defaults, DEFAULT_CSS, ClassNames
-from svg_timeline.svg import SVG
+from svg_timeline.svg import SVG, SvgGroup
 from svg_timeline.svg_primitives import Rectangle, Text
 from svg_timeline.time_calculations import TimeSpacing
 from svg_timeline.timeline_elements import TimeLineElement
@@ -75,6 +75,8 @@ class TimelinePlot:
     def save(self, file_path: Path):
         """ Save an SVG of the timeline under the given file path """
         for i_layer in sorted(self._layer.keys()):
+            layer = SvgGroup(id_base='layer')
             for element in self._layer[i_layer]:
-                self._svg.elements.append(element.svg(self._coordinates))
+                layer.append(element.svg(self._coordinates))
+            self._svg.elements.append(layer)
         self._svg.save_as(file_path=file_path)
