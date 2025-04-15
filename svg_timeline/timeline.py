@@ -5,8 +5,8 @@ from typing import Optional
 
 from svg_timeline.geometry import Vector
 from svg_timeline.style import Defaults, DEFAULT_CSS, ClassNames
-from svg_timeline.svg import SVG, SvgGroup
-from svg_timeline.svg_primitives import Rectangle, Line, Text, Circle, Image
+from svg_timeline.svg import SVG
+from svg_timeline.svg_primitives import Rectangle, Text
 from svg_timeline.time_calculations import TimeSpacing
 from svg_timeline.timeline_elements import TimeLineCoordinates, Event, ConnectedEvents, DatedImage, TimeSpan
 
