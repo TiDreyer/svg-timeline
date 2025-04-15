@@ -30,14 +30,24 @@ class TimeLineCoordinates:
         :param major_tics: the spacing of the major tics drawn on the time arrow
         :param minor_tics: [optional] the spacing of the minor tics drawn on the time arrow
         """
-        width, height = canvas_size
-        y = Defaults.arrow_y_position * height
-        x1 = Defaults.arrow_x_padding * width
-        x2 = (1 - Defaults.arrow_x_padding) * width
+        self._width, self._height = canvas_size
+        y = Defaults.arrow_y_position * self._height
+        x1 = Defaults.arrow_x_padding * self._width
+        x2 = (1 - Defaults.arrow_x_padding) * self._width
         self._gradient = TimeGradient(source=Vector(x1, y), target=Vector(x2, y),
                                       start_date=start_date, end_date=end_date)
         self._tics_major = major_tics
         self._tics_minor = minor_tics
+
+    @property
+    def width(self) -> int:
+        """ full width of the canvas """
+        return self._width
+
+    @property
+    def height(self) -> int:
+        """ full height of the canvas """
+        return self._height
 
     @property
     def lane_normal(self) -> Vector:
