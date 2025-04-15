@@ -75,11 +75,15 @@ class SvgGroup(SvgElement):
                  attributes: Optional[dict[str, str]] = None,
                  classes: Optional[list[str]] = None,
                  id_base: str = 'group',
+                 exact_id: Optional[str] = None,
                  ):
         super().__init__(tag='g', attributes=attributes, classes=classes)
         self._elements = elements or []
         counter = SvgGroup.id_counters.setdefault(id_base, 1)
-        self._attributes['id'] = f'{id_base}_{counter:03}'
+        if exact_id is not None:
+            self._attributes['id'] = exact_id
+        else:
+            self._attributes['id'] = f'{id_base}_{counter:03}'
         SvgGroup.id_counters[id_base] += 1
 
     @property

@@ -75,7 +75,7 @@ class TimelinePlot:
     def save(self, file_path: Path):
         """ Save an SVG of the timeline under the given file path """
         for i_layer in sorted(self._layer.keys()):
-            layer = SvgGroup(id_base='layer')
+            layer = SvgGroup(exact_id=f'layer_{i_layer:03}')
             for element in self._layer[i_layer]:
                 layer.append(element.svg(self._coordinates))
             self._svg.elements.append(layer)
