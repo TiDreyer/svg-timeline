@@ -4,6 +4,7 @@ from pathlib import Path
 from svg_timeline.style import Defaults, Colors
 from svg_timeline.time_calculations import TimeSpacingPerDecade, TimeSpacingPerYear, dt
 from svg_timeline.timeline import TimelinePlot
+from svg_timeline.timeline_elements import TimeLineCoordinates
 
 # defining important dates for easier usage later on
 _BIRTH = dt('1882-03-23')
@@ -23,20 +24,19 @@ _DEATH = dt('1935-04-14')
 
 def main():
     """ main script function for the creation of the plot """
-    # defining the range of the timeline
-    start_date = dt('1879-12-01')
-    end_date = dt('1935-12-31')
-
     # setting what percentage of the page width the arrow occupies
     Defaults.arrow_y_position = 0.85
 
     # initializing the timeline plot object
+    coords = TimeLineCoordinates(
+        start_date=dt('1879-12-01'),
+        end_date=dt('1935-12-31'),
+        canvas_size=(1000, 300),
+    )
     timeline = TimelinePlot(
-        size=(1000, 300),
-        start_date=start_date,
-        end_date=end_date,
-        time_spacing=TimeSpacingPerDecade(start_date, end_date),
-        minor_tics=TimeSpacingPerYear(start_date, end_date),
+        coordinates=coords,
+        time_spacing=TimeSpacingPerDecade(coords.first, coords.last),
+        minor_tics=TimeSpacingPerYear(coords.first, coords.last),
     )
 
     # white text is easier to read on colored timespans
