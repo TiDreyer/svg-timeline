@@ -21,13 +21,13 @@ def test_connected_events_raises_on_length():
     tlp.add_connected_events(dates=[start_date, end_date], labels=['adsf', 'asdfas'], classes=[[], []])
     tlp.add_connected_events(dates=[start_date, end_date], labels=['adsf', 'asdfas'], classes=[['color_a', 'asdf'], ['color_e']])
     # mis-matched lengths:
-    with raises(RuntimeError):
+    with raises(ValueError):
         tlp.add_connected_events(dates=[start_date], labels=[])
-    with raises(RuntimeError):
+    with raises(ValueError):
         tlp.add_connected_events(dates=[start_date, end_date], labels=['adsf'])
-    with raises(RuntimeError):
+    with raises(ValueError):
         tlp.add_connected_events(dates=[start_date], labels=['adsf', 'asdfas'])
-    with raises(RuntimeError):
+    with raises(ValueError):
         tlp.add_connected_events(dates=[start_date, end_date], labels=['adsf', 'asdfas'], classes=[])
-    with raises(RuntimeError):
+    with raises(ValueError):
         tlp.add_connected_events(dates=[start_date, end_date], labels=['adsf', 'asdfas'], classes=[['color_a']])

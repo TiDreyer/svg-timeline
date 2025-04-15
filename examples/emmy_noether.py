@@ -44,7 +44,7 @@ def main():
 
     # adding the image of Emmy Noether
     _image_path = Path(__file__).parent.joinpath('473px-Noether.jpeg')
-    _image_scale = 0.3
+    _image_scale = 0.27
     timeline.add_image(_PHOTO, _image_path, width=_image_scale*473, height=_image_scale*720, lane=1)
 
     # some important dates in her life
