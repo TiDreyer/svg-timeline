@@ -16,17 +16,12 @@ class TimelinePlot:
     """ representation of a timeline plot
     dates, timespans etc. can be added to this timeline via method calls
     """
-    def __init__(self, start_date: datetime, end_date: datetime,
+    def __init__(self, coordinates: TimeLineCoordinates,
                  time_spacing: TimeSpacing, minor_tics: Optional[TimeSpacing] = None,
-                 size: tuple[int, int] = (800, 600)):
+                 ):
         self._layer: dict[int, list[TimeLineElement]] = dict()
-
-        self._coordinates = TimeLineCoordinates(
-            start_date=start_date, end_date=end_date,
-            canvas_size=size,
-        )
-        self.add_element(TimeArrow(major_tics=time_spacing, minor_tics=minor_tics),
-                         layer=0)
+        self._coordinates = coordinates
+        self.add_element(TimeArrow(major_tics=time_spacing, minor_tics=minor_tics), layer=0)
 
     def add_element(self, element: TimeLineElement, layer: int = 1) -> None:
         self._layer.setdefault(layer, []).append(element)
