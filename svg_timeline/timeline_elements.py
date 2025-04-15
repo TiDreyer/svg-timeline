@@ -158,24 +158,27 @@ class ConnectedEvents(TimeLineElement):
     lane: float = 1
     classes: Optional[list[Classes]] = None
 
+    def __post_init__(self):
+        # validate that the length of the three lists matches
+        self.classes = [[] for _ in range(len(self.dates))] if self.classes is None else self.classes
+        if not len(self.dates) == len(self.labels) == len(self.classes):
+            raise ValueError("dates, labels and classes need to be of the same length")
+
     def svg(self, coord: TimeLineCoordinates) -> SvgGroup:
-        classes = [[] for _ in range(len(self.dates))] if self.classes is None else self.classes
-        if not len(self.dates) == len(self.labels) == len(classes):
-            raise RuntimeError("dates, labels and classes need to be of the same length")
         lines = SvgGroup([Line(
             source=coord.as_coord(self.dates[i], lane=self.lane),
             target=coord.as_coord(self.dates[i + 1], lane=self.lane),
-            classes=classes[i],
+            classes=self.classes[i],
         ) for i in range(len(self.dates)-1)])
         circles = SvgGroup([Circle(
             center=coord.as_coord(self.dates[i], lane=self.lane),
             radius=Defaults.event_dot_radius,
-            classes=classes[i],
+            classes=self.classes[i],
         ) for i, label in enumerate(self.labels) if label is not None])
         texts = SvgGroup([Text(
             coord=coord.as_coord(self.dates[i], lane=(self.lane + 0.5 if self.lane >= 0 else self.lane - 0.5)),
             text=label,
-            classes=classes[i],
+            classes=self.classes[i],
         ) for i, label in enumerate(self.labels) if label is not None])
         connected_events = SvgGroup([lines, circles, texts], id_base='connected_events')
         return connected_events
