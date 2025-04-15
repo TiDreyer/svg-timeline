@@ -20,15 +20,11 @@ class TimeLineCoordinates:
                  start_date: datetime,
                  end_date: datetime,
                  canvas_size: tuple[int, int],
-                 major_tics: TimeSpacing,
-                 minor_tics: Optional[TimeSpacing] = None,
                  ):
         """
         :param start_date: the lower boundary of the timeline
         :param end_date: the upper boundary of the timeline
         :param canvas_size: the width and height of the canvas in pixel
-        :param major_tics: the spacing of the major tics drawn on the time arrow
-        :param minor_tics: [optional] the spacing of the minor tics drawn on the time arrow
         """
         self._first = start_date
         self._last = end_date
@@ -38,8 +34,6 @@ class TimeLineCoordinates:
         x2 = (1 - Defaults.arrow_x_padding) * self._width
         self._gradient = TimeGradient(source=Vector(x1, y), target=Vector(x2, y),
                                       start_date=start_date, end_date=end_date)
-        self._tics_major = major_tics
-        self._tics_minor = minor_tics
 
     @property
     def first(self) -> datetime:
@@ -76,32 +70,6 @@ class TimeLineCoordinates:
         lane_point = date_coord + lane * Defaults.lane_width * self.lane_normal
         return lane_point
 
-    @property
-    def time_arrow(self) -> SvgGroup:
-        """ the svg representation of the time arrow and its tics """
-        timeline = SvgGroup(id_base='timeline')
-        line = Line(self._gradient.source, self._gradient.target, classes=[ClassNames.TIMEAXIS])
-        timeline.append(line)
-        timeline_delta = self._gradient.target - self._gradient.source
-        tic_delta = 10 * timeline_delta.orthogonal()
-        major_tics = SvgGroup(id_base='tics')
-        for date, label in zip(self._tics_major.dates, self._tics_major.labels):
-            tic_base = self._gradient.date_to_coord(date)
-            tic_end = tic_base + tic_delta
-            text_start = tic_base + 1.5 * tic_delta
-            major_tics.append(Line(source=tic_base, target=tic_end, classes=[ClassNames.MAJOR_TICK]))
-            major_tics.append(Text(text_start, label, classes=[ClassNames.MAJOR_TICK]))
-        timeline.append(major_tics)
-        if self._tics_minor is None:
-            return timeline
-        minor_tics = SvgGroup(id_base='tics')
-        for date in self._tics_minor.dates:
-            tic_base = self._gradient.date_to_coord(date)
-            tic_end = tic_base + 0.5 * tic_delta
-            minor_tics.append(Line(source=tic_base, target=tic_end, classes=[ClassNames.MINOR_TICK]))
-        timeline.append(minor_tics)
-        return timeline
-
 
 class TimeLineElement(ABC):
     """ interface definition for timeline elements """
@@ -125,6 +93,39 @@ class Title(TimeLineElement):
             exact_id='title'
         )
         return title
+
+
+@dataclass
+class TimeArrow(TimeLineElement):
+    """ the timeline arrow with major and minor tics """
+    major_tics: TimeSpacing
+    minor_tics: Optional[TimeSpacing] = None
+    classes: Classes = None
+
+    def svg(self, coord: TimeLineCoordinates) -> SvgGroup:
+        timeline = SvgGroup(id_base='timeline')
+        source = coord.as_coord(coord.first, lane=0)
+        target = coord.as_coord(coord.last, lane=0)
+        line = Line(source, target, classes=[ClassNames.TIMEAXIS])
+        timeline.append(line)
+        tic_delta = -10 * coord.lane_normal
+        major_tics = SvgGroup(id_base='tics')
+        for date, label in zip(self.major_tics.dates, self.major_tics.labels):
+            tic_base = coord.as_coord(date)
+            tic_end = tic_base + tic_delta
+            text_start = tic_base + 1.5 * tic_delta
+            major_tics.append(Line(source=tic_base, target=tic_end, classes=[ClassNames.MAJOR_TICK]))
+            major_tics.append(Text(text_start, label, classes=[ClassNames.MAJOR_TICK]))
+        timeline.append(major_tics)
+        if self.minor_tics is None:
+            return timeline
+        minor_tics = SvgGroup(id_base='tics')
+        for date in self.minor_tics.dates:
+            tic_base = coord.as_coord(date)
+            tic_end = tic_base + 0.5 * tic_delta
+            minor_tics.append(Line(source=tic_base, target=tic_end, classes=[ClassNames.MINOR_TICK]))
+        timeline.append(minor_tics)
+        return timeline
 
 
 @dataclass

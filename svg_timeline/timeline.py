@@ -8,7 +8,7 @@ from svg_timeline.style import Defaults, DEFAULT_CSS, ClassNames
 from svg_timeline.svg import SVG, SvgGroup
 from svg_timeline.svg_primitives import Rectangle, Text
 from svg_timeline.time_calculations import TimeSpacing
-from svg_timeline.timeline_elements import TimeLineElement, Title
+from svg_timeline.timeline_elements import TimeLineElement, Title, TimeArrow
 from svg_timeline.timeline_elements import TimeLineCoordinates, Event, ConnectedEvents, DatedImage, TimeSpan
 
 
@@ -29,9 +29,9 @@ class TimelinePlot:
         self._coordinates = TimeLineCoordinates(
             start_date=start_date, end_date=end_date,
             canvas_size=size,
-            major_tics=time_spacing, minor_tics=minor_tics,
         )
-        self._svg.elements.append(self._coordinates.time_arrow)
+        self.add_element(TimeArrow(major_tics=time_spacing, minor_tics=minor_tics),
+                         layer=0)
 
     def add_element(self, element: TimeLineElement, layer: int = 1) -> None:
         self._layer.setdefault(layer, []).append(element)
