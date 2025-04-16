@@ -237,6 +237,8 @@ text.color_e_text {
       <text class="color_d" x="919.7944637016062" y="180.0">USA</text>
     </g>
   </g>
+</g>
+<g id="layer_002">
   <g id="event_006">
     <path class="color_a event" d="M958.0222623639115,255.0 L958.0222623639115,135.0" />
     <circle class="color_a event" cx="958.0222623639115" cy="135.0" r="3" />
