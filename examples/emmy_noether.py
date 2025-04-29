@@ -6,24 +6,13 @@ from svg_timeline.time_calculations import TimeSpacingPerDecade, TimeSpacingPerY
 from svg_timeline.timeline import TimelinePlot
 from svg_timeline.timeline_elements import TimeLineCoordinates, Event, TimeSpan, ConnectedEvents, DatedImage
 
-# defining important dates for easier usage later on
-_BIRTH = dt('1882-03-23')
-_PHOTO = dt('1900')
-_THESIS = dt('1907')
-_TEACH_ERL = dt('1908')
-_EPOCH_1 = dt('1908')
-_MOVE_GOE = dt('1915-04')
-_THEOREM = dt('1918')
-_HABIL = dt('1919')
-_EPOCH_2 = dt('1920')
-_EPOCH_3 = dt('1927')
-_AWARD = dt('1932')
-_MOVE_USA = dt('1933')
-_DEATH = dt('1935-04-14')
-
 
 def main():
     """ main script function for the creation of the plot """
+    # defining the range of the timeline
+    birth = dt('1882-03-23')
+    death = dt('1935-04-14')
+
     # setting what percentage of the page width the arrow occupies
     Defaults.arrow_y_position = 0.85
 
@@ -49,25 +38,25 @@ def main():
     _image_path = Path(__file__).parent.joinpath('473px-Noether.jpeg')
     _image_scale = 0.27
     timeline.add_element(
-        DatedImage(_PHOTO, _image_path, width=_image_scale*473, height=_image_scale*720, lane=1)
+        DatedImage(dt('1900'), _image_path, width=_image_scale*473, height=_image_scale*720, lane=1)
     )
 
     plot_elements = [
         # some important dates in her life
-        Event(_BIRTH, 'Birth', lane=2, classes=[Colors.COLOR_A.name.lower()]),
-        Event(_THESIS, 'PhD Thesis', lane=3, classes=[Colors.COLOR_B.name.lower()]),
-        Event(_THEOREM, 'Noether\'s Theorem', lane=5, classes=[Colors.COLOR_E.name.lower()]),
-        Event(_HABIL, 'Habilitation', lane=3, classes=[Colors.COLOR_C.name.lower()]),
-        Event(_AWARD, 'Ackermann-Teuber Memorial Award', lane=5, classes=[Colors.COLOR_E.name.lower()]),
+        Event(birth, 'Birth', lane=2, classes=[Colors.COLOR_A.name.lower()]),
+        Event(dt('1907'), 'PhD Thesis', lane=3, classes=[Colors.COLOR_B.name.lower()]),
+        Event(dt('1918'), 'Noether\'s Theorem', lane=5, classes=[Colors.COLOR_E.name.lower()]),
+        Event(dt('1919'), 'Habilitation', lane=3, classes=[Colors.COLOR_C.name.lower()]),
+        Event(dt('1932'), 'Ackermann-Teuber Memorial Award', lane=5, classes=[Colors.COLOR_E.name.lower()]),
 
         # scholars distinguish three "epochs" in her work
-        TimeSpan(_EPOCH_1, _EPOCH_2, '"1st epoch"', lane=1, classes=[Colors.COLOR_B.name.lower(), 'white_text']),
-        TimeSpan(_EPOCH_2, _EPOCH_3, '"2nd epoch"', lane=1, classes=[Colors.COLOR_C.name.lower(), 'white_text']),
-        TimeSpan(_EPOCH_3, _DEATH, '"3rd epoch"', lane=1, classes=[Colors.COLOR_D.name.lower(), 'white_text']),
+        TimeSpan(dt('1908'), dt('1920'), '"1st epoch"', lane=1, classes=[Colors.COLOR_B.name.lower(), 'white_text']),
+        TimeSpan(dt('1920'), dt('1927'), '"2nd epoch"', lane=1, classes=[Colors.COLOR_C.name.lower(), 'white_text']),
+        TimeSpan(dt('1927'), death, '"3rd epoch"', lane=1, classes=[Colors.COLOR_D.name.lower(), 'white_text']),
 
         # the universities she was associated with
         ConnectedEvents(
-            dates=[_TEACH_ERL, _MOVE_GOE, _MOVE_USA, _DEATH],
+            dates=[dt('1908'), dt('1915-04'), dt('1933'), death],
             labels=["Erlangen", "Göttingen", "USA", None],
             classes=[[Colors.COLOR_B.name.lower()], [Colors.COLOR_C.name.lower()], [Colors.COLOR_D.name.lower()], []],
             lane=2,
@@ -77,7 +66,7 @@ def main():
         timeline.add_element(event)
 
     # adding this date on layer 2 so it is plotted on top of the other elements
-    timeline.add_element(Event(_DEATH, 'Death', lane=4, classes=[Colors.COLOR_A.name.lower()]), layer=2)
+    timeline.add_element(Event(death, 'Death', lane=4, classes=[Colors.COLOR_A.name.lower()]), layer=2)
 
     # saving the SVG
     svg_path = Path(__file__).parent.joinpath('emmy_noether.svg')
