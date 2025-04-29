@@ -8,7 +8,7 @@ from svg_timeline.svg import SVG, SvgGroup
 from svg_timeline.svg_primitives import Rectangle
 from svg_timeline.time_calculations import TimeSpacing
 from svg_timeline.timeline_elements import TimeLineElement, Title, TimeArrow
-from svg_timeline.timeline_elements import TimeLineCoordinates, Event, ConnectedEvents, DatedImage, TimeSpan
+from svg_timeline.timeline_elements import TimeLineGeometry, Event, ConnectedEvents, DatedImage, TimeSpan
 from svg_timeline._warnings import deprecated
 
 
@@ -17,7 +17,7 @@ class TimelinePlot:
     """ representation of a timeline plot
     dates, timespans etc. can be added to this timeline via method calls
     """
-    def __init__(self, coordinates: TimeLineCoordinates,
+    def __init__(self, coordinates: TimeLineGeometry,
                  time_spacing: TimeSpacing, minor_tics: Optional[TimeSpacing] = None,
                  ):
         self._layer: dict[int, list[TimeLineElement]] = dict()

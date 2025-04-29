@@ -6,44 +6,44 @@ from svg_timeline.css import CascadeStyleSheet
 
 
 @dataclass
-class TitleStyle:
-    x_position: float = 1/2
-    y_position: float = 1/17
-    size_factor: float = 1/15
-
-
-@dataclass
-class CanvasStyle:
+class CanvasGeometry:
     height: int = 800
     width: int = 1000
     x_padding: float = 0.03
 
 
 @dataclass
-class LaneStyle:
+class LaneGeometry:
     lane_zero_y: float = 0.9
     width: float = 30
 
 
 @dataclass
-class EventStyle:
+class TitleGeometry:
+    x_position: float = 1/2
+    y_position: float = 1/17
+    size_factor: float = 1/15
+
+
+@dataclass
+class EventGeometry:
     dot_radius: float = 3
 
 
 @dataclass
-class TimespanStyle:
+class TimespanGeometry:
     width: float = 18
     use_start_stilt: bool = False
     use_end_stilt: bool = False
 
 
 @dataclass
-class TimelineStyle:
-    canvas: CanvasStyle = field(default_factory=CanvasStyle)
-    title: TitleStyle = field(default_factory=TitleStyle)
-    lane: LaneStyle = field(default_factory=LaneStyle)
-    event: EventStyle = field(default_factory=EventStyle)
-    timespan: TimespanStyle = field(default_factory=TimespanStyle)
+class GeometrySettings:
+    canvas: CanvasGeometry = field(default_factory=CanvasGeometry)
+    title: TitleGeometry = field(default_factory=TitleGeometry)
+    lane: LaneGeometry = field(default_factory=LaneGeometry)
+    event: EventGeometry = field(default_factory=EventGeometry)
+    timespan: TimespanGeometry = field(default_factory=TimespanGeometry)
 
 
 class ClassNames(StrEnum):
