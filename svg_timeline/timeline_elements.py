@@ -38,6 +38,11 @@ class TimeLineCoordinates:
                                       start_date=start_date, end_date=end_date)
 
     @property
+    def style(self) -> TimelineStyle:
+        """ styling information for the timeline """
+        return self._style
+
+    @property
     def first(self) -> datetime:
         """ first date of the timeline """
         return self._first
