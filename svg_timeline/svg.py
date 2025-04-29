@@ -4,8 +4,7 @@ from pathlib import Path
 from textwrap import indent
 from typing import Optional
 
-from svg_timeline.css import CascadeStyleSheet
-from svg_timeline.style import DEFAULT_CSS
+from svg_timeline.css import CascadeStyleSheet, DEFAULT_CSS
 
 _INDENT = 2 * ' '
 
