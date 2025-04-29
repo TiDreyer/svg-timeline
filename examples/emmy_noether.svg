@@ -35,12 +35,6 @@ path.minor_tic {
 path.event {
   stroke-width: 2pt;
 }
-circle.event {
-  radius: 3pt;
-}
-path.timespan {
-  stroke-width: 1pt;
-}
 text.timespan {
   font-size: 9pt;
 }

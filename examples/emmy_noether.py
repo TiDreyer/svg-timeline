@@ -1,10 +1,11 @@
 """ Example script to create a timeline of Emmy Noether's life """
 from pathlib import Path
 
-from svg_timeline.style import Defaults, Colors
+from svg_timeline.css import Colors
 from svg_timeline.time_calculations import TimeSpacingPerDecade, TimeSpacingPerYear, dt
 from svg_timeline.timeline import TimelinePlot
-from svg_timeline.timeline_elements import TimeLineCoordinates, Event, TimeSpan, ConnectedEvents, DatedImage
+from svg_timeline.timeline_elements import Event, TimeSpan, ConnectedEvents, DatedImage
+from svg_timeline.timeline_geometry import TimeLineGeometry, GeometrySettings
 
 
 def main():
@@ -13,14 +14,19 @@ def main():
     birth = dt('1882-03-23')
     death = dt('1935-04-14')
 
-    # setting what percentage of the page width the arrow occupies
-    Defaults.arrow_y_position = 0.85
+    style = GeometrySettings()
+    style.canvas.width = 1000
+    style.canvas.height = 300
+    # setting at what vertical position the arrow is drawn
+    style.lane.lane_zero_y = 0.85
+    # white text is easier to read on colored timespans
+    style.timespan.text_color = 'white'
 
     # initializing the timeline plot object
-    coords = TimeLineCoordinates(
+    coords = TimeLineGeometry(
         start_date=dt('1879-12-01'),
         end_date=dt('1935-12-31'),
-        canvas_size=(1000, 300),
+        style=style,
     )
     timeline = TimelinePlot(
         coordinates=coords,
@@ -30,9 +36,6 @@ def main():
 
     # adding a title to the plot
     timeline.add_title("Emmy Noether")
-
-    # white text is easier to read on colored timespans
-    Defaults.timespan_text_color = 'white'
 
     # adding the image of Emmy Noether
     _image_path = Path(__file__).parent.joinpath('473px-Noether.jpeg')
