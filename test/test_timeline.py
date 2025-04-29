@@ -15,7 +15,6 @@ def test_connected_events_raises_on_length():
     coords = TimeLineCoordinates(
         start_date=start_date,
         end_date=end_date,
-        canvas_size=(1000, 300),
     )
     tlp = TimelinePlot(
         coordinates=coords,

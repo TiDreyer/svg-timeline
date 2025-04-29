@@ -19,21 +19,18 @@ class TimeLineCoordinates:
     def __init__(self,
                  start_date: datetime,
                  end_date: datetime,
-                 canvas_size: tuple[int, int],
                  style: Optional[TimelineStyle] = None,
                  ):
         """
         :param start_date: the lower boundary of the timeline
         :param end_date: the upper boundary of the timeline
-        :param canvas_size: the width and height of the canvas in pixel
         """
         self._style = style or TimelineStyle()
         self._first = start_date
         self._last = end_date
-        self._width, self._height = canvas_size
-        y = self._style.arrow.y_position * self._height
-        x1 = self._style.arrow.x_padding * self._width
-        x2 = (1 - self._style.arrow.x_padding) * self._width
+        y = self._style.arrow.y_position * self._style.canvas.height
+        x1 = self._style.arrow.x_padding * self._style.canvas.width
+        x2 = (1 - self._style.arrow.x_padding) * self._style.canvas.width
         self._gradient = TimeGradient(source=Vector(x1, y), target=Vector(x2, y),
                                       start_date=start_date, end_date=end_date)
 
@@ -55,12 +52,12 @@ class TimeLineCoordinates:
     @property
     def width(self) -> int:
         """ full width of the canvas """
-        return self._width
+        return self._style.canvas.width
 
     @property
     def height(self) -> int:
         """ full height of the canvas """
-        return self._height
+        return self._style.canvas.height
 
     @property
     def lane_normal(self) -> Vector:
