@@ -52,7 +52,7 @@ def test_svg_style_section():
             'text-anchor': 'middle',
         },
     }
-    svg = SVG(width=800, height=600, style=style)
+    svg = SVG(width=800, height=600, css=style)
     style_section = dedent('''\
     <style>
     svg {
@@ -129,7 +129,7 @@ def test_svg_full():
         SvgElement('a', {'a1': 'hello', 'a2': 'world'}, 'asdf'),
         SvgElement('b', {'b1': 'hello', 'b2': 'world'}),
     ]
-    svg = SVG(width=800, height=600, style=style, elements=elements, definitions=definitions)
+    svg = SVG(width=800, height=600, css=style, elements=elements, definitions=definitions)
     full = dedent('''\
     <?xml version="1.0" encoding="UTF-8"?>
     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"

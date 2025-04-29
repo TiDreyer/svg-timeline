@@ -4,6 +4,7 @@ from pathlib import Path
 from textwrap import indent
 from typing import Optional
 
+from svg_timeline.css import CascadeStyleSheet
 
 _INDENT = 2 * ' '
 
@@ -104,12 +105,12 @@ class SVG:
     and save them into a .svg along with the necessary meta-data
     """
     def __init__(self, width: int, height: int,
-                 style: Optional[dict[str, dict[str, str]]] = None,
+                 css: Optional[CascadeStyleSheet] = None,
                  elements: Optional[list[SvgElement]] = None,
                  definitions: Optional[list[SvgElement]] = None):
         self.width = width
         self.height = height
-        self.style = style or {}
+        self.css = css or CascadeStyleSheet()
         self.elements = elements or []
         self.defs = definitions or []
 
@@ -129,7 +130,7 @@ class SVG:
     def style_section(self) -> str:
         """ style section lines of the .svg file """
         style_section = '<style>\n'
-        for selector, props in self.style.items():
+        for selector, props in self.css.items():
             style_section += f'{selector} {{\n'
             for name, value in props.items():
                 style_section += f'{_INDENT}{name}: {value};\n'

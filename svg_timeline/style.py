@@ -2,6 +2,8 @@
 from dataclasses import dataclass
 from enum import StrEnum
 
+from svg_timeline.css import CascadeStyleSheet
+
 
 @dataclass
 class __TimelineStyle:
@@ -46,7 +48,7 @@ class Colors(StrEnum):
     COLOR_E = '#ffa600'
 
 
-DEFAULT_CSS = {
+DEFAULT_CSS = CascadeStyleSheet({
     'rect.background': {
         'fill': 'white',
     },
@@ -92,7 +94,7 @@ DEFAULT_CSS = {
     f'path.{ClassNames.IMAGE}': {
         'stroke-width': '2pt',
     },
-}
+})
 
 for __COLOR in Colors:
     __SELECTOR = f'path.{__COLOR.name.lower()}, rect.{__COLOR.name.lower()}, circle.{__COLOR.name.lower()}'
