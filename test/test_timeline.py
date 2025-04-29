@@ -4,6 +4,7 @@ from pytest import raises
 
 from svg_timeline.timeline import TimelinePlot
 from svg_timeline.time_calculations import TimeSpacingPerYear
+from svg_timeline.timeline_elements import TimeLineCoordinates
 
 
 def test_connected_events_raises_on_length():
@@ -11,9 +12,13 @@ def test_connected_events_raises_on_length():
     otherwise the call should raise a RuntimeError """
     start_date = datetime.fromisoformat('2000-01-01')
     end_date = datetime.fromisoformat('2010-12-31')
-    tlp = TimelinePlot(
+    coords = TimeLineCoordinates(
         start_date=start_date,
         end_date=end_date,
+        canvas_size=(1000, 300),
+    )
+    tlp = TimelinePlot(
+        coordinates=coords,
         time_spacing=TimeSpacingPerYear(start_date, end_date),
     )
     # first correct usage examples:
