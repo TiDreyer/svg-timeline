@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Optional
 
 from svg_timeline.geometry import Vector
-from svg_timeline.style import Defaults, ClassNames
+from svg_timeline.style import TimelineStyle, ClassNames
 from svg_timeline.svg import SvgGroup
 from svg_timeline.svg_primitives import Line, Text, Circle, Image, Rectangle
 from svg_timeline.time_calculations import TimeGradient, TimeSpacing
@@ -20,18 +20,20 @@ class TimeLineCoordinates:
                  start_date: datetime,
                  end_date: datetime,
                  canvas_size: tuple[int, int],
+                 style: Optional[TimelineStyle] = None,
                  ):
         """
         :param start_date: the lower boundary of the timeline
         :param end_date: the upper boundary of the timeline
         :param canvas_size: the width and height of the canvas in pixel
         """
+        self._style = style or TimelineStyle()
         self._first = start_date
         self._last = end_date
         self._width, self._height = canvas_size
-        y = Defaults.arrow_y_position * self._height
-        x1 = Defaults.arrow_x_padding * self._width
-        x2 = (1 - Defaults.arrow_x_padding) * self._width
+        y = self._style.arrow_y_position * self._height
+        x1 = self._style.arrow_x_padding * self._width
+        x2 = (1 - self._style.arrow_x_padding) * self._width
         self._gradient = TimeGradient(source=Vector(x1, y), target=Vector(x2, y),
                                       start_date=start_date, end_date=end_date)
 
@@ -67,13 +69,13 @@ class TimeLineCoordinates:
         (default: on the time arrow)
         """
         date_coord = self._gradient.date_to_coord(date)
-        lane_point = date_coord + lane * Defaults.lane_width * self.lane_normal
+        lane_point = date_coord + lane * self._style.lane_width * self.lane_normal
         return lane_point
 
 
 class TimeLineElement(ABC):
     """ interface definition for timeline elements """
-    def svg(self, coord: TimeLineCoordinates) -> SvgGroup:
+    def svg(self, coord: TimeLineCoordinates, style: TimelineStyle) -> SvgGroup:
         raise NotImplementedError
 
 
@@ -83,11 +85,11 @@ class Title(TimeLineElement):
     text: str
     classes: Classes = None
 
-    def svg(self, coord: TimeLineCoordinates) -> SvgGroup:
+    def svg(self, coord: TimeLineCoordinates, style: TimelineStyle) -> SvgGroup:
         classes = self.classes or []
         classes += [ClassNames.TITLE]
-        text_coord = Vector(x=int(coord.width * Defaults.title_x_position),
-                            y=int(coord.height * Defaults.title_y_position))
+        text_coord = Vector(x=int(coord.width * style.title_x_position),
+                            y=int(coord.height * style.title_y_position))
         title = SvgGroup(
             [Text(text_coord, self.text, classes=classes)],
             exact_id='title'
@@ -102,7 +104,7 @@ class TimeArrow(TimeLineElement):
     minor_tics: Optional[TimeSpacing] = None
     classes: Classes = None
 
-    def svg(self, coord: TimeLineCoordinates) -> SvgGroup:
+    def svg(self, coord: TimeLineCoordinates, style: TimelineStyle) -> SvgGroup:
         timeline = SvgGroup(id_base='timeline')
         source = coord.as_coord(coord.first, lane=0)
         target = coord.as_coord(coord.last, lane=0)
@@ -136,7 +138,7 @@ class Event(TimeLineElement):
     lane: float = 1
     classes: Classes = None
 
-    def svg(self, coord: TimeLineCoordinates) -> SvgGroup:
+    def svg(self, coord: TimeLineCoordinates, style: TimelineStyle) -> SvgGroup:
         classes = self.classes or []
         classes += [ClassNames.EVENT]
         event_base = coord.as_coord(self.date)
@@ -144,7 +146,7 @@ class Event(TimeLineElement):
         text_coord = coord.as_coord(self.date, lane=(self.lane + 0.5 if self.lane >= 0 else self.lane - 0.5))
         event = SvgGroup([
             Line(source=event_base, target=event_end, classes=classes),
-            Circle(center=event_end, radius=Defaults.event_dot_radius, classes=classes),
+            Circle(center=event_end, radius=style.event_dot_radius, classes=classes),
             Text(text_coord, self.text, classes=classes),
         ], id_base='event')
         return event
@@ -164,7 +166,7 @@ class ConnectedEvents(TimeLineElement):
         if not len(self.dates) == len(self.labels) == len(self.classes):
             raise ValueError("dates, labels and classes need to be of the same length")
 
-    def svg(self, coord: TimeLineCoordinates) -> SvgGroup:
+    def svg(self, coord: TimeLineCoordinates, style: TimelineStyle) -> SvgGroup:
         lines = SvgGroup([Line(
             source=coord.as_coord(self.dates[i], lane=self.lane),
             target=coord.as_coord(self.dates[i + 1], lane=self.lane),
@@ -172,7 +174,7 @@ class ConnectedEvents(TimeLineElement):
         ) for i in range(len(self.dates)-1)])
         circles = SvgGroup([Circle(
             center=coord.as_coord(self.dates[i], lane=self.lane),
-            radius=Defaults.event_dot_radius,
+            radius=style.event_dot_radius,
             classes=self.classes[i],
         ) for i, label in enumerate(self.labels) if label is not None])
         texts = SvgGroup([Text(
@@ -194,7 +196,7 @@ class DatedImage(TimeLineElement):
     lane: float = 1
     classes: Classes = None
 
-    def svg(self, coord: TimeLineCoordinates) -> SvgGroup:
+    def svg(self, coord: TimeLineCoordinates, style: TimelineStyle) -> SvgGroup:
         classes = self.classes or []
         classes += [ClassNames.IMAGE]
         event_base = coord.as_coord(self.date)
@@ -218,10 +220,10 @@ class TimeSpan(TimeLineElement):
     width: Optional[int] = None
     classes: Classes = None
 
-    def svg(self, coord: TimeLineCoordinates) -> SvgGroup:
+    def svg(self, coord: TimeLineCoordinates, style: TimelineStyle) -> SvgGroup:
         classes = self.classes or []
         classes += [ClassNames.TIMESPAN]
-        width = self.width or Defaults.timespan_width
+        width = self.width or style.timespan_width
         half_width_vector = width/2 * coord.lane_normal
         start_corner = coord.as_coord(self.start_date, lane=self.lane) + half_width_vector
         end_corner = coord.as_coord(self.end_date, lane=self.lane) - half_width_vector
@@ -231,11 +233,11 @@ class TimeSpan(TimeLineElement):
             Rectangle(start_corner, end_corner, classes=classes),
             Text(text_coord, self.text, classes=classes),
         ], id_base='timespan')
-        if Defaults.timespan_use_start_stilt:
+        if style.timespan_use_start_stilt:
             on_timeline = coord.as_coord(self.start_date, lane=0)
             bottom_timespan = coord.as_coord(self.start_date, lane=self.lane) - half_width_vector
             timespan.append(Line(source=on_timeline, target=bottom_timespan, classes=classes))
-        if Defaults.timespan_use_end_stilt:
+        if style.timespan_use_end_stilt:
             on_timeline = coord.as_coord(self.end_date, lane=0)
             bottom_timespan = coord.as_coord(self.end_date, lane=self.lane) - half_width_vector
             timespan.append(Line(source=on_timeline, target=bottom_timespan, classes=classes))

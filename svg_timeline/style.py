@@ -6,7 +6,7 @@ from svg_timeline.css import CascadeStyleSheet
 
 
 @dataclass
-class __TimelineStyle:
+class TimelineStyle:
     title_x_position: float = 1/2
     title_y_position: float = 1/17
     title_size_factor: float = 1/15
@@ -21,9 +21,6 @@ class __TimelineStyle:
     timespan_width: float = 18
     timespan_use_start_stilt: bool = False
     timespan_use_end_stilt: bool = False
-
-
-Defaults = __TimelineStyle()
 
 
 class ClassNames(StrEnum):

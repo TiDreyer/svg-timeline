@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Optional
 
 from svg_timeline.geometry import Vector
+from svg_timeline.style import TimelineStyle
 from svg_timeline.svg import SVG, SvgGroup
 from svg_timeline.svg_primitives import Rectangle
 from svg_timeline.time_calculations import TimeSpacing
@@ -12,13 +13,16 @@ from svg_timeline.timeline_elements import TimeLineCoordinates, Event, Connected
 from svg_timeline._warnings import deprecated
 
 
+
 class TimelinePlot:
     """ representation of a timeline plot
     dates, timespans etc. can be added to this timeline via method calls
     """
     def __init__(self, coordinates: TimeLineCoordinates,
                  time_spacing: TimeSpacing, minor_tics: Optional[TimeSpacing] = None,
+                 style: Optional[TimelineStyle] = None,
                  ):
+        self._style = style or TimelineStyle()
         self._layer: dict[int, list[TimeLineElement]] = dict()
         self._coordinates = coordinates
         self.add_element(TimeArrow(major_tics=time_spacing, minor_tics=minor_tics), layer=0)
@@ -72,6 +76,6 @@ class TimelinePlot:
         for i_layer in sorted(self._layer.keys()):
             layer = SvgGroup(exact_id=f'layer_{i_layer:03}')
             for element in self._layer[i_layer]:
-                layer.append(element.svg(self._coordinates))
+                layer.append(element.svg(self._coordinates, self._style))
             svg.elements.append(layer)
         svg.save_as(file_path=file_path)
