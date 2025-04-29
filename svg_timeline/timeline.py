@@ -8,7 +8,8 @@ from svg_timeline.svg import SVG, SvgGroup
 from svg_timeline.svg_primitives import Rectangle
 from svg_timeline.time_calculations import TimeSpacing
 from svg_timeline.timeline_elements import TimeLineElement, Title, TimeArrow
-from svg_timeline.timeline_elements import TimeLineGeometry, Event, ConnectedEvents, DatedImage, TimeSpan
+from svg_timeline.timeline_elements import Event, ConnectedEvents, DatedImage, TimeSpan
+from svg_timeline.timeline_geometry import TimeLineGeometry
 from svg_timeline._warnings import deprecated
 
 

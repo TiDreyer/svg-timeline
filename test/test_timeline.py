@@ -4,7 +4,7 @@ from pytest import raises
 
 from svg_timeline.timeline import TimelinePlot
 from svg_timeline.time_calculations import TimeSpacingPerYear
-from svg_timeline.timeline_elements import TimeLineGeometry
+from svg_timeline.timeline_geometry import TimeLineGeometry
 
 
 def test_connected_events_raises_on_length():
