@@ -28,9 +28,9 @@ class TimeLineCoordinates:
         self._style = style or TimelineStyle()
         self._first = start_date
         self._last = end_date
-        y = self._style.arrow.y_position * self._style.canvas.height
-        x1 = self._style.arrow.x_padding * self._style.canvas.width
-        x2 = (1 - self._style.arrow.x_padding) * self._style.canvas.width
+        y = self._style.lane.lane_zero_y * self._style.canvas.height
+        x1 = self._style.canvas.x_padding * self._style.canvas.width
+        x2 = (1 - self._style.canvas.x_padding) * self._style.canvas.width
         self._gradient = TimeGradient(source=Vector(x1, y), target=Vector(x2, y),
                                       start_date=start_date, end_date=end_date)
 

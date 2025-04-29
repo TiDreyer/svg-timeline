@@ -16,17 +16,13 @@ class TitleStyle:
 class CanvasStyle:
     height: int = 800
     width: int = 1000
+    x_padding: float = 0.03
 
 
 @dataclass
 class LaneStyle:
+    lane_zero_y: float = 0.9
     width: float = 30
-
-
-@dataclass
-class ArrowStyle:
-    y_position: float = 0.9
-    x_padding: float = 0.03
 
 
 @dataclass
@@ -46,7 +42,6 @@ class TimelineStyle:
     canvas: CanvasStyle = field(default_factory=CanvasStyle)
     title: TitleStyle = field(default_factory=TitleStyle)
     lane: LaneStyle = field(default_factory=LaneStyle)
-    arrow: ArrowStyle = field(default_factory=ArrowStyle)
     event: EventStyle = field(default_factory=EventStyle)
     timespan: TimespanStyle = field(default_factory=TimespanStyle)
 
