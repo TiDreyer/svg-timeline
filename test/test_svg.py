@@ -1,6 +1,7 @@
 """ test cases for the classes defined in the svg module """
 from textwrap import dedent
 
+from svg_timeline.css import CascadeStyleSheet
 from svg_timeline.svg import SVG, SvgElement
 
 def test_svg_element_getters():
@@ -42,7 +43,7 @@ def test_svg_header():
 
 
 def test_svg_style_section():
-    style = {
+    style = CascadeStyleSheet({
         'svg': {'background': 'white'},
         'text': {
             'font-family': 'Liberation Sans',
@@ -51,7 +52,7 @@ def test_svg_style_section():
             'dominant-baseline': 'central',
             'text-anchor': 'middle',
         },
-    }
+    })
     svg = SVG(width=800, height=600, css=style)
     style_section = dedent('''\
     <style>
@@ -111,7 +112,7 @@ def test_svg_footer():
 
 
 def test_svg_full():
-    style = {
+    style = CascadeStyleSheet({
         'svg': {'background': 'white'},
         'text': {
             'font-family': 'Liberation Sans',
@@ -120,7 +121,7 @@ def test_svg_full():
             'dominant-baseline': 'central',
             'text-anchor': 'middle',
         },
-    }
+    })
     definitions = [
         SvgElement('x', {'x1': 'hello', 'x2': 'world'}, 'asdf'),
         SvgElement('y', {'y1': 'hello', 'y2': 'world'}),
