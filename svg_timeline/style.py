@@ -1,26 +1,47 @@
 """ Singleton to store styling defaults """
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from svg_timeline.css import CascadeStyleSheet
 
 
 @dataclass
+class TitleStyle:
+    x_position: float = 1/2
+    y_position: float = 1/17
+    size_factor: float = 1/15
+
+
+@dataclass
+class LaneStyle:
+    width: float = 30
+
+
+@dataclass
+class ArrowStyle:
+    y_position: float = 0.9
+    x_padding: float = 0.03
+
+
+@dataclass
+class EventStyle:
+    dot_radius: float = 3
+
+
+@dataclass
+class TimespanStyle:
+    width: float = 18
+    use_start_stilt: bool = False
+    use_end_stilt: bool = False
+
+
+@dataclass
 class TimelineStyle:
-    title_x_position: float = 1/2
-    title_y_position: float = 1/17
-    title_size_factor: float = 1/15
-
-    lane_width: float = 30
-
-    arrow_y_position: float = 0.9
-    arrow_x_padding: float = 0.03
-
-    event_dot_radius: float = 3
-
-    timespan_width: float = 18
-    timespan_use_start_stilt: bool = False
-    timespan_use_end_stilt: bool = False
+    title: TitleStyle = field(default_factory=TitleStyle)
+    lane: LaneStyle = field(default_factory=LaneStyle)
+    arrow: ArrowStyle = field(default_factory=ArrowStyle)
+    event: EventStyle = field(default_factory=EventStyle)
+    timespan: TimespanStyle = field(default_factory=TimespanStyle)
 
 
 class ClassNames(StrEnum):

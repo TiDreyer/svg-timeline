@@ -31,9 +31,9 @@ class TimeLineCoordinates:
         self._first = start_date
         self._last = end_date
         self._width, self._height = canvas_size
-        y = self._style.arrow_y_position * self._height
-        x1 = self._style.arrow_x_padding * self._width
-        x2 = (1 - self._style.arrow_x_padding) * self._width
+        y = self._style.arrow.y_position * self._height
+        x1 = self._style.arrow.x_padding * self._width
+        x2 = (1 - self._style.arrow.x_padding) * self._width
         self._gradient = TimeGradient(source=Vector(x1, y), target=Vector(x2, y),
                                       start_date=start_date, end_date=end_date)
 
@@ -69,7 +69,7 @@ class TimeLineCoordinates:
         (default: on the time arrow)
         """
         date_coord = self._gradient.date_to_coord(date)
-        lane_point = date_coord + lane * self._style.lane_width * self.lane_normal
+        lane_point = date_coord + lane * self._style.lane.width * self.lane_normal
         return lane_point
 
 
@@ -88,8 +88,8 @@ class Title(TimeLineElement):
     def svg(self, coord: TimeLineCoordinates, style: TimelineStyle) -> SvgGroup:
         classes = self.classes or []
         classes += [ClassNames.TITLE]
-        text_coord = Vector(x=int(coord.width * style.title_x_position),
-                            y=int(coord.height * style.title_y_position))
+        text_coord = Vector(x=int(coord.width * style.title.x_position),
+                            y=int(coord.height * style.title.y_position))
         title = SvgGroup(
             [Text(text_coord, self.text, classes=classes)],
             exact_id='title'
@@ -146,7 +146,7 @@ class Event(TimeLineElement):
         text_coord = coord.as_coord(self.date, lane=(self.lane + 0.5 if self.lane >= 0 else self.lane - 0.5))
         event = SvgGroup([
             Line(source=event_base, target=event_end, classes=classes),
-            Circle(center=event_end, radius=style.event_dot_radius, classes=classes),
+            Circle(center=event_end, radius=style.event.dot_radius, classes=classes),
             Text(text_coord, self.text, classes=classes),
         ], id_base='event')
         return event
@@ -174,7 +174,7 @@ class ConnectedEvents(TimeLineElement):
         ) for i in range(len(self.dates)-1)])
         circles = SvgGroup([Circle(
             center=coord.as_coord(self.dates[i], lane=self.lane),
-            radius=style.event_dot_radius,
+            radius=style.event.dot_radius,
             classes=self.classes[i],
         ) for i, label in enumerate(self.labels) if label is not None])
         texts = SvgGroup([Text(
@@ -223,7 +223,7 @@ class TimeSpan(TimeLineElement):
     def svg(self, coord: TimeLineCoordinates, style: TimelineStyle) -> SvgGroup:
         classes = self.classes or []
         classes += [ClassNames.TIMESPAN]
-        width = self.width or style.timespan_width
+        width = self.width or style.timespan.width
         half_width_vector = width/2 * coord.lane_normal
         start_corner = coord.as_coord(self.start_date, lane=self.lane) + half_width_vector
         end_corner = coord.as_coord(self.end_date, lane=self.lane) - half_width_vector
@@ -233,11 +233,11 @@ class TimeSpan(TimeLineElement):
             Rectangle(start_corner, end_corner, classes=classes),
             Text(text_coord, self.text, classes=classes),
         ], id_base='timespan')
-        if style.timespan_use_start_stilt:
+        if style.timespan.use_start_stilt:
             on_timeline = coord.as_coord(self.start_date, lane=0)
             bottom_timespan = coord.as_coord(self.start_date, lane=self.lane) - half_width_vector
             timespan.append(Line(source=on_timeline, target=bottom_timespan, classes=classes))
-        if style.timespan_use_end_stilt:
+        if style.timespan.use_end_stilt:
             on_timeline = coord.as_coord(self.end_date, lane=0)
             bottom_timespan = coord.as_coord(self.end_date, lane=self.lane) - half_width_vector
             timespan.append(Line(source=on_timeline, target=bottom_timespan, classes=classes))
