@@ -131,11 +131,7 @@ class SVG:
     def style_section(self) -> str:
         """ style section lines of the .svg file """
         style_section = '<style>\n'
-        for selector, props in self.css.items():
-            style_section += f'{selector} {{\n'
-            for name, value in props.items():
-                style_section += f'{_INDENT}{name}: {value};\n'
-            style_section += '}\n'
+        style_section += self.css.compile(indent=_INDENT, line_break='\n')
         style_section += '</style>\n'
         return style_section
 

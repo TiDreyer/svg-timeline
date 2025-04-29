@@ -25,3 +25,13 @@ class CascadeStyleSheet(dict):
                 raise TypeError(f"Invalid subkey {sub_key} in entry {key}. All CSS keys must be strings.")
             if not isinstance(sub_value, str):
                 raise TypeError(f"Invalid value for {sub_key} in entry {key}. All CSS values must be strings.")
+
+    def compile(self, indent='', line_break='\n') -> str:
+        """ compile the contained style definition into a css file """
+        css_section = ""
+        for selector, props in self.items():
+            css_section += f'{selector} {{{line_break}'
+            for name, value in props.items():
+                css_section += f'{indent}{name}: {value};{line_break}'
+            css_section += f'}}{line_break}'
+        return css_section
