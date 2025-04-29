@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import Optional
 
 from svg_timeline.geometry import Vector
-from svg_timeline.style import DEFAULT_CSS
 from svg_timeline.svg import SVG, SvgGroup
 from svg_timeline.svg_primitives import Rectangle
 from svg_timeline.time_calculations import TimeSpacing
@@ -67,7 +66,7 @@ class TimelinePlot:
     def save(self, file_path: Path):
         """ Save an SVG of the timeline under the given file path """
         width, height = self._coordinates.width, self._coordinates.height
-        svg = SVG(width, height, style=DEFAULT_CSS)
+        svg = SVG(width, height)
         # first, set a white background
         svg.elements.append(Rectangle(Vector(0, 0), Vector(width, height), classes=['background']))
         for i_layer in sorted(self._layer.keys()):

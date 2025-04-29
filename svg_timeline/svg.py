@@ -5,6 +5,7 @@ from textwrap import indent
 from typing import Optional
 
 from svg_timeline.css import CascadeStyleSheet
+from svg_timeline.style import DEFAULT_CSS
 
 _INDENT = 2 * ' '
 
@@ -110,7 +111,7 @@ class SVG:
                  definitions: Optional[list[SvgElement]] = None):
         self.width = width
         self.height = height
-        self.css = css or CascadeStyleSheet()
+        self.css = css or DEFAULT_CSS
         self.elements = elements or []
         self.defs = definitions or []
 
