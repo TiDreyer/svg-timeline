@@ -1,27 +1,44 @@
-""" Singleton to store styling defaults """
-from dataclasses import dataclass
+""" base classes for handling CSS """
 from enum import StrEnum
 
 
-@dataclass
-class __TimelineStyle:
-    title_x_position: float = 1/2
-    title_y_position: float = 1/17
-    title_size_factor: float = 1/15
+class CascadeStyleSheet(dict):
+    """ basic representation of a CSS """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.full_validate()
 
-    lane_width: float = 30
+    def full_validate(self):
+        """ check that the object represents valid CSS """
+        for key, value in self.items():
+            self.__validate_one_entry(key, value)
 
-    arrow_y_position: float = 0.9
-    arrow_x_padding: float = 0.03
+    def __setitem__(self, key, value):
+        self.__validate_one_entry(key, value)
+        super().__setitem__(key, value)
 
-    event_dot_radius: float = 3
+    @staticmethod
+    def __validate_one_entry(key, value):
+        if not isinstance(key, str):
+            raise TypeError(f"Invalid key {key}. All CSS keys must be strings.")
+        if not isinstance(value, dict):
+            raise TypeError(f"Invalid entry for key {key}. All CSS entries must be dicts.")
+        for sub_key, sub_value in value.items():
+            if not isinstance(sub_key, str):
+                raise TypeError(f"Invalid subkey {sub_key} in entry {key}. All CSS keys must be strings.")
+            if not isinstance(sub_value, str):
+                raise TypeError(f"Invalid value for {sub_key} in entry {key}. All CSS values must be strings.")
 
-    timespan_width: float = 18
-    timespan_use_start_stilt: bool = False
-    timespan_use_end_stilt: bool = False
-
-
-Defaults = __TimelineStyle()
+    def compile(self, indent='', line_break='\n') -> str:
+        """ compile the contained style definition into a css file """
+        css_section = f'{line_break or " "}'
+        for selector, props in self.items():
+            css_section += f'{selector} {{{line_break}'
+            css_section += f'{line_break or " "}'.join(
+                f'{indent}{name}: {value};' for name, value in props.items()
+            )
+            css_section += f'{line_break or " "}}}{line_break or " "}'
+        return css_section
 
 
 class ClassNames(StrEnum):
@@ -46,7 +63,7 @@ class Colors(StrEnum):
     COLOR_E = '#ffa600'
 
 
-DEFAULT_CSS = {
+DEFAULT_CSS = CascadeStyleSheet({
     'rect.background': {
         'fill': 'white',
     },
@@ -80,19 +97,13 @@ DEFAULT_CSS = {
     f'path.{ClassNames.EVENT}': {
         'stroke-width': '2pt',
     },
-    f'circle.{ClassNames.EVENT}': {
-        'radius': '3pt',
-    },
-    f'path.{ClassNames.TIMESPAN}': {
-        'stroke-width': '1pt',
-    },
     f'text.{ClassNames.TIMESPAN}': {
         'font-size': '9pt',
     },
     f'path.{ClassNames.IMAGE}': {
         'stroke-width': '2pt',
     },
-}
+})
 
 for __COLOR in Colors:
     __SELECTOR = f'path.{__COLOR.name.lower()}, rect.{__COLOR.name.lower()}, circle.{__COLOR.name.lower()}'

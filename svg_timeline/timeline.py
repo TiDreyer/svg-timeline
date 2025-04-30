@@ -4,20 +4,21 @@ from pathlib import Path
 from typing import Optional
 
 from svg_timeline.geometry import Vector
-from svg_timeline.style import DEFAULT_CSS
 from svg_timeline.svg import SVG, SvgGroup
 from svg_timeline.svg_primitives import Rectangle
 from svg_timeline.time_calculations import TimeSpacing
 from svg_timeline.timeline_elements import TimeLineElement, Title, TimeArrow
-from svg_timeline.timeline_elements import TimeLineCoordinates, Event, ConnectedEvents, DatedImage, TimeSpan
+from svg_timeline.timeline_elements import Event, ConnectedEvents, DatedImage, TimeSpan
+from svg_timeline.timeline_geometry import TimeLineGeometry
 from svg_timeline._warnings import deprecated
+
 
 
 class TimelinePlot:
     """ representation of a timeline plot
     dates, timespans etc. can be added to this timeline via method calls
     """
-    def __init__(self, coordinates: TimeLineCoordinates,
+    def __init__(self, coordinates: TimeLineGeometry,
                  time_spacing: TimeSpacing, minor_tics: Optional[TimeSpacing] = None,
                  ):
         self._layer: dict[int, list[TimeLineElement]] = dict()
@@ -67,12 +68,12 @@ class TimelinePlot:
     def save(self, file_path: Path):
         """ Save an SVG of the timeline under the given file path """
         width, height = self._coordinates.width, self._coordinates.height
-        svg = SVG(width, height, style=DEFAULT_CSS)
+        svg = SVG(width, height)
         # first, set a white background
         svg.elements.append(Rectangle(Vector(0, 0), Vector(width, height), classes=['background']))
         for i_layer in sorted(self._layer.keys()):
             layer = SvgGroup(exact_id=f'layer_{i_layer:03}')
             for element in self._layer[i_layer]:
-                layer.append(element.svg(self._coordinates))
+                layer.append(element.svg(self._coordinates, self._coordinates.style))
             svg.elements.append(layer)
         svg.save_as(file_path=file_path)
