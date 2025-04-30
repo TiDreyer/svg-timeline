@@ -96,12 +96,6 @@ DEFAULT_CSS = CascadeStyleSheet({
     f'path.{ClassNames.EVENT}': {
         'stroke-width': '2pt',
     },
-    f'circle.{ClassNames.EVENT}': {
-        'radius': '3pt',
-    },
-    f'path.{ClassNames.TIMESPAN}': {
-        'stroke-width': '1pt',
-    },
     f'text.{ClassNames.TIMESPAN}': {
         'font-size': '9pt',
     },
