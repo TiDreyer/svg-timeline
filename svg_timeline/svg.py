@@ -129,8 +129,8 @@ class SVG:
     @property
     def style_section(self) -> str:
         """ style section lines of the .svg file """
-        style_section = '<style>\n'
-        style_section += self.css.compile(indent=_INDENT, line_break='\n')
+        style_section = '<style>'
+        style_section += self.css.compile(indent='  ', line_break='\n')
         style_section += '</style>\n'
         return style_section
 

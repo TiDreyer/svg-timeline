@@ -31,12 +31,13 @@ class CascadeStyleSheet(dict):
 
     def compile(self, indent='', line_break='\n') -> str:
         """ compile the contained style definition into a css file """
-        css_section = ""
+        css_section = f'{line_break or " "}'
         for selector, props in self.items():
             css_section += f'{selector} {{{line_break}'
-            for name, value in props.items():
-                css_section += f'{indent}{name}: {value};{line_break}'
-            css_section += f'}}{line_break}'
+            css_section += f'{line_break or " "}'.join(
+                f'{indent}{name}: {value};' for name, value in props.items()
+            )
+            css_section += f'{line_break or " "}}}{line_break or " "}'
         return css_section
 
 
