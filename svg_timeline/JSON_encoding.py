@@ -1,7 +1,7 @@
 from dataclasses import is_dataclass
 from datetime import datetime
 from enum import Enum
-from json import dumps, JSONEncoder
+from json import dumps, loads, JSONEncoder, JSONDecoder
 from pathlib import Path
 
 from svg_timeline.time_calculations import TimeSpacing
@@ -16,6 +16,12 @@ def save_json(timeline: TimelinePlot, file_path: Path):
     """ Save a JSON representing the timeline under the given file path """
     with open(file_path, 'w') as json_file:
         json_file.write(dumps(timeline, cls=TimeLineEncoder, indent='  '))
+
+
+def load_json(file_path: Path) -> TimelinePlot:
+    """ Load a JSON representing the timeline from the given file path """
+    with open(file_path, 'r') as json_file:
+        return loads(json_file.read(), cls=TimeLineDecoder)
 
 
 class KnownClasses(Enum):
@@ -80,3 +86,30 @@ class TimeLineEncoder(JSONEncoder):
             }
         # Let the base class default method raise the TypeError
         return super().default(obj)
+
+
+class TimeLineDecoder(JSONDecoder):
+    def decode(self, s, **kwargs) -> TimelinePlot:
+        pure_json = super().decode(s, **kwargs)
+        return recursive_decode(pure_json)
+
+
+def recursive_decode(json_object: any) -> any:
+    # depth-first: decode sub-objects before using them to decode this object
+    if isinstance(json_object, dict):
+        for key, value in json_object.items():
+            json_object[key] = recursive_decode(value)
+    if isinstance(json_object, list):
+        for i, value in enumerate(json_object):
+            json_object[i] = recursive_decode(value)
+    # special cases, that can be decoded:
+    if isinstance(json_object, str):
+        try:
+            return datetime.fromisoformat(json_object)
+        except ValueError:
+            pass
+    if isinstance(json_object, dict) and 'type' in json_object:
+        cls = KnownClasses[json_object.pop('type')].value
+        return cls(**json_object)
+    # if it is no special case, return the current representation:
+    return json_object
