@@ -1,7 +1,9 @@
 """ Example script to create a timeline of Emmy Noether's life """
 from pathlib import Path
 
+from svg_timeline.JSON_encoding import save_json, load_json
 from svg_timeline.css import Colors
+from svg_timeline.svg import SvgGroup
 from svg_timeline.time_calculations import TimeSpacingPerDecade, TimeSpacingPerYear, dt
 from svg_timeline.timeline import TimelinePlot
 from svg_timeline.timeline_elements import Event, TimeSpan, ConnectedEvents, DatedImage
@@ -19,23 +21,21 @@ def main():
     style.canvas.height = 300
     # setting at what vertical position the arrow is drawn
     style.lane.lane_zero_y = 0.85
-    # white text is easier to read on colored timespans
-    style.timespan.text_color = 'white'
 
     # initializing the timeline plot object
-    coords = TimeLineGeometry(
+    geometry = TimeLineGeometry(
         start_date=dt('1879-12-01'),
         end_date=dt('1935-12-31'),
         style=style,
     )
-    timeline = TimelinePlot(
-        coordinates=coords,
-        time_spacing=TimeSpacingPerDecade(coords.first, coords.last),
-        minor_tics=TimeSpacingPerYear(coords.first, coords.last),
-    )
+    timeline = TimelinePlot(geometry=geometry)
 
     # adding a title to the plot
     timeline.add_title("Emmy Noether")
+    timeline.add_timearrow(
+        major_tics=TimeSpacingPerDecade(geometry.first, geometry.last),
+        minor_tics=TimeSpacingPerYear(geometry.first, geometry.last),
+    )
 
     # adding the image of Emmy Noether
     _image_path = Path(__file__).parent.joinpath('473px-Noether.jpeg')
@@ -74,6 +74,15 @@ def main():
     # saving the SVG
     svg_path = Path(__file__).parent.joinpath('emmy_noether.svg')
     timeline.save(svg_path)
+
+    # saving as JSON
+    json_path = Path(__file__).parent.joinpath('emmy_noether.json')
+    save_json(timeline, json_path)
+
+    # re-constructing saved plot
+    SvgGroup.id_counters = {}  # reset id-counters
+    new_timeline = load_json(json_path)
+    new_timeline.save(svg_path)
 
 
 if __name__ == '__main__':
