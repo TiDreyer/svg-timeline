@@ -28,6 +28,14 @@ class TimelinePlot:
     def add_element(self, element: TimeLineElement, layer: int = 1) -> None:
         self._layer.setdefault(layer, []).append(element)
 
+    @property
+    def layers(self) -> dict[int, list[TimeLineElement]]:
+        return self._layer
+
+    @property
+    def geometry(self) -> TimeLineGeometry:
+        return self._coordinates
+
     @deprecated(msg="use add_element() instead")
     def add_event(self, date: datetime, text: str,
                   lane: int = 1, classes: Optional[list[str]] = None):
