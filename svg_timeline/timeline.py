@@ -18,23 +18,24 @@ class TimelinePlot:
     """ representation of a timeline plot
     dates, timespans etc. can be added to this timeline via method calls
     """
-    def __init__(self, coordinates: TimeLineGeometry,
+    def __init__(self, geometry: TimeLineGeometry,
                  time_spacing: TimeSpacing, minor_tics: Optional[TimeSpacing] = None,
+                 layers: Optional[dict[int, list[TimeLineElement]]] = None
                  ):
-        self._layer: dict[int, list[TimeLineElement]] = dict()
-        self._coordinates = coordinates
+        self._layers: dict[int, list[TimeLineElement]] = layers or dict()
+        self._geometry = geometry
         self.add_element(TimeArrow(major_tics=time_spacing, minor_tics=minor_tics), layer=0)
 
     def add_element(self, element: TimeLineElement, layer: int = 1) -> None:
-        self._layer.setdefault(layer, []).append(element)
+        self._layers.setdefault(layer, []).append(element)
 
     @property
     def layers(self) -> dict[int, list[TimeLineElement]]:
-        return self._layer
+        return self._layers
 
     @property
     def geometry(self) -> TimeLineGeometry:
-        return self._coordinates
+        return self._geometry
 
     @deprecated(msg="use add_element() instead")
     def add_event(self, date: datetime, text: str,
@@ -75,13 +76,13 @@ class TimelinePlot:
 
     def save(self, file_path: Path):
         """ Save an SVG of the timeline under the given file path """
-        width, height = self._coordinates.width, self._coordinates.height
+        width, height = self._geometry.width, self._geometry.height
         svg = SVG(width, height)
         # first, set a white background
         svg.elements.append(Rectangle(Vector(0, 0), Vector(width, height), classes=['background']))
-        for i_layer in sorted(self._layer.keys()):
+        for i_layer in sorted(self._layers.keys()):
             layer = SvgGroup(exact_id=f'layer_{i_layer:03}')
-            for element in self._layer[i_layer]:
-                layer.append(element.svg(self._coordinates, self._coordinates.style))
+            for element in self._layers[i_layer]:
+                layer.append(element.svg(self._geometry, self._geometry.style))
             svg.elements.append(layer)
         svg.save_as(file_path=file_path)

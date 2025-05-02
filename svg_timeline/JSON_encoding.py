@@ -62,8 +62,8 @@ class TimeLineEncoder(JSONEncoder):
         if isinstance(obj, TimeLineGeometry):
             return {
                 "type": KnownClasses(obj.__class__).name,
-                "first": obj.first,
-                "last": obj.last,
+                "start_date": obj.first,
+                "end_date": obj.last,
                 "style": obj.style,
             }
         if isinstance(obj, TimeSpacing):

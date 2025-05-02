@@ -17,7 +17,7 @@ def test_connected_events_raises_on_length():
         end_date=end_date,
     )
     tlp = TimelinePlot(
-        coordinates=coords,
+        geometry=coords,
         time_spacing=TimeSpacingPerYear(start_date, end_date),
     )
     # first correct usage examples:
