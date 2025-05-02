@@ -19,12 +19,10 @@ class TimelinePlot:
     dates, timespans etc. can be added to this timeline via method calls
     """
     def __init__(self, geometry: TimeLineGeometry,
-                 time_spacing: TimeSpacing, minor_tics: Optional[TimeSpacing] = None,
                  layers: Optional[dict[int, list[TimeLineElement]]] = None
                  ):
         self._layers: dict[int, list[TimeLineElement]] = layers or dict()
         self._geometry = geometry
-        self.add_element(TimeArrow(major_tics=time_spacing, minor_tics=minor_tics), layer=0)
 
     def add_element(self, element: TimeLineElement, layer: int = 1) -> None:
         self._layers.setdefault(layer, []).append(element)
@@ -73,6 +71,10 @@ class TimelinePlot:
         """ Add a title that should be printed above the timeline """
         title = Title(text=title, classes=classes)
         self.add_element(title, layer=0)
+
+    def add_timearrow(self, major_tics: TimeSpacing, minor_tics: Optional[TimeSpacing] = None):
+        """ Add a timearrow to the timeline """
+        self.add_element(TimeArrow(major_tics=major_tics, minor_tics=minor_tics), layer=0)
 
     def save(self, file_path: Path):
         """ Save an SVG of the timeline under the given file path """
