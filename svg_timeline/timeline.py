@@ -19,9 +19,13 @@ class TimelinePlot:
     dates, timespans etc. can be added to this timeline via method calls
     """
     def __init__(self, geometry: TimeLineGeometry,
-                 layers: Optional[dict[int, list[TimeLineElement]]] = None
+                 layers: Optional[dict[int|str, list[TimeLineElement]]] = None
                  ):
-        self._layers: dict[int, list[TimeLineElement]] = layers or dict()
+        self._layers: dict[int, list[TimeLineElement]] = dict()
+        if layers is not None:
+            for i_layer, elements in layers.items():
+                layer = self._layers.setdefault(int(i_layer), [])
+                layer += elements
         self._geometry = geometry
 
     def add_element(self, element: TimeLineElement, layer: int = 1) -> None:
