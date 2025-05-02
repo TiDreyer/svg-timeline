@@ -108,6 +108,8 @@ def recursive_decode(json_object: any) -> any:
             return datetime.fromisoformat(json_object)
         except ValueError:
             pass
+    if isinstance(json_object, dict) and json_object.get('type', '') == KnownClasses.Path.name:
+        return Path(json_object['path'])
     if isinstance(json_object, dict) and 'type' in json_object:
         cls = KnownClasses[json_object.pop('type')].value
         return cls(**json_object)
