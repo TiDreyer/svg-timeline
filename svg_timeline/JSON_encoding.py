@@ -54,40 +54,40 @@ class KnownClasses(Enum):
     Path = Path
 
 class TimeLineEncoder(JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, TimelinePlot):
+    def default(self, o):
+        if isinstance(o, TimelinePlot):
             return {
-                "type": KnownClasses(obj.__class__).name,
-                "layers": obj.layers,
-                "geometry": obj.geometry,
+                "type": KnownClasses(o.__class__).name,
+                "layers": o.layers,
+                "geometry": o.geometry,
             }
-        if isinstance(obj, TimeLineGeometry):
+        if isinstance(o, TimeLineGeometry):
             return {
-                "type": KnownClasses(obj.__class__).name,
-                "start_date": obj.first,
-                "end_date": obj.last,
-                "style": obj.style,
+                "type": KnownClasses(o.__class__).name,
+                "start_date": o.first,
+                "end_date": o.last,
+                "style": o.style,
             }
-        if isinstance(obj, TimeSpacing):
+        if isinstance(o, TimeSpacing):
             return {
-                "type": KnownClasses(obj.__class__).name,
-                "start_date": obj.start_date,
-                "end_date": obj.end_date,
+                "type": KnownClasses(o.__class__).name,
+                "start_date": o.start_date,
+                "end_date": o.end_date,
             }
-        if is_dataclass(obj):
+        if is_dataclass(o):
             return {
-                "type": KnownClasses(obj.__class__).name,
-                **{k: v for k, v in obj.__dict__.items()},
+                "type": KnownClasses(o.__class__).name,
+                **{k: v for k, v in o.__dict__.items()},
             }
-        if isinstance(obj, datetime):
-            return obj.isoformat()
-        if isinstance(obj, Path):
+        if isinstance(o, datetime):
+            return o.isoformat()
+        if isinstance(o, Path):
             return {
                 "type": KnownClasses.Path.name,
-                "path": str(obj),
+                "path": str(o),
             }
         # Let the base class default method raise the TypeError
-        return super().default(obj)
+        return super().default(o)
 
 
 class TimeLineDecoder(JSONDecoder):
