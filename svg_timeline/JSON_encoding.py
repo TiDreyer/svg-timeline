@@ -15,14 +15,22 @@ import svg_timeline.time_calculations as tls
 
 def save_json(timeline: TimelinePlot, file_path: Path):
     """ Save a JSON representing the timeline under the given file path """
+    with_meta = {
+        'meta': {
+            'created': datetime.now(),
+            'version': "test",  # TODO
+        },
+        'data': timeline,
+    }
     with open(file_path, 'w', encoding='utf-8') as json_file:
-        json_file.write(dumps(timeline, cls=TimeLineEncoder, indent='  '))
+        json_file.write(dumps(with_meta, cls=TimeLineEncoder, indent='  '))
 
 
 def load_json(file_path: Path) -> TimelinePlot:
     """ Load a JSON representing the timeline from the given file path """
     with open(file_path, 'r', encoding='utf-8') as json_file:
-        return loads(json_file.read(), cls=TimeLineDecoder)
+        with_meta = loads(json_file.read(), cls=TimeLineDecoder)
+    return with_meta['data']
 
 
 class KnownClasses(Enum):
@@ -54,6 +62,7 @@ class KnownClasses(Enum):
     TimeSpacingPerMinute = tls.TimeSpacingPerMinute
     TimeSpacingPerSecond = tls.TimeSpacingPerSecond
     Path = Path
+
 
 class TimeLineEncoder(JSONEncoder):
     """ JSON encoder to serialize timeline specific classes
