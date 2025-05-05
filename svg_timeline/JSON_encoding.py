@@ -25,6 +25,8 @@ def load_json(file_path: Path) -> TimelinePlot:
 
 
 class KnownClasses(Enum):
+    # pylint: disable=invalid-name
+    # (the enum names need to be the class names to allow for easier de-serialization)
     TimelinePlot = TimelinePlot
     TimeLineGeometry = TimeLineGeometry
     GeometrySettings = geo.GeometrySettings
