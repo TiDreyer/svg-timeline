@@ -3,7 +3,6 @@ from datetime import datetime
 from pytest import raises
 
 from svg_timeline.timeline import TimelinePlot
-from svg_timeline.time_calculations import TimeSpacingPerYear
 from svg_timeline.timeline_geometry import TimeLineGeometry
 
 
@@ -16,10 +15,7 @@ def test_connected_events_raises_on_length():
         start_date=start_date,
         end_date=end_date,
     )
-    tlp = TimelinePlot(
-        coordinates=coords,
-        time_spacing=TimeSpacingPerYear(start_date, end_date),
-    )
+    tlp = TimelinePlot(geometry=coords)
     # first correct usage examples:
     tlp.add_connected_events(dates=[start_date, end_date], labels=['adsf', 'asdfas'])
     tlp.add_connected_events(dates=[start_date, end_date], labels=['adsf', 'asdfas'], classes=[[], []])

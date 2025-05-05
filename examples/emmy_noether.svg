@@ -93,6 +93,9 @@ text.color_e_text {
 </style>
 <rect class="background" x="0" y="0" width="1000.0" height="300.0" />
 <g id="layer_000">
+  <g id="title">
+    <text class="title" x="500" y="17">Emmy Noether</text>
+  </g>
   <g id="timeline_001">
     <path class="time_axis" d="M30.0,255.0 L970.0,255.0" />
     <g id="tics_001">
@@ -167,9 +170,6 @@ text.color_e_text {
       <path class="minor_tic" d="M936.5449397060978,255.0 L936.5449397060978,260.0" />
       <path class="minor_tic" d="M953.2954157105893,255.0 L953.2954157105893,260.0" />
     </g>
-  </g>
-  <g id="title">
-    <text class="title" x="500" y="17">Emmy Noether</text>
   </g>
 </g>
 <g id="layer_001">

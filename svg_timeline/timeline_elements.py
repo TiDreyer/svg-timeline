@@ -1,3 +1,4 @@
+""" different elements that can be added to a timeline plot """
 from abc import ABC
 from dataclasses import dataclass
 from datetime import datetime
@@ -17,6 +18,7 @@ Classes = Optional[list[str]]
 class TimeLineElement(ABC):
     """ interface definition for timeline elements """
     def svg(self, coord: TimeLineGeometry, style: GeometrySettings) -> SvgGroup:
+        """ generate the SVG representation of this element """
         raise NotImplementedError
 
 
@@ -27,7 +29,7 @@ class Title(TimeLineElement):
     classes: Classes = None
 
     def svg(self, coord: TimeLineGeometry, style: GeometrySettings) -> SvgGroup:
-        classes = self.classes or []
+        classes = self.classes.copy() if self.classes else []
         classes += [ClassNames.TITLE]
         text_coord = Vector(x=int(coord.width * style.title.x_position),
                             y=int(coord.height * style.title.y_position))
@@ -80,7 +82,7 @@ class Event(TimeLineElement):
     classes: Classes = None
 
     def svg(self, coord: TimeLineGeometry, style: GeometrySettings) -> SvgGroup:
-        classes = self.classes or []
+        classes = self.classes.copy() if self.classes else []
         classes += [ClassNames.EVENT]
         event_base = coord.as_coord(self.date)
         event_end = coord.as_coord(self.date, lane=self.lane)
@@ -138,7 +140,7 @@ class DatedImage(TimeLineElement):
     classes: Classes = None
 
     def svg(self, coord: TimeLineGeometry, style: GeometrySettings) -> SvgGroup:
-        classes = self.classes or []
+        classes = self.classes.copy() if self.classes else []
         classes += [ClassNames.IMAGE]
         event_base = coord.as_coord(self.date)
         event_end = coord.as_coord(self.date, lane=self.lane)
@@ -162,7 +164,7 @@ class TimeSpan(TimeLineElement):
     classes: Classes = None
 
     def svg(self, coord: TimeLineGeometry, style: GeometrySettings) -> SvgGroup:
-        classes = self.classes or []
+        classes = self.classes.copy() if self.classes else []
         classes += [ClassNames.TIMESPAN]
         width = self.width or style.timespan.width
         half_width_vector = width/2 * coord.lane_normal
