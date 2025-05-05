@@ -14,13 +14,13 @@ import svg_timeline.time_calculations as tls
 
 def save_json(timeline: TimelinePlot, file_path: Path):
     """ Save a JSON representing the timeline under the given file path """
-    with open(file_path, 'w') as json_file:
+    with open(file_path, 'w', encoding='utf-8') as json_file:
         json_file.write(dumps(timeline, cls=TimeLineEncoder, indent='  '))
 
 
 def load_json(file_path: Path) -> TimelinePlot:
     """ Load a JSON representing the timeline from the given file path """
-    with open(file_path, 'r') as json_file:
+    with open(file_path, 'r', encoding='utf-8') as json_file:
         return loads(json_file.read(), cls=TimeLineDecoder)
 
 
@@ -77,7 +77,7 @@ class TimeLineEncoder(JSONEncoder):
         if is_dataclass(o):
             return {
                 "type": KnownClasses(o.__class__).name,
-                **{k: v for k, v in o.__dict__.items()},
+                **o.__dict__,
             }
         if isinstance(o, datetime):
             return o.isoformat()
