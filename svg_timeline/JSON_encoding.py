@@ -5,6 +5,7 @@ from enum import Enum
 from json import dumps, loads, JSONEncoder, JSONDecoder
 from pathlib import Path
 
+from svg_timeline import __version__
 from svg_timeline.time_calculations import TimeSpacing
 from svg_timeline.timeline import TimelinePlot
 from svg_timeline.timeline_geometry import TimeLineGeometry
@@ -18,7 +19,7 @@ def save_json(timeline: TimelinePlot, file_path: Path):
     with_meta = {
         'meta': {
             'created': datetime.now(),
-            'version': "test",  # TODO
+            'version': __version__,
         },
         'data': timeline,
     }

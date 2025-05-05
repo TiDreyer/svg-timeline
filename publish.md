@@ -5,12 +5,13 @@ Make sure you are on the latest version of `main`:
 
 Set a new valid version number (see below for details):
 1. Update the version number in `pyproject.toml` to `X.Y.Z`
-2. Complete & rename the `[Unreleased]` section in `CHANGELOG.md`
-3. `git add -u`
-4. `git commit -m "New library version X.Y.Z"`
-5. `git tag "X.Y.Z" -a "New library version X.Y.Z"`
-6. `git push --follow-tags`
-7. Create a new GitHub release
+2. Update the version number in `svg_timeline.__init__.py` to the same value
+3. Complete & rename the `[Unreleased]` section in `CHANGELOG.md`
+4. `git add -u`
+5. `git commit -m "New library version X.Y.Z"`
+6. `git tag "X.Y.Z" -a "New library version X.Y.Z"`
+7. `git push --follow-tags`
+8. Create a new GitHub release
 
 Run these commands manually to build and publish the library:
 1. `poetry build`
