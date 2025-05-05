@@ -29,14 +29,17 @@ class TimelinePlot:
         self._geometry = geometry
 
     def add_element(self, element: TimeLineElement, layer: int = 1) -> None:
+        """ Add an element to one layer of this timeline plot """
         self._layers.setdefault(layer, []).append(element)
 
     @property
     def layers(self) -> dict[int, list[TimeLineElement]]:
+        """ all elements currently registered in this timeline, sorted by layer """
         return self._layers
 
     @property
     def geometry(self) -> TimeLineGeometry:
+        """ the geometry settings of this plot """
         return self._geometry
 
     @deprecated(msg="use add_element() instead")

@@ -1,3 +1,4 @@
+""" functionality for (de-)serializing a timeline as JSON """
 from dataclasses import is_dataclass
 from datetime import datetime
 from enum import Enum
@@ -25,6 +26,7 @@ def load_json(file_path: Path) -> TimelinePlot:
 
 
 class KnownClasses(Enum):
+    """ registry of classes that can be (de-)serialized """
     # pylint: disable=invalid-name
     # (the enum names need to be the class names to allow for easier de-serialization)
     TimelinePlot = TimelinePlot
@@ -54,6 +56,8 @@ class KnownClasses(Enum):
     Path = Path
 
 class TimeLineEncoder(JSONEncoder):
+    """ JSON encoder to serialize timeline specific classes
+    that the default JSONEncoder can't handle """
     def default(self, o):
         if isinstance(o, TimelinePlot):
             return {
@@ -91,12 +95,16 @@ class TimeLineEncoder(JSONEncoder):
 
 
 class TimeLineDecoder(JSONDecoder):
+    """ JSON decoder to de-serialize timeline specific classes
+    that the default JSONDecoder can't handle """
     def decode(self, s, **kwargs) -> TimelinePlot:
         pure_json = super().decode(s, **kwargs)
         return recursive_decode(pure_json)
 
 
 def recursive_decode(json_object: any) -> any:
+    """ recursively transform the object returned by the
+    default JSONDecoder into our custom classes """
     # depth-first: decode sub-objects before using them to decode this object
     if isinstance(json_object, dict):
         for key, value in json_object.items():

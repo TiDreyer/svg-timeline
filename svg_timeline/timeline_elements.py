@@ -1,3 +1,4 @@
+""" different elements that can be added to a timeline plot """
 from abc import ABC
 from dataclasses import dataclass
 from datetime import datetime
@@ -17,6 +18,7 @@ Classes = Optional[list[str]]
 class TimeLineElement(ABC):
     """ interface definition for timeline elements """
     def svg(self, coord: TimeLineGeometry, style: GeometrySettings) -> SvgGroup:
+        """ generate the SVG representation of this element """
         raise NotImplementedError
 
 
