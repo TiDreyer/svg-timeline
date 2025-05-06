@@ -23,17 +23,8 @@ class LaneGeometry:
 
 
 @dataclass
-class TitleGeometry:
-    """ geometry settings related to the title elements """
-    x_position: float = 1/2
-    y_position: float = 1/17
-    size_factor: float = 1/15
-
-
-@dataclass
 class GeometrySettings:
     canvas: CanvasGeometry = field(default_factory=CanvasGeometry)
-    title: TitleGeometry = field(default_factory=TitleGeometry)
     lane: LaneGeometry = field(default_factory=LaneGeometry)
 
 

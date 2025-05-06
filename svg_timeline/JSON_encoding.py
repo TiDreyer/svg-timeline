@@ -42,7 +42,6 @@ class KnownClasses(Enum):
     TimeLineGeometry = TimeLineGeometry
     GeometrySettings = geo.GeometrySettings
     CanvasGeometry = geo.CanvasGeometry
-    TitleGeometry = geo.TitleGeometry
     LaneGeometry = geo.LaneGeometry
     Title = ele.Title
     TimeArrow = ele.TimeArrow

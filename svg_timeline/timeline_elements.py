@@ -26,13 +26,15 @@ class TimeLineElement(ABC):
 class Title(TimeLineElement):
     """ the text of the title """
     text: str
+    rel_x_position: float = 1/2
+    rel_y_position: float = 1/17
     classes: Classes = None
 
     def svg(self, coord: TimeLineGeometry, style: GeometrySettings) -> SvgGroup:
         classes = self.classes.copy() if self.classes else []
         classes += [ClassNames.TITLE]
-        text_coord = Vector(x=int(coord.width * style.title.x_position),
-                            y=int(coord.height * style.title.y_position))
+        text_coord = Vector(x=int(coord.width * self.rel_x_position),
+                            y=int(coord.height * self.rel_y_position))
         title = SvgGroup(
             [Text(text_coord, self.text, classes=classes)],
             exact_id='title'
