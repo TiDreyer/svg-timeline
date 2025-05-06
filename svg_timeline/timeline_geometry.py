@@ -37,18 +37,11 @@ class EventGeometry:
 
 
 @dataclass
-class TimespanGeometry:
-    """ geometry settings related to the timespan elements """
-    width: float = 18
-
-
-@dataclass
 class GeometrySettings:
     canvas: CanvasGeometry = field(default_factory=CanvasGeometry)
     title: TitleGeometry = field(default_factory=TitleGeometry)
     lane: LaneGeometry = field(default_factory=LaneGeometry)
     event: EventGeometry = field(default_factory=EventGeometry)
-    timespan: TimespanGeometry = field(default_factory=TimespanGeometry)
 
 
 class TimeLineGeometry:

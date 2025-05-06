@@ -45,7 +45,6 @@ class KnownClasses(Enum):
     TitleGeometry = geo.TitleGeometry
     LaneGeometry = geo.LaneGeometry
     EventGeometry = geo.EventGeometry
-    TimespanGeometry = geo.TimespanGeometry
     Title = ele.Title
     TimeArrow = ele.TimeArrow
     Event = ele.Event

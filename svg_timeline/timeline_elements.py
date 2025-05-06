@@ -166,7 +166,8 @@ class TimeSpan(TimeLineElement):
     def svg(self, coord: TimeLineGeometry, style: GeometrySettings) -> SvgGroup:
         classes = self.classes.copy() if self.classes else []
         classes += [ClassNames.TIMESPAN]
-        width = self.width or style.timespan.width
+        # if no explicit width is set, fill 60% of a lane
+        width = self.width or 0.6 * style.lane.width
         half_width_vector = width/2 * coord.lane_normal
         start_corner = coord.as_coord(self.start_date, lane=self.lane) + half_width_vector
         end_corner = coord.as_coord(self.end_date, lane=self.lane) - half_width_vector
