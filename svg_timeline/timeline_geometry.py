@@ -31,17 +31,10 @@ class TitleGeometry:
 
 
 @dataclass
-class EventGeometry:
-    """ geometry settings related to the event elements """
-    dot_radius: float = 3
-
-
-@dataclass
 class GeometrySettings:
     canvas: CanvasGeometry = field(default_factory=CanvasGeometry)
     title: TitleGeometry = field(default_factory=TitleGeometry)
     lane: LaneGeometry = field(default_factory=LaneGeometry)
-    event: EventGeometry = field(default_factory=EventGeometry)
 
 
 class TimeLineGeometry:

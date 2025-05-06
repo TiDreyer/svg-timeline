@@ -78,6 +78,7 @@ class Event(TimeLineElement):
     """ an event that happened at a single point in time """
     date: datetime
     text: str
+    dot_radius: float = 3
     lane: float = 1
     classes: Classes = None
 
@@ -89,7 +90,7 @@ class Event(TimeLineElement):
         text_coord = coord.as_coord(self.date, lane=(self.lane + 0.5 if self.lane >= 0 else self.lane - 0.5))
         event = SvgGroup([
             Line(source=event_base, target=event_end, classes=classes),
-            Circle(center=event_end, radius=style.event.dot_radius, classes=classes),
+            Circle(center=event_end, radius=self.dot_radius, classes=classes),
             Text(text_coord, self.text, classes=classes),
         ], id_base='event')
         return event
@@ -100,6 +101,7 @@ class ConnectedEvents(TimeLineElement):
     """ a series of events connected via lines """
     dates: list[datetime]
     labels: list[str]
+    dot_radius: float = 3
     lane: float = 1
     classes: Optional[list[Classes]] = None
 
@@ -117,7 +119,7 @@ class ConnectedEvents(TimeLineElement):
         ) for i in range(len(self.dates)-1)])
         circles = SvgGroup([Circle(
             center=coord.as_coord(self.dates[i], lane=self.lane),
-            radius=style.event.dot_radius,
+            radius=self.dot_radius,
             classes=self.classes[i],
         ) for i, label in enumerate(self.labels) if label is not None])
         texts = SvgGroup([Text(
