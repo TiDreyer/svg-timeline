@@ -7,8 +7,10 @@ from svg_timeline.colors import ColorPalette, DEFAULT_COLORS
 
 class CascadeStyleSheet(dict):
     """ basic representation of a CSS """
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, custom_entries: Optional[dict] = None):
+        super().__init__(_DEFAULTS)
+        if custom_entries is not None:
+            self.update(custom_entries)
         self.full_validate()
         self._used_color_palette: Optional[ColorPalette] = None
 
@@ -78,7 +80,7 @@ class ClassNames(StrEnum):
     TOP_TEXT = 'top_text'
 
 
-DEFAULT_CSS = CascadeStyleSheet({
+_DEFAULTS = {
     'rect.background': {
         'fill': 'white',
     },
@@ -118,4 +120,4 @@ DEFAULT_CSS = CascadeStyleSheet({
     f'path.{ClassNames.IMAGE}': {
         'stroke-width': '2pt',
     },
-})
+}
