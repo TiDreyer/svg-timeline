@@ -1,5 +1,4 @@
 """ high level timeline API classes """
-from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
@@ -8,9 +7,7 @@ from svg_timeline.svg import SVG, SvgGroup
 from svg_timeline.svg_primitives import Rectangle
 from svg_timeline.time_calculations import TimeSpacing
 from svg_timeline.timeline_elements import TimeLineElement, Title, TimeArrow
-from svg_timeline.timeline_elements import Event, ConnectedEvents, DatedImage, TimeSpan
 from svg_timeline.timeline_geometry import TimeLineGeometry
-from svg_timeline._warnings import deprecated
 
 
 
@@ -41,38 +38,6 @@ class TimelinePlot:
     def geometry(self) -> TimeLineGeometry:
         """ the geometry settings of this plot """
         return self._geometry
-
-    @deprecated(msg="use add_element() instead")
-    def add_event(self, date: datetime, text: str,
-                  lane: int = 1, classes: Optional[list[str]] = None):
-        """ Add an event to the timeline that happened at a single point in time """
-        event = Event(date=date, text=text, lane=lane, classes=classes)
-        self.add_element(event)
-
-    @deprecated(msg="use add_element() instead")
-    def add_connected_events(self, dates: list[datetime], labels: list[str],
-                             classes: Optional[list[Optional[list[str]]]] = None,
-                             lane: int = 1,
-                             ) -> None:
-        """ Add a series of events connected via lines """
-        connected_events = ConnectedEvents(dates=dates, labels=labels, classes=classes, lane=lane)
-        self.add_element(connected_events)
-
-    @deprecated(msg="use add_element() instead")
-    def add_image(self, date: datetime, image_path: Path, height: float, width: float,
-                  lane: int = 1, classes: Optional[list[str]] = None):
-        """ Add an image to the timeline that is associated with a single point in time """
-        image = DatedImage(date=date, image_path=image_path, height=height, width=width,
-                           lane=lane, classes=classes)
-        self.add_element(image)
-
-    @deprecated(msg="use add_element() instead")
-    def add_timespan(self, start_date: datetime, end_date: datetime, text: str,
-                     lane: int = 1, width: Optional[int] = None, classes: Optional[list[str]] = None):
-        """ Add an entry to the timeline that is associated with a certain time span """
-        timespan = TimeSpan(start_date=start_date, end_date=end_date, text=text,
-                            lane=lane, width=width, classes=classes)
-        self.add_element(timespan)
 
     def add_title(self, title: str, classes: Optional[list[str]] = None):
         """ Add a title that should be printed above the timeline """
