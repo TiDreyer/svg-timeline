@@ -75,14 +75,9 @@ def main():
     svg_path = Path(__file__).parent.joinpath('emmy_noether.svg')
     timeline.save(svg_path)
 
-    # saving as JSON
-    json_path = Path(__file__).parent.joinpath('emmy_noether.json')
-    save_json(timeline, json_path)
-
-    # re-constructing saved plot
-    SvgGroup.id_counters = {}  # reset id-counters
-    new_timeline = load_json(json_path)
-    new_timeline.save(svg_path)
+    # # saving as JSON (uncomment to update test data)
+    # json_path = Path(__file__).parent.joinpath('../test/files/emmy_noether.json')
+    # save_json(timeline, json_path)
 
 
 if __name__ == '__main__':
