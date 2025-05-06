@@ -1,7 +1,7 @@
 """ Example script to create a timeline of Emmy Noether's life """
 from pathlib import Path
 
-from svg_timeline.JSON_encoding import save_json, load_json
+from svg_timeline.json_serialize import save_json, load_json
 from svg_timeline.css import Colors
 from svg_timeline.svg import SvgGroup
 from svg_timeline.time_calculations import TimeSpacingPerDecade, TimeSpacingPerYear, dt
@@ -41,7 +41,7 @@ def main():
     _image_path = Path(__file__).parent.joinpath('473px-Noether.jpeg')
     _image_scale = 0.27
     timeline.add_element(
-        DatedImage(dt('1900'), _image_path, width=_image_scale*473, height=_image_scale*720, lane=1)
+        DatedImage.from_path(dt('1900'), _image_path, width=_image_scale*473, height=_image_scale*720, lane=1)
     )
 
     plot_elements = [
@@ -75,14 +75,9 @@ def main():
     svg_path = Path(__file__).parent.joinpath('emmy_noether.svg')
     timeline.save(svg_path)
 
-    # saving as JSON
-    json_path = Path(__file__).parent.joinpath('emmy_noether.json')
-    save_json(timeline, json_path)
-
-    # re-constructing saved plot
-    SvgGroup.id_counters = {}  # reset id-counters
-    new_timeline = load_json(json_path)
-    new_timeline.save(svg_path)
+    # # saving as JSON (uncomment to update test data)
+    # json_path = Path(__file__).parent.joinpath('../test/files/emmy_noether.json')
+    # save_json(timeline, json_path)
 
 
 if __name__ == '__main__':

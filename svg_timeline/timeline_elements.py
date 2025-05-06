@@ -3,7 +3,7 @@ from abc import ABC
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Self
 
 from svg_timeline.geometry import Vector
 from svg_timeline.css import ClassNames
@@ -137,11 +137,17 @@ class ConnectedEvents(TimeLineElement):
 class DatedImage(TimeLineElement):
     """ an image that is associated with a single point in time """
     date: datetime
-    image_path: Path
+    image_data: str
     height: float
     width: float
     lane: float = 1
     classes: Classes = None
+
+    @classmethod
+    def from_path(cls, date: datetime, file_path: Path, width: float, height: float,
+                  lane: float = 1, classes: Optional[list[str]] = None) -> Self:
+        xlink_href = Image.xlink_href_from_file_path(file=file_path)
+        return cls(date, xlink_href, height, width, lane, classes)
 
     def svg(self, geometry: TimeLineGeometry) -> SvgGroup:
         classes = self.classes.copy() if self.classes else []
@@ -152,7 +158,7 @@ class DatedImage(TimeLineElement):
         image_top_left = image_center_left + self.width / 2 * geometry.lane_normal.orthogonal(ccw=True)
         image = SvgGroup([
             Line(source=event_base, target=event_end, classes=classes),
-            Image(top_left=image_top_left, file=self.image_path, height=self.height, width=self.width, classes=classes),
+            Image(top_left=image_top_left, xlink_href=self.image_data, height=self.height, width=self.width, classes=classes),
         ], id_base='image')
         return image
 

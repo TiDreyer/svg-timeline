@@ -16,6 +16,18 @@ import svg_timeline.time_calculations as tls
 
 def save_json(timeline: TimelinePlot, file_path: Path):
     """ Save a JSON representing the timeline under the given file path """
+    with open(file_path, 'w', encoding='utf-8') as json_file:
+        json_file.write(encode_serialisation(timeline))
+
+
+def load_json(file_path: Path) -> TimelinePlot:
+    """ Load a JSON representing the timeline from the given file path """
+    with open(file_path, 'r', encoding='utf-8') as json_file:
+        return decode_serialisation(json_file.read())
+
+
+def encode_serialisation(timeline: TimelinePlot) -> str:
+    """ add metadata and serialize the timeline """
     with_meta = {
         'meta': {
             'created': datetime.now(),
@@ -23,14 +35,12 @@ def save_json(timeline: TimelinePlot, file_path: Path):
         },
         'data': timeline,
     }
-    with open(file_path, 'w', encoding='utf-8') as json_file:
-        json_file.write(dumps(with_meta, cls=TimeLineEncoder, indent='  '))
+    return dumps(with_meta, cls=TimeLineEncoder, indent='  ')
 
 
-def load_json(file_path: Path) -> TimelinePlot:
-    """ Load a JSON representing the timeline from the given file path """
-    with open(file_path, 'r', encoding='utf-8') as json_file:
-        with_meta = loads(json_file.read(), cls=TimeLineDecoder)
+def decode_serialisation(serialization: str) -> TimelinePlot:
+    """ de-serialize the timeline and remove metadata """
+    with_meta = loads(serialization, cls=TimeLineDecoder)
     return with_meta['data']
 
 
