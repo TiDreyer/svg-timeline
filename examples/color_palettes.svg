@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="400" height="400" viewBox="0 0 400 400">
+<style>
+rect.background {
+  fill: white;
+}
+path {
+  stroke: black;
+  stroke-width: 2pt;
+  fill: none;
+}
+text {
+  font-size: 10pt;
+  font-family: Liberation Sans;
+  fill: black;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+circle, rect {
+  fill: black;
+}
+text.title {
+  font-size: 20pt;
+}
+path.time_arrow_axis {
+  stroke-width: 3pt;
+}
+path.time_arrow_major_tic {
+  stroke-width: 2pt;
+}
+path.time_arrow_minor_tic {
+  stroke-width: 1pt;
+}
+path.event {
+  stroke-width: 2pt;
+}
+text.timespan {
+  font-size: 9pt;
+}
+path.image {
+  stroke-width: 2pt;
+}
+.colored.c00 {
+  stroke: #000000;
+  fill: #000000;
+}
+.top_text.c00 {
+  fill: #ffffff;
+}
+.colored.c01 {
+  stroke: #1f77b4;
+  fill: #1f77b4;
+}
+.top_text.c01 {
+  fill: #000000;
+}
+.colored.c02 {
+  stroke: #ff7f0e;
+  fill: #ff7f0e;
+}
+.top_text.c02 {
+  fill: #000000;
+}
+.colored.c03 {
+  stroke: #2ca02c;
+  fill: #2ca02c;
+}
+.top_text.c03 {
+  fill: #000000;
+}
+.colored.c04 {
+  stroke: #d62728;
+  fill: #d62728;
+}
+.top_text.c04 {
+  fill: #000000;
+}
+.colored.c05 {
+  stroke: #9467bd;
+  fill: #9467bd;
+}
+.top_text.c05 {
+  fill: #000000;
+}
+.colored.c06 {
+  stroke: #8c564b;
+  fill: #8c564b;
+}
+.top_text.c06 {
+  fill: #000000;
+}
+.colored.c07 {
+  stroke: #e377c2;
+  fill: #e377c2;
+}
+.top_text.c07 {
+  fill: #000000;
+}
+.colored.c08 {
+  stroke: #7f7f7f;
+  fill: #7f7f7f;
+}
+.top_text.c08 {
+  fill: #000000;
+}
+.colored.c09 {
+  stroke: #bcbd22;
+  fill: #bcbd22;
+}
+.top_text.c09 {
+  fill: #000000;
+}
+.colored.c10 {
+  stroke: #17becf;
+  fill: #17becf;
+}
+.top_text.c10 {
+  fill: #000000;
+}
+</style>
+<rect class="background" x="0" y="0" width="400.0" height="400.0" />
+<g id="layer_001">
+  <g id="timespan_001">
+    <rect class="timespan c00 colored" x="12.0" y="371.0" width="376.0" height="18.0" />
+    <text class="timespan c00 top_text" x="200.0" y="380.0">c00</text>
+  </g>
+  <g id="timespan_002">
+    <rect class="timespan c01 colored" x="12.0" y="341.0" width="376.0" height="18.0" />
+    <text class="timespan c01 top_text" x="200.0" y="350.0">c01</text>
+  </g>
+  <g id="timespan_003">
+    <rect class="timespan c02 colored" x="12.0" y="311.0" width="376.0" height="18.0" />
+    <text class="timespan c02 top_text" x="200.0" y="320.0">c02</text>
+  </g>
+  <g id="timespan_004">
+    <rect class="timespan c03 colored" x="12.0" y="281.0" width="376.0" height="18.0" />
+    <text class="timespan c03 top_text" x="200.0" y="290.0">c03</text>
+  </g>
+  <g id="timespan_005">
+    <rect class="timespan c04 colored" x="12.0" y="251.0" width="376.0" height="18.0" />
+    <text class="timespan c04 top_text" x="200.0" y="260.0">c04</text>
+  </g>
+  <g id="timespan_006">
+    <rect class="timespan c05 colored" x="12.0" y="221.0" width="376.0" height="18.0" />
+    <text class="timespan c05 top_text" x="200.0" y="230.0">c05</text>
+  </g>
+  <g id="timespan_007">
+    <rect class="timespan c06 colored" x="12.0" y="191.0" width="376.0" height="18.0" />
+    <text class="timespan c06 top_text" x="200.0" y="200.0">c06</text>
+  </g>
+  <g id="timespan_008">
+    <rect class="timespan c07 colored" x="12.0" y="161.0" width="376.0" height="18.0" />
+    <text class="timespan c07 top_text" x="200.0" y="170.0">c07</text>
+  </g>
+  <g id="timespan_009">
+    <rect class="timespan c08 colored" x="12.0" y="131.0" width="376.0" height="18.0" />
+    <text class="timespan c08 top_text" x="200.0" y="140.0">c08</text>
+  </g>
+  <g id="timespan_010">
+    <rect class="timespan c09 colored" x="12.0" y="101.0" width="376.0" height="18.0" />
+    <text class="timespan c09 top_text" x="200.0" y="110.0">c09</text>
+  </g>
+  <g id="timespan_011">
+    <rect class="timespan c10 colored" x="12.0" y="71.0" width="376.0" height="18.0" />
+    <text class="timespan c10 top_text" x="200.0" y="80.0">c10</text>
+  </g>
+</g>
+</svg>
