@@ -1,5 +1,8 @@
 """ base classes for handling CSS """
 from enum import StrEnum
+from typing import Optional
+
+from svg_timeline.colors import ColorPalette, DEFAULT_COLORS
 
 
 class CascadeStyleSheet(dict):
@@ -7,6 +10,7 @@ class CascadeStyleSheet(dict):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.full_validate()
+        self._used_color_palette: Optional[ColorPalette] = None
 
     def full_validate(self):
         """ check that the object represents valid CSS """
@@ -31,6 +35,8 @@ class CascadeStyleSheet(dict):
 
     def compile(self, indent='', line_break='\n') -> str:
         """ compile the contained style definition into a css file """
+        if self._used_color_palette is None:
+            self.set_color_palette(DEFAULT_COLORS)
         css_section = f'{line_break or " "}'
         for selector, props in self.items():
             css_section += f'{selector} {{{line_break}'
@@ -39,6 +45,19 @@ class CascadeStyleSheet(dict):
             )
             css_section += f'{line_break or " "}}}{line_break or " "}'
         return css_section
+
+    def set_color_palette(self, palette: ColorPalette):
+        if self._used_color_palette is not None:
+            raise RuntimeError("Color palette was already set on this CascadeStyleSheet")
+        for i, color in enumerate(palette):
+            self[f'.colored.c{i:02}'] = {
+                'stroke': color.color,
+                'fill': color.color,
+            }
+            self[f'.top_text.c{i:02}'] = {
+                'fill': color.top_text_color,
+            }
+        self._used_color_palette = palette
 
 
 class ClassNames(StrEnum):
@@ -50,17 +69,6 @@ class ClassNames(StrEnum):
     EVENT = 'event'
     TIMESPAN = 'timespan'
     IMAGE = 'image'
-
-
-class Colors(StrEnum):
-    """ string constants for all the colors that are pre-defined as class names """
-    WHITE = '#ffffff'
-    BLACK = '#000000'
-    COLOR_A = '#003f5c'
-    COLOR_B = '#58508d'
-    COLOR_C = '#bc5090'
-    COLOR_D = '#ff6361'
-    COLOR_E = '#ffa600'
 
 
 DEFAULT_CSS = CascadeStyleSheet({
@@ -104,14 +112,3 @@ DEFAULT_CSS = CascadeStyleSheet({
         'stroke-width': '2pt',
     },
 })
-
-for __COLOR in Colors:
-    __SELECTOR = f'path.{__COLOR.name.lower()}, rect.{__COLOR.name.lower()}, circle.{__COLOR.name.lower()}'
-    DEFAULT_CSS[__SELECTOR] = {
-        'stroke': str(__COLOR),
-        'fill': str(__COLOR),
-    }
-    __SELECTOR = f'text.{__COLOR.name.lower()}_text'
-    DEFAULT_CSS[__SELECTOR] = {
-        'fill': str(__COLOR),
-    }
