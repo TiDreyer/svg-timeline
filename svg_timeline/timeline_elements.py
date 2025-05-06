@@ -125,34 +125,50 @@ class ConnectedEvents(TimeLineElement):
     labels: list[str]
     dot_radius: float = 3
     lane: float = 1
-    palette_color: int = 0
-    classes: Optional[list[Classes]] = None
+    palette_colors: list[int] | int = 0
+    common_classes: Optional[Classes] = None
+    individual_classes: Optional[list[Classes]] = None
 
     def __post_init__(self):
+        # fill defaults for optional attributes:
+        self.common_classes = self.common_classes or []
+        if self.individual_classes is None:
+            self.individual_classes = [[] for _ in range(len(self.dates))]
+        if isinstance(self.palette_colors, int):
+            self.palette_colors = [self.palette_colors for _ in range(len(self.dates))]
         # validate that the length of the three lists matches
-        self.classes = [[] for _ in range(len(self.dates))] if self.classes is None else self.classes
         if not len(self.dates) == len(self.labels) == len(self.classes):
             raise ValueError("dates, labels and classes need to be of the same length")
 
+    @property
+    def classes(self) -> list[Classes]:
+        return [self.common_classes + individual for individual in self.individual_classes]
+
     def svg(self, geometry: TimeLineGeometry) -> SvgGroup:
         classes = self.classes.copy() if self.classes else []
-        classes += [ClassNames.CONNECTED_EVENTS, f'c{self.palette_color:02}']
-        lines = SvgGroup([Line(
-            source=geometry.as_coord(self.dates[i], lane=self.lane),
-            target=geometry.as_coord(self.dates[i + 1], lane=self.lane),
-            classes=self.classes[i] + [ClassNames.COLORED],
-        ) for i in range(len(self.dates)-1)])
-        circles = SvgGroup([Circle(
-            center=geometry.as_coord(self.dates[i], lane=self.lane),
-            radius=self.dot_radius,
-            classes=self.classes[i] + [ClassNames.COLORED],
-        ) for i, label in enumerate(self.labels) if label is not None])
-        texts = SvgGroup([Text(
-            coord=geometry.as_coord(self.dates[i], lane=(self.lane + 0.5 if self.lane >= 0 else self.lane - 0.5)),
-            text=label,
-            classes=self.classes[i],
-        ) for i, label in enumerate(self.labels) if label is not None])
-        connected_events = SvgGroup([lines, circles, texts], id_base='connected_events')
+        classes += [ClassNames.CONNECTED_EVENTS]
+        n_dates = len(self.dates)
+        groups = [[] for _ in range(n_dates)]
+        for i in range(n_dates - 1):
+            groups[i].append(Line(
+                source=geometry.as_coord(self.dates[i], lane=self.lane),
+                target=geometry.as_coord(self.dates[i + 1], lane=self.lane),
+                classes=classes[i] + [f'c{self.palette_colors[i]:02}', ClassNames.COLORED],
+            ))
+        for i, label in enumerate(self.labels):
+            if label is None:
+                continue
+            groups[i].append(Circle(
+                center=geometry.as_coord(self.dates[i], lane=self.lane),
+                radius=self.dot_radius,
+                classes=classes[i] + [f'c{self.palette_colors[i]:02}', ClassNames.COLORED],
+            ))
+            groups[i].append(Text(
+                coord=geometry.as_coord(self.dates[i], lane=(self.lane + 0.5 if self.lane >= 0 else self.lane - 0.5)),
+                text=label,
+                classes=classes[i] + [ClassNames.COLORED],
+            ))
+        connected_events = SvgGroup([SvgGroup(group) for group in groups], id_base='connected_events')
         return connected_events
 
 
