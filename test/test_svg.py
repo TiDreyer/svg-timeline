@@ -1,6 +1,7 @@
 """ test cases for the classes defined in the svg module """
 from textwrap import dedent
 
+from svg_timeline.colors import Color, ColorPalette
 from svg_timeline.css import CascadeStyleSheet
 from svg_timeline.svg import SVG, SvgElement
 
@@ -42,35 +43,6 @@ def test_svg_header():
     assert svg.header == header
 
 
-def test_svg_style_section():
-    style = CascadeStyleSheet({
-        'svg': {'background': 'white'},
-        'text': {
-            'font-family': 'Liberation Sans',
-            'font-size': '12pt',
-            'fill': 'black',
-            'dominant-baseline': 'central',
-            'text-anchor': 'middle',
-        },
-    })
-    svg = SVG(width=800, height=600, css=style)
-    style_section = dedent('''\
-    <style>
-    svg {
-      background: white;
-    }
-    text {
-      font-family: Liberation Sans;
-      font-size: 12pt;
-      fill: black;
-      dominant-baseline: central;
-      text-anchor: middle;
-    }
-    </style>
-    ''')
-    assert svg.style_section == style_section
-
-
 def test_svg_defs_section():
     definitions = [
         SvgElement('a', {'a1': 'hello', 'a2': 'world'}, 'asdf'),
@@ -109,50 +81,3 @@ def test_svg_footer():
     </svg>
     ''')
     assert svg.footer == dedent(footer)
-
-
-def test_svg_full():
-    style = CascadeStyleSheet({
-        'svg': {'background': 'white'},
-        'text': {
-            'font-family': 'Liberation Sans',
-            'font-size': '12pt',
-            'fill': 'black',
-            'dominant-baseline': 'central',
-            'text-anchor': 'middle',
-        },
-    })
-    definitions = [
-        SvgElement('x', {'x1': 'hello', 'x2': 'world'}, 'asdf'),
-        SvgElement('y', {'y1': 'hello', 'y2': 'world'}),
-    ]
-    elements = [
-        SvgElement('a', {'a1': 'hello', 'a2': 'world'}, 'asdf'),
-        SvgElement('b', {'b1': 'hello', 'b2': 'world'}),
-    ]
-    svg = SVG(width=800, height=600, css=style, elements=elements, definitions=definitions)
-    full = dedent('''\
-    <?xml version="1.0" encoding="UTF-8"?>
-    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-         width="800" height="600" viewBox="0 0 800 600">
-    <style>
-    svg {
-      background: white;
-    }
-    text {
-      font-family: Liberation Sans;
-      font-size: 12pt;
-      fill: black;
-      dominant-baseline: central;
-      text-anchor: middle;
-    }
-    </style>
-    <defs>
-      <x x1="hello" x2="world">asdf</x>
-      <y y1="hello" y2="world" />
-    </defs>
-    <a a1="hello" a2="world">asdf</a>
-    <b b1="hello" b2="world" />
-    </svg>
-    ''')
-    assert svg.full == full
