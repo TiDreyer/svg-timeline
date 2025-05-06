@@ -75,7 +75,7 @@ class TimeLineEncoder(JSONEncoder):
                 "type": KnownClasses(o.__class__).name,
                 "start_date": o.first,
                 "end_date": o.last,
-                "style": o.style,
+                "settings": o.settings,
             }
         if isinstance(o, TimeSpacing):
             return {
