@@ -62,13 +62,20 @@ class CascadeStyleSheet(dict):
 
 class ClassNames(StrEnum):
     """ string constants for all the class names that are commonly used for styling via CSS """
+    # determining the timeline element:
     TITLE = 'title'
-    TIMEAXIS = 'time_axis'
-    MINOR_TICK = 'minor_tic'
-    MAJOR_TICK = 'major_tic'
+    TIME_ARROW = 'time_arrow'
     EVENT = 'event'
     TIMESPAN = 'timespan'
+    CONNECTED_EVENTS = 'connected_events'
     IMAGE = 'image'
+    # sub-elements
+    TIME_ARROW_AXIS = 'time_axis'
+    TIME_ARROW_MINOR_TIC = 'minor_tic'
+    TIME_ARROW_MAJOR_TIC = 'major_tic'
+    # for picking which color to use:
+    COLORED = 'colored'
+    TOP_TEXT = 'top_text'
 
 
 DEFAULT_CSS = CascadeStyleSheet({
@@ -93,13 +100,13 @@ DEFAULT_CSS = CascadeStyleSheet({
     f'text.{ClassNames.TITLE}': {
         'font-size': '20pt',
     },
-    f'path.{ClassNames.TIMEAXIS}': {
+    f'path.{ClassNames.TIME_ARROW_AXIS}': {
         'stroke-width': '3pt',
     },
-    f'path.{ClassNames.MAJOR_TICK}': {
+    f'path.{ClassNames.TIME_ARROW_MAJOR_TIC}': {
         'stroke-width': '2pt',
     },
-    f'path.{ClassNames.MINOR_TICK}': {
+    f'path.{ClassNames.TIME_ARROW_MINOR_TIC}': {
         'stroke-width': '1pt',
     },
     f'path.{ClassNames.EVENT}': {
