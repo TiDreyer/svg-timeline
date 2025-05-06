@@ -3,6 +3,7 @@ from json import dumps, loads
 from pathlib import Path
 
 import svg_timeline.json_serialize as serialize
+from svg_timeline.svg import SvgGroup
 from svg_timeline.timeline_elements import Event
 
 
@@ -45,3 +46,21 @@ def test_serialization_invariance():
         if '"created":' in encoded_line:
             continue
         assert encoded_line == direct_line
+
+
+def test_compilation_invariance():
+    """ loading a JSON serialization should result in the same SVG """
+    json_path = Path(__file__).parent.joinpath('files/emmy_noether.json')
+    with open(json_path, 'r', encoding='utf-8') as json_file:
+        direct_read = json_file.read()
+    decoded = serialize.decode_serialisation(direct_read)
+    encoded = serialize.encode_serialisation(decoded)
+    decoded_2 = serialize.decode_serialisation(encoded)
+    # compare SVGs line by line
+    svg_1_lines = decoded.svg.full.split('\n')
+    SvgGroup.id_counters = {}  # reset id-counters
+    svg_2_lines = decoded_2.svg.full.split('\n')
+    assert len(svg_1_lines) == len(svg_2_lines)
+    for svg_1_line, svg_2_line in zip(svg_1_lines, svg_2_lines):
+        assert svg_2_line == svg_1_line
+
