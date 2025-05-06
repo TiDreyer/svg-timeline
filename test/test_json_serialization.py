@@ -2,7 +2,7 @@ from datetime import datetime
 from json import dumps, loads
 from pathlib import Path
 
-from svg_timeline.JSON_encoding import TimeLineEncoder, TimeLineDecoder
+from svg_timeline.json_serialize import TimeLineEncoder, TimeLineDecoder
 from svg_timeline.timeline_elements import Event
 
 
