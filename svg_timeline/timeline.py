@@ -48,8 +48,9 @@ class TimelinePlot:
         """ Add a timearrow to the timeline """
         self.add_element(TimeArrow(major_tics=major_tics, minor_tics=minor_tics), layer=0)
 
-    def save(self, file_path: Path):
-        """ Save an SVG of the timeline under the given file path """
+    @property
+    def svg(self) -> SVG:
+        """ Return the SVG representation of this timeline """
         width, height = self._geometry.width, self._geometry.height
         svg = SVG(width, height)
         # first, set a white background
@@ -59,4 +60,8 @@ class TimelinePlot:
             for element in self._layers[i_layer]:
                 layer.append(element.svg(self._geometry))
             svg.elements.append(layer)
-        svg.save_as(file_path=file_path)
+        return svg
+
+    def save(self, file_path: Path):
+        """ Save an SVG of the timeline under the given file path """
+        self.svg.save_as(file_path=file_path)
