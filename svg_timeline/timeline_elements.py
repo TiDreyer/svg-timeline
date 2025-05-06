@@ -176,12 +176,4 @@ class TimeSpan(TimeLineElement):
             Rectangle(start_corner, end_corner, classes=classes),
             Text(text_coord, self.text, classes=classes),
         ], id_base='timespan')
-        if style.timespan.use_start_stilt:
-            on_timeline = coord.as_coord(self.start_date, lane=0)
-            bottom_timespan = coord.as_coord(self.start_date, lane=self.lane) - half_width_vector
-            timespan.append(Line(source=on_timeline, target=bottom_timespan, classes=classes))
-        if style.timespan.use_end_stilt:
-            on_timeline = coord.as_coord(self.end_date, lane=0)
-            bottom_timespan = coord.as_coord(self.end_date, lane=self.lane) - half_width_vector
-            timespan.append(Line(source=on_timeline, target=bottom_timespan, classes=classes))
         return timespan

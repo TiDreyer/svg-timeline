@@ -40,8 +40,6 @@ class EventGeometry:
 class TimespanGeometry:
     """ geometry settings related to the timespan elements """
     width: float = 18
-    use_start_stilt: bool = False
-    use_end_stilt: bool = False
 
 
 @dataclass
