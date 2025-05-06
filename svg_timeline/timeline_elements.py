@@ -44,6 +44,31 @@ class Title(TimeLineElement):
 
 
 @dataclass
+class TimeArrowTics(TimeLineElement):
+    """ the tics on a timeline arrow"""
+    spacing: TimeSpacing
+    major: bool = True
+    palette_color: int = 0
+    classes: Classes = None
+
+    def svg(self, geometry: TimeLineGeometry) -> SvgGroup:
+        classes = self.classes.copy() if self.classes else []
+        classes += [ClassNames.TIME_ARROW, f'c{self.palette_color:02}']
+        tic_delta = (-10 if self.major else -5) * geometry.lane_normal
+        tic_group = SvgGroup(id_base='tics')
+        for date, label in zip(self.spacing.dates, self.spacing.labels):
+            tic_base = geometry.as_coord(date)
+            tic_end = tic_base + tic_delta
+            tic_classes = classes + [ClassNames.TIME_ARROW_MAJOR_TIC if self.major else
+                                     ClassNames.TIME_ARROW_MINOR_TIC]
+            tic_group.append(Line(source=tic_base, target=tic_end, classes=tic_classes + [ClassNames.COLORED]))
+            if self.major:
+                text_start = tic_base + 1.5 * tic_delta
+                tic_group.append(Text(text_start, label, classes=tic_classes))
+        return tic_group
+
+
+@dataclass
 class TimeArrow(TimeLineElement):
     """ the timeline arrow with major and minor tics """
     major_tics: TimeSpacing
@@ -59,25 +84,13 @@ class TimeArrow(TimeLineElement):
         target = geometry.as_coord(geometry.last, lane=0)
         line = Line(source, target, classes=classes + [ClassNames.TIME_ARROW_AXIS, ClassNames.COLORED])
         timeline.append(line)
-        tic_delta = -10 * geometry.lane_normal
-        major_tics = SvgGroup(id_base='tics')
-        for date, label in zip(self.major_tics.dates, self.major_tics.labels):
-            tic_base = geometry.as_coord(date)
-            tic_end = tic_base + tic_delta
-            text_start = tic_base + 1.5 * tic_delta
-            tic_classes = classes + [ClassNames.TIME_ARROW_MAJOR_TIC]
-            major_tics.append(Line(source=tic_base, target=tic_end, classes=tic_classes + [ClassNames.COLORED]))
-            major_tics.append(Text(text_start, label, classes=tic_classes))
-        timeline.append(major_tics)
-        if self.minor_tics is None:
-            return timeline
-        minor_tics = SvgGroup(id_base='tics')
-        for date in self.minor_tics.dates:
-            tic_base = geometry.as_coord(date)
-            tic_end = tic_base + 0.5 * tic_delta
-            tic_classes = classes + [ClassNames.TIME_ARROW_MINOR_TIC, ClassNames.COLORED]
-            minor_tics.append(Line(source=tic_base, target=tic_end, classes=tic_classes))
-        timeline.append(minor_tics)
+        major_tics = TimeArrowTics(spacing=self.major_tics, major=True,
+                                   palette_color=self.palette_color, classes=self.classes)
+        timeline.append(major_tics.svg(geometry=geometry))
+        if self.minor_tics is not None:
+            minor_tics = TimeArrowTics(spacing=self.minor_tics, major=False,
+                                       palette_color=self.palette_color, classes=self.classes)
+            timeline.append(minor_tics.svg(geometry=geometry))
         return timeline
 
 
