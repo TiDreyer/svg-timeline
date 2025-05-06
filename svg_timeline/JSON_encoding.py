@@ -41,8 +41,6 @@ class KnownClasses(Enum):
     TimelinePlot = TimelinePlot
     TimeLineGeometry = TimeLineGeometry
     GeometrySettings = geo.GeometrySettings
-    CanvasGeometry = geo.CanvasGeometry
-    LaneGeometry = geo.LaneGeometry
     Title = ele.Title
     TimeArrow = ele.TimeArrow
     Event = ele.Event

@@ -171,7 +171,7 @@ class TimeSpan(TimeLineElement):
         classes = self.classes.copy() if self.classes else []
         classes += [ClassNames.TIMESPAN]
         # if no explicit width is set, fill 60% of a lane
-        width = self.width or 0.6 * style.lane.width
+        width = self.width or 0.6 * style.lane_height
         half_width_vector = width/2 * coord.lane_normal
         start_corner = coord.as_coord(self.start_date, lane=self.lane) + half_width_vector
         end_corner = coord.as_coord(self.end_date, lane=self.lane) - half_width_vector
