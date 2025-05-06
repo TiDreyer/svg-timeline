@@ -2,6 +2,7 @@
 from pathlib import Path
 from typing import Optional
 
+from svg_timeline.css import CascadeStyleSheet
 from svg_timeline.geometry import Vector
 from svg_timeline.svg import SVG, SvgGroup
 from svg_timeline.svg_primitives import Rectangle
@@ -16,13 +17,15 @@ class TimelinePlot:
     dates, timespans etc. can be added to this timeline via method calls
     """
     def __init__(self, geometry: TimeLineGeometry,
-                 layers: Optional[dict[int|str, list[TimeLineElement]]] = None
+                 layers: Optional[dict[int|str, list[TimeLineElement]]] = None,
+                 css: Optional[CascadeStyleSheet] = None,
                  ):
         self._layers: dict[int, list[TimeLineElement]] = dict()
         if layers is not None:
             for i_layer, elements in layers.items():
                 layer = self._layers.setdefault(int(i_layer), [])
                 layer += elements
+        self._css = css or CascadeStyleSheet()
         self._geometry = geometry
 
     def add_element(self, element: TimeLineElement, layer: int = 1) -> None:
@@ -39,6 +42,11 @@ class TimelinePlot:
         """ the geometry settings of this plot """
         return self._geometry
 
+    @property
+    def css(self) -> CascadeStyleSheet:
+        """ the style sheet of this plot """
+        return self._css
+
     def add_title(self, title: str, classes: Optional[list[str]] = None):
         """ Add a title that should be printed above the timeline """
         title = Title(text=title, classes=classes)
@@ -52,7 +60,7 @@ class TimelinePlot:
     def svg(self) -> SVG:
         """ Return the SVG representation of this timeline """
         width, height = self._geometry.width, self._geometry.height
-        svg = SVG(width, height)
+        svg = SVG(width, height, css=self.css)
         # first, set a white background
         svg.elements.append(Rectangle(Vector(0, 0), Vector(width, height), classes=['background']))
         for i_layer in sorted(self._layers.keys()):
