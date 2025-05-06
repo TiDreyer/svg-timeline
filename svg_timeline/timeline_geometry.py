@@ -1,5 +1,5 @@
 """ classes that define the geometry of the timeline plot """
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
 
@@ -8,49 +8,13 @@ from svg_timeline.time_calculations import TimeGradient
 
 
 @dataclass
-class CanvasGeometry:
-    """ geometry settings related to the canvas """
-    height: int = 800
-    width: int = 1000
-    x_padding: float = 0.03
-
-
-@dataclass
-class LaneGeometry:
-    """ geometry settings related to the lane definitions """
-    lane_zero_y: float = 0.9
-    width: float = 30
-
-
-@dataclass
-class TitleGeometry:
-    """ geometry settings related to the title elements """
-    x_position: float = 1/2
-    y_position: float = 1/17
-    size_factor: float = 1/15
-
-
-@dataclass
-class EventGeometry:
-    """ geometry settings related to the event elements """
-    dot_radius: float = 3
-
-
-@dataclass
-class TimespanGeometry:
-    """ geometry settings related to the timespan elements """
-    width: float = 18
-    use_start_stilt: bool = False
-    use_end_stilt: bool = False
-
-
-@dataclass
 class GeometrySettings:
-    canvas: CanvasGeometry = field(default_factory=CanvasGeometry)
-    title: TitleGeometry = field(default_factory=TitleGeometry)
-    lane: LaneGeometry = field(default_factory=LaneGeometry)
-    event: EventGeometry = field(default_factory=EventGeometry)
-    timespan: TimespanGeometry = field(default_factory=TimespanGeometry)
+    """ geometry settings related to the canvas """
+    canvas_height: int = 800
+    canvas_width: int = 1000
+    canvas_x_padding: float = 0.03
+    lane_zero_rel_y_position: float = 0.9
+    lane_height: float = 30
 
 
 class TimeLineGeometry:
@@ -58,25 +22,25 @@ class TimeLineGeometry:
     def __init__(self,
                  start_date: datetime,
                  end_date: datetime,
-                 style: Optional[GeometrySettings] = None,
+                 settings: Optional[GeometrySettings] = None,
                  ):
         """
         :param start_date: the lower boundary of the timeline
         :param end_date: the upper boundary of the timeline
         """
-        self._style = style or GeometrySettings()
+        self._settings = settings or GeometrySettings()
         self._first = start_date
         self._last = end_date
-        y = self._style.lane.lane_zero_y * self._style.canvas.height
-        x1 = self._style.canvas.x_padding * self._style.canvas.width
-        x2 = (1 - self._style.canvas.x_padding) * self._style.canvas.width
+        y = self._settings.lane_zero_rel_y_position * self._settings.canvas_height
+        x1 = self._settings.canvas_x_padding * self._settings.canvas_width
+        x2 = (1 - self._settings.canvas_x_padding) * self._settings.canvas_width
         self._gradient = TimeGradient(source=Vector(x1, y), target=Vector(x2, y),
                                       start_date=start_date, end_date=end_date)
 
     @property
-    def style(self) -> GeometrySettings:
+    def settings(self) -> GeometrySettings:
         """ styling information for the timeline """
-        return self._style
+        return self._settings
 
     @property
     def first(self) -> datetime:
@@ -91,12 +55,12 @@ class TimeLineGeometry:
     @property
     def width(self) -> int:
         """ full width of the canvas """
-        return self._style.canvas.width
+        return self._settings.canvas_width
 
     @property
     def height(self) -> int:
         """ full height of the canvas """
-        return self._style.canvas.height
+        return self._settings.canvas_height
 
     @property
     def lane_normal(self) -> Vector:
@@ -110,5 +74,5 @@ class TimeLineGeometry:
         (default: on the time arrow)
         """
         date_coord = self._gradient.date_to_coord(date)
-        lane_point = date_coord + lane * self._style.lane.width * self.lane_normal
+        lane_point = date_coord + lane * self._settings.lane_height * self.lane_normal
         return lane_point

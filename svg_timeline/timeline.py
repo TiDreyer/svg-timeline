@@ -92,6 +92,6 @@ class TimelinePlot:
         for i_layer in sorted(self._layers.keys()):
             layer = SvgGroup(exact_id=f'layer_{i_layer:03}')
             for element in self._layers[i_layer]:
-                layer.append(element.svg(self._geometry, self._geometry.style))
+                layer.append(element.svg(self._geometry))
             svg.elements.append(layer)
         svg.save_as(file_path=file_path)

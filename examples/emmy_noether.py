@@ -16,17 +16,17 @@ def main():
     birth = dt('1882-03-23')
     death = dt('1935-04-14')
 
-    style = GeometrySettings()
-    style.canvas.width = 1000
-    style.canvas.height = 300
+    geo_settings = GeometrySettings()
+    geo_settings.canvas_width = 1000
+    geo_settings.canvas_height = 300
     # setting at what vertical position the arrow is drawn
-    style.lane.lane_zero_y = 0.85
+    geo_settings.lane_zero_rel_y_position = 0.85
 
     # initializing the timeline plot object
     geometry = TimeLineGeometry(
         start_date=dt('1879-12-01'),
         end_date=dt('1935-12-31'),
-        style=style,
+        settings=geo_settings,
     )
     timeline = TimelinePlot(geometry=geometry)
 
