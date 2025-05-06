@@ -1,7 +1,7 @@
 """ Example script to create a timeline of Emmy Noether's life """
 from pathlib import Path
 
-from svg_timeline.JSON_encoding import save_json, load_json
+from svg_timeline.json_serialize import save_json, load_json
 from svg_timeline.css import Colors
 from svg_timeline.svg import SvgGroup
 from svg_timeline.time_calculations import TimeSpacingPerDecade, TimeSpacingPerYear, dt
@@ -41,7 +41,7 @@ def main():
     _image_path = Path(__file__).parent.joinpath('473px-Noether.jpeg')
     _image_scale = 0.27
     timeline.add_element(
-        DatedImage(dt('1900'), _image_path, width=_image_scale*473, height=_image_scale*720, lane=1)
+        DatedImage.from_path(dt('1900'), _image_path, width=_image_scale*473, height=_image_scale*720, lane=1)
     )
 
     plot_elements = [
