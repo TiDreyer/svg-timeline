@@ -4,7 +4,7 @@ from mimetypes import guess_type
 from base64 import b64encode
 from html import escape
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Self
 
 from svg_timeline.geometry import Vector
 from svg_timeline.svg import SvgElement
@@ -74,22 +74,35 @@ class Circle(SvgElement):
 class Image(SvgElement):
     """ SVG embedding of the image found at the given file path """
     def __init__(self, top_left: Vector, width: float, height: float,
-                 file: Path, classes: Optional[list[str]] = None):
+                 xlink_href: str, classes: Optional[list[str]] = None):
         super().__init__(tag='image', classes=classes)
         self.top_left = top_left
         self.width = width
         self.height = height
-        self.file = file
+        self.xlink_href = xlink_href
         self._update_attributes()
 
     def _update_attributes(self) -> None:
-        mimetype, encoding = guess_type(self.file)
-        with open(self.file, 'rb', encoding=encoding) as image_file:
-            image_data = b64encode(image_file.read())
         self._attributes.update({
             'x': str(self.top_left.x),
             'y': str(self.top_left.y),
             'width': str(self.width),
             'height': str(self.height),
-            'xlink:href': f'data:{mimetype};base64,{image_data.decode()}',
+            'xlink:href': self.xlink_href,
         })
+
+    @staticmethod
+    def xlink_href_from_file_path(file: Path) -> str:
+        """ determine the data representation of the image from its path """
+        mimetype, encoding = guess_type(file)
+        with open(file, 'rb', encoding=encoding) as image_file:
+            image_data = b64encode(image_file.read())
+        xlink_href = f'data:{mimetype};base64,{image_data.decode()}'
+        return xlink_href
+
+    @classmethod
+    def from_path(cls, top_left: Vector, width: float, height: float,
+                  file_path: Path, classes: Optional[list[str]] = None) -> Self:
+        """ generate an instance from a file path instead of the data """
+        xlink_href = cls.xlink_href_from_file_path(file_path)
+        return cls(top_left, width, height, xlink_href, classes)
