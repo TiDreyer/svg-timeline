@@ -50,7 +50,7 @@ class TimelinePlot:
         width, height = self._geometry.width, self._geometry.height
         svg = SVG(width, height, css=self.css)
         # first, set a white background
-        self.add_element(Background(), layer=-1)
+        self.add_element(Background(), layer=0)
         for i_layer, elements in sorted(self._layers.items()):
             layer = Layer(elements=elements, index=i_layer)
             svg.elements.append(layer.svg(self._geometry))
