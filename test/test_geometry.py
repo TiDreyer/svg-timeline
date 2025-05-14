@@ -3,32 +3,7 @@ import math
 
 import pytest
 
-from svg_timeline.geometry import Canvas, Vector, COORD_TOLERANCE
-
-
-def test_vector_in_canvas():
-    canvas = Canvas(100, 100)
-    # corners
-    assert Vector(0, 0) in canvas
-    assert Vector(100, 100) in canvas
-    assert Vector(100, 0) in canvas
-    assert Vector(0, 100) in canvas
-    # borders
-    assert Vector(50, 0) in canvas
-    assert Vector(50, 100) in canvas
-    assert Vector(100, 50) in canvas
-    assert Vector(0, 50) in canvas
-    # inside
-    assert Vector(30, 30) in canvas
-    assert Vector(50, 50) in canvas
-    assert Vector(99, 30) in canvas
-    assert Vector(99.9999, 30) in canvas
-    # outside
-    assert Vector(-1, 50) not in canvas
-    assert Vector(50, -30) not in canvas
-    assert Vector(101, 50) not in canvas
-    assert Vector(50, 130) not in canvas
-    assert Vector(50, 100.0001) not in canvas
+from svg_timeline.geometry import Vector, COORD_TOLERANCE
 
 
 def test_vector_equal():
