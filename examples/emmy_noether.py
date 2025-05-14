@@ -2,7 +2,6 @@
 from pathlib import Path
 
 from svg_timeline.json_serialize import save_json, load_json
-from svg_timeline.css import Colors
 from svg_timeline.svg import SvgGroup
 from svg_timeline.time_calculations import TimeSpacingPerDecade, TimeSpacingPerYear, dt
 from svg_timeline.timeline import TimelinePlot
@@ -46,22 +45,22 @@ def main():
 
     plot_elements = [
         # some important dates in her life
-        Event(birth, 'Birth', lane=2, classes=[Colors.COLOR_A.name.lower()]),
-        Event(dt('1907'), 'PhD Thesis', lane=3, classes=[Colors.COLOR_B.name.lower()]),
-        Event(dt('1918'), 'Noether\'s Theorem', lane=5, classes=[Colors.COLOR_E.name.lower()]),
-        Event(dt('1919'), 'Habilitation', lane=3, classes=[Colors.COLOR_C.name.lower()]),
-        Event(dt('1932'), 'Ackermann-Teuber Memorial Award', lane=5, classes=[Colors.COLOR_E.name.lower()]),
+        Event(birth, 'Birth', lane=2, palette_color=1),
+        Event(dt('1907'), 'PhD Thesis', lane=3, palette_color=2),
+        Event(dt('1918'), 'Noether\'s Theorem', lane=5, palette_color=5),
+        Event(dt('1919'), 'Habilitation', lane=3, palette_color=3),
+        Event(dt('1932'), 'Ackermann-Teuber Memorial Award', lane=5, palette_color=5),
 
         # scholars distinguish three "epochs" in her work
-        TimeSpan(dt('1908'), dt('1920'), '"1st epoch"', lane=1, classes=[Colors.COLOR_B.name.lower(), 'white_text']),
-        TimeSpan(dt('1920'), dt('1927'), '"2nd epoch"', lane=1, classes=[Colors.COLOR_C.name.lower(), 'white_text']),
-        TimeSpan(dt('1927'), death, '"3rd epoch"', lane=1, classes=[Colors.COLOR_D.name.lower(), 'white_text']),
+        TimeSpan(dt('1908'), dt('1920'), '"1st epoch"', lane=1, palette_color=2),
+        TimeSpan(dt('1920'), dt('1927'), '"2nd epoch"', lane=1, palette_color=3),
+        TimeSpan(dt('1927'), death, '"3rd epoch"', lane=1, palette_color=4),
 
         # the universities she was associated with
         ConnectedEvents(
             dates=[dt('1908'), dt('1915-04'), dt('1933'), death],
             labels=["Erlangen", "Göttingen", "USA", None],
-            classes=[[Colors.COLOR_B.name.lower()], [Colors.COLOR_C.name.lower()], [Colors.COLOR_D.name.lower()], []],
+            palette_colors=[2, 3, 4, 0],
             lane=2,
         ),
     ]
@@ -69,7 +68,7 @@ def main():
         timeline.add_element(event)
 
     # adding this date on layer 2 so it is plotted on top of the other elements
-    timeline.add_element(Event(death, 'Death', lane=4, classes=[Colors.COLOR_A.name.lower()]), layer=2)
+    timeline.add_element(Event(death, 'Death', lane=4, palette_color=1), layer=2)
 
     # saving the SVG
     svg_path = Path(__file__).parent.joinpath('emmy_noether.svg')

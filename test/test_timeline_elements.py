@@ -12,8 +12,8 @@ def test_connected_events_raises_on_length():
     date_2 = datetime.fromisoformat('2010-12-31')
     # first correct usage examples:
     _ = ConnectedEvents(dates=[date_1, date_2], labels=['adsf', 'asdfas'])
-    _ = ConnectedEvents(dates=[date_1, date_2], labels=['adsf', 'asdfas'], classes=[[], []])
-    _ = ConnectedEvents(dates=[date_1, date_2], labels=['adsf', 'asdfas'], classes=[['color_a', 'asdf'], ['color_e']])
+    _ = ConnectedEvents(dates=[date_1, date_2], labels=['adsf', 'asdfas'], individual_classes=[[], []])
+    _ = ConnectedEvents(dates=[date_1, date_2], labels=['adsf', 'asdfas'], individual_classes=[['color_a', 'asdf'], ['color_e']])
     # mis-matched lengths:
     with raises(ValueError):
         _ = ConnectedEvents(dates=[date_1], labels=[])
@@ -22,6 +22,6 @@ def test_connected_events_raises_on_length():
     with raises(ValueError):
         _ = ConnectedEvents(dates=[date_1], labels=['adsf', 'asdfas'])
     with raises(ValueError):
-        _ = ConnectedEvents(dates=[date_1, date_2], labels=['adsf', 'asdfas'], classes=[])
+        _ = ConnectedEvents(dates=[date_1, date_2], labels=['adsf', 'asdfas'], individual_classes=[])
     with raises(ValueError):
-        _ = ConnectedEvents(dates=[date_1, date_2], labels=['adsf', 'asdfas'], classes=[['color_a']])
+        _ = ConnectedEvents(dates=[date_1, date_2], labels=['adsf', 'asdfas'], individual_classes=[['color_a']])

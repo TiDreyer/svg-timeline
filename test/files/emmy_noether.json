@@ -1,6 +1,6 @@
 {
   "meta": {
-    "created": "2025-05-06T19:46:19.791533",
+    "created": "2025-05-06T20:00:04.828144",
     "version": "0.2.2"
   },
   "data": {
@@ -12,6 +12,7 @@
           "text": "Emmy Noether",
           "rel_x_position": 0.5,
           "rel_y_position": 0.058823529411764705,
+          "palette_color": 0,
           "classes": null
         },
         {
@@ -26,6 +27,7 @@
             "start_date": "1879-12-01T00:00:00",
             "end_date": "1935-12-31T00:00:00"
           },
+          "palette_color": 0,
           "classes": null
         }
       ],
@@ -37,6 +39,7 @@
           "height": 194.4,
           "width": 127.71000000000001,
           "lane": 1,
+          "palette_color": 0,
           "classes": null
         },
         {
@@ -45,9 +48,8 @@
           "text": "Birth",
           "dot_radius": 3,
           "lane": 2,
-          "classes": [
-            "color_a"
-          ]
+          "palette_color": 1,
+          "classes": null
         },
         {
           "type": "Event",
@@ -55,9 +57,8 @@
           "text": "PhD Thesis",
           "dot_radius": 3,
           "lane": 3,
-          "classes": [
-            "color_b"
-          ]
+          "palette_color": 2,
+          "classes": null
         },
         {
           "type": "Event",
@@ -65,9 +66,8 @@
           "text": "Noether's Theorem",
           "dot_radius": 3,
           "lane": 5,
-          "classes": [
-            "color_e"
-          ]
+          "palette_color": 5,
+          "classes": null
         },
         {
           "type": "Event",
@@ -75,9 +75,8 @@
           "text": "Habilitation",
           "dot_radius": 3,
           "lane": 3,
-          "classes": [
-            "color_c"
-          ]
+          "palette_color": 3,
+          "classes": null
         },
         {
           "type": "Event",
@@ -85,9 +84,8 @@
           "text": "Ackermann-Teuber Memorial Award",
           "dot_radius": 3,
           "lane": 5,
-          "classes": [
-            "color_e"
-          ]
+          "palette_color": 5,
+          "classes": null
         },
         {
           "type": "TimeSpan",
@@ -96,10 +94,8 @@
           "text": "\"1st epoch\"",
           "lane": 1,
           "width": null,
-          "classes": [
-            "color_b",
-            "white_text"
-          ]
+          "palette_color": 2,
+          "classes": null
         },
         {
           "type": "TimeSpan",
@@ -108,10 +104,8 @@
           "text": "\"2nd epoch\"",
           "lane": 1,
           "width": null,
-          "classes": [
-            "color_c",
-            "white_text"
-          ]
+          "palette_color": 3,
+          "classes": null
         },
         {
           "type": "TimeSpan",
@@ -120,10 +114,8 @@
           "text": "\"3rd epoch\"",
           "lane": 1,
           "width": null,
-          "classes": [
-            "color_d",
-            "white_text"
-          ]
+          "palette_color": 4,
+          "classes": null
         },
         {
           "type": "ConnectedEvents",
@@ -141,16 +133,17 @@
           ],
           "dot_radius": 3,
           "lane": 2,
-          "classes": [
-            [
-              "color_b"
-            ],
-            [
-              "color_c"
-            ],
-            [
-              "color_d"
-            ],
+          "palette_colors": [
+            2,
+            3,
+            4,
+            0
+          ],
+          "common_classes": [],
+          "individual_classes": [
+            [],
+            [],
+            [],
             []
           ]
         }
@@ -162,9 +155,8 @@
           "text": "Death",
           "dot_radius": 3,
           "lane": 4,
-          "classes": [
-            "color_a"
-          ]
+          "palette_color": 1,
+          "classes": null
         }
       ]
     },
@@ -179,6 +171,127 @@
         "canvas_x_padding": 0.03,
         "lane_zero_rel_y_position": 0.85,
         "lane_height": 30
+      }
+    },
+    "css": {
+      "type": "CascadeStyleSheet",
+      "data": {
+        "rect.background": {
+          "fill": "white"
+        },
+        "path": {
+          "stroke": "black",
+          "stroke-width": "2pt",
+          "fill": "none"
+        },
+        "text": {
+          "font-size": "10pt",
+          "font-family": "Liberation Sans",
+          "fill": "black",
+          "text-anchor": "middle",
+          "dominant-baseline": "central"
+        },
+        "circle, rect": {
+          "fill": "black"
+        },
+        "text.title": {
+          "font-size": "20pt"
+        },
+        "path.time_axis": {
+          "stroke-width": "3pt"
+        },
+        "path.major_tic": {
+          "stroke-width": "2pt"
+        },
+        "path.minor_tic": {
+          "stroke-width": "1pt"
+        },
+        "path.event": {
+          "stroke-width": "2pt"
+        },
+        "text.timespan": {
+          "font-size": "9pt"
+        },
+        "path.image": {
+          "stroke-width": "2pt"
+        },
+        ".colored.c00": {
+          "stroke": "#000000",
+          "fill": "#000000"
+        },
+        ".top_text.c00": {
+          "fill": "#ffffff"
+        },
+        ".colored.c01": {
+          "stroke": "#1f77b4",
+          "fill": "#1f77b4"
+        },
+        ".top_text.c01": {
+          "fill": "#000000"
+        },
+        ".colored.c02": {
+          "stroke": "#ff7f0e",
+          "fill": "#ff7f0e"
+        },
+        ".top_text.c02": {
+          "fill": "#000000"
+        },
+        ".colored.c03": {
+          "stroke": "#2ca02c",
+          "fill": "#2ca02c"
+        },
+        ".top_text.c03": {
+          "fill": "#000000"
+        },
+        ".colored.c04": {
+          "stroke": "#d62728",
+          "fill": "#d62728"
+        },
+        ".top_text.c04": {
+          "fill": "#000000"
+        },
+        ".colored.c05": {
+          "stroke": "#9467bd",
+          "fill": "#9467bd"
+        },
+        ".top_text.c05": {
+          "fill": "#000000"
+        },
+        ".colored.c06": {
+          "stroke": "#8c564b",
+          "fill": "#8c564b"
+        },
+        ".top_text.c06": {
+          "fill": "#000000"
+        },
+        ".colored.c07": {
+          "stroke": "#e377c2",
+          "fill": "#e377c2"
+        },
+        ".top_text.c07": {
+          "fill": "#000000"
+        },
+        ".colored.c08": {
+          "stroke": "#7f7f7f",
+          "fill": "#7f7f7f"
+        },
+        ".top_text.c08": {
+          "fill": "#000000"
+        },
+        ".colored.c09": {
+          "stroke": "#bcbd22",
+          "fill": "#bcbd22"
+        },
+        ".top_text.c09": {
+          "fill": "#000000"
+        },
+        ".colored.c10": {
+          "stroke": "#17becf",
+          "fill": "#17becf"
+        },
+        ".top_text.c10": {
+          "fill": "#000000"
+        }
       }
     }
   }

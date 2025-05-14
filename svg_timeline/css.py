@@ -1,12 +1,18 @@
 """ base classes for handling CSS """
 from enum import StrEnum
+from typing import Optional
+
+from svg_timeline.colors import ColorPalette, DEFAULT_COLORS
 
 
 class CascadeStyleSheet(dict):
     """ basic representation of a CSS """
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, custom_entries: Optional[dict] = None):
+        super().__init__(_DEFAULTS)
+        if custom_entries is not None:
+            self.update(custom_entries)
         self.full_validate()
+        self._used_color_palette: Optional[ColorPalette] = None
 
     def full_validate(self):
         """ check that the object represents valid CSS """
@@ -31,6 +37,8 @@ class CascadeStyleSheet(dict):
 
     def compile(self, indent='', line_break='\n') -> str:
         """ compile the contained style definition into a css file """
+        if self._used_color_palette is None:
+            self.set_color_palette(DEFAULT_COLORS)
         css_section = f'{line_break or " "}'
         for selector, props in self.items():
             css_section += f'{selector} {{{line_break}'
@@ -40,30 +48,39 @@ class CascadeStyleSheet(dict):
             css_section += f'{line_break or " "}}}{line_break or " "}'
         return css_section
 
+    def set_color_palette(self, palette: ColorPalette):
+        if self._used_color_palette is not None:
+            raise RuntimeError("Color palette was already set on this CascadeStyleSheet")
+        for i, color in enumerate(palette):
+            self[f'.colored.c{i:02}'] = {
+                'stroke': color.color,
+                'fill': color.color,
+            }
+            self[f'.top_text.c{i:02}'] = {
+                'fill': color.top_text_color,
+            }
+        self._used_color_palette = palette
+
 
 class ClassNames(StrEnum):
     """ string constants for all the class names that are commonly used for styling via CSS """
+    # determining the timeline element:
     TITLE = 'title'
-    TIMEAXIS = 'time_axis'
-    MINOR_TICK = 'minor_tic'
-    MAJOR_TICK = 'major_tic'
+    TIME_ARROW = 'time_arrow'
     EVENT = 'event'
     TIMESPAN = 'timespan'
+    CONNECTED_EVENTS = 'connected_events'
     IMAGE = 'image'
+    # sub-elements
+    TIME_ARROW_AXIS = 'time_axis'
+    TIME_ARROW_MINOR_TIC = 'minor_tic'
+    TIME_ARROW_MAJOR_TIC = 'major_tic'
+    # for picking which color to use:
+    COLORED = 'colored'
+    TOP_TEXT = 'top_text'
 
 
-class Colors(StrEnum):
-    """ string constants for all the colors that are pre-defined as class names """
-    WHITE = '#ffffff'
-    BLACK = '#000000'
-    COLOR_A = '#003f5c'
-    COLOR_B = '#58508d'
-    COLOR_C = '#bc5090'
-    COLOR_D = '#ff6361'
-    COLOR_E = '#ffa600'
-
-
-DEFAULT_CSS = CascadeStyleSheet({
+_DEFAULTS = {
     'rect.background': {
         'fill': 'white',
     },
@@ -85,13 +102,13 @@ DEFAULT_CSS = CascadeStyleSheet({
     f'text.{ClassNames.TITLE}': {
         'font-size': '20pt',
     },
-    f'path.{ClassNames.TIMEAXIS}': {
+    f'path.{ClassNames.TIME_ARROW_AXIS}': {
         'stroke-width': '3pt',
     },
-    f'path.{ClassNames.MAJOR_TICK}': {
+    f'path.{ClassNames.TIME_ARROW_MAJOR_TIC}': {
         'stroke-width': '2pt',
     },
-    f'path.{ClassNames.MINOR_TICK}': {
+    f'path.{ClassNames.TIME_ARROW_MINOR_TIC}': {
         'stroke-width': '1pt',
     },
     f'path.{ClassNames.EVENT}': {
@@ -103,15 +120,4 @@ DEFAULT_CSS = CascadeStyleSheet({
     f'path.{ClassNames.IMAGE}': {
         'stroke-width': '2pt',
     },
-})
-
-for __COLOR in Colors:
-    __SELECTOR = f'path.{__COLOR.name.lower()}, rect.{__COLOR.name.lower()}, circle.{__COLOR.name.lower()}'
-    DEFAULT_CSS[__SELECTOR] = {
-        'stroke': str(__COLOR),
-        'fill': str(__COLOR),
-    }
-    __SELECTOR = f'text.{__COLOR.name.lower()}_text'
-    DEFAULT_CSS[__SELECTOR] = {
-        'fill': str(__COLOR),
-    }
+}

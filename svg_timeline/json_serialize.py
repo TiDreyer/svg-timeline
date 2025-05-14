@@ -9,6 +9,7 @@ from svg_timeline import __version__
 from svg_timeline.time_calculations import TimeSpacing
 from svg_timeline.timeline import TimelinePlot
 from svg_timeline.timeline_geometry import TimeLineGeometry
+from svg_timeline.css import CascadeStyleSheet
 import svg_timeline.timeline_elements as ele
 import svg_timeline.timeline_geometry as geo
 import svg_timeline.time_calculations as tls
@@ -51,6 +52,7 @@ class KnownClasses(Enum):
     TimelinePlot = TimelinePlot
     TimeLineGeometry = TimeLineGeometry
     GeometrySettings = geo.GeometrySettings
+    CascadeStyleSheet = CascadeStyleSheet
     Title = ele.Title
     TimeArrow = ele.TimeArrow
     Event = ele.Event
@@ -79,6 +81,10 @@ class TimeLineEncoder(JSONEncoder):
                 "type": KnownClasses(o.__class__).name,
                 "layers": o.layers,
                 "geometry": o.geometry,
+                "css": {
+                    "type": KnownClasses(CascadeStyleSheet).name,
+                    "data": o.css.copy(),
+                },
             }
         if isinstance(o, TimeLineGeometry):
             return {
@@ -135,6 +141,8 @@ def recursive_decode(json_object: any) -> any:
             pass
     if isinstance(json_object, dict) and json_object.get('type', '') == KnownClasses.Path.name:
         return Path(json_object['path'])
+    if isinstance(json_object, dict) and json_object.get('type', '') == KnownClasses.CascadeStyleSheet.name:
+        return CascadeStyleSheet(json_object['data'])
     if isinstance(json_object, dict) and 'type' in json_object:
         cls = KnownClasses[json_object.pop('type')].value
         return cls(**json_object)
