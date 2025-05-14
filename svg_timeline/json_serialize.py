@@ -7,7 +7,7 @@ from pathlib import Path
 
 from svg_timeline import __version__
 from svg_timeline.timeline import TimelinePlot
-from svg_timeline.svg import CascadeStyleSheet
+from svg_timeline.svg_file import CascadeStyleSheet
 import svg_timeline.timeline_elements as ele
 import svg_timeline.timeline_geometry as geo
 import svg_timeline.time_spacing as tls

@@ -2,7 +2,7 @@
 from pathlib import Path
 from typing import Optional
 
-from svg_timeline.svg import SVG, CascadeStyleSheet
+from svg_timeline.svg_file import SvgFile, CascadeStyleSheet
 from svg_timeline.timeline_elements import TimeLineElement, Background, Layer
 from svg_timeline.timeline_geometry import TimeLineGeometry
 
@@ -44,10 +44,10 @@ class TimelinePlot:
         return self._css
 
     @property
-    def svg(self) -> SVG:
+    def svg(self) -> SvgFile:
         """ Return the SVG representation of this timeline """
         width, height = self._geometry.width, self._geometry.height
-        svg = SVG(width, height, css=self.css)
+        svg = SvgFile(width, height, css=self.css)
         # first, set a white background
         self.add_element(Background(), layer=0)
         for i_layer, elements in sorted(self._layers.items()):
