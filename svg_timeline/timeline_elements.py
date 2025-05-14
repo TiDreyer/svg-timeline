@@ -220,7 +220,8 @@ class DatedImage(TimeLineElement):
         image_top_left = image_center_left + self.width / 2 * geometry.lane_normal.orthogonal(ccw=True)
         image = SvgGroup([
             Line(source=event_base, target=event_end, classes=classes + [ClassNames.COLORED]),
-            Image(top_left=image_top_left, xlink_href=self.image_data, height=self.height, width=self.width, classes=classes),
+            Image(top_left=image_top_left, xlink_href=self.image_data,
+                  height=self.height, width=self.width, classes=classes),
         ], id_base='image')
         return image
 
