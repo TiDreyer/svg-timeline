@@ -6,26 +6,6 @@ from typing import Self
 COORD_TOLERANCE = 0.000_001
 
 
-class Canvas:
-    """ representation of a rectangular drawing area
-    with the origin (0,0) in the top left corner """
-    def __init__(self, width: int, height: int):
-        self.width = width
-        self.height = height
-
-    def __repr__(self) -> str:
-        return f"Canvas(width={self.width}, height={self.height})"
-
-    def __contains__(self, item) -> bool:
-        """ check whether the item is contained within the canvas"""
-        if isinstance(item, Vector):
-            if (item.x < 0 or item.x > self.width or
-                item.y < 0 or item.y > self.height):
-                return False
-            return True
-        raise TypeError(f"__contains__ not defined for type '{type(item)}'")
-
-
 class Vector:
     """ a vector (or point) within a canvas """
     def __init__(self, x: float, y: float):

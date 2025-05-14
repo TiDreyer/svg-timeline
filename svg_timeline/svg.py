@@ -1,7 +1,6 @@
 """ base classes for creating SVG files """
 from html import escape
 from pathlib import Path
-from textwrap import indent
 from typing import Optional
 
 from svg_timeline.css import CascadeStyleSheet
@@ -65,39 +64,6 @@ class SvgElement:
         else:
             svg_element += ' />'
         return svg_element
-
-
-class SvgGroup(SvgElement):
-    """ a group of SVG elements inside a g-container """
-    id_counters = {}
-
-    def __init__(self,
-                 elements: Optional[list[SvgElement]] = None,
-                 attributes: Optional[dict[str, str]] = None,
-                 classes: Optional[list[str]] = None,
-                 id_base: str = 'group',
-                 exact_id: Optional[str] = None,
-                 ):
-        super().__init__(tag='g', attributes=attributes, classes=classes)
-        self._elements = elements or []
-        counter = SvgGroup.id_counters.setdefault(id_base, 1)
-        if exact_id is not None:
-            self._attributes['id'] = exact_id
-        else:
-            self._attributes['id'] = f'{id_base}_{counter:03}'
-        SvgGroup.id_counters[id_base] += 1
-
-    @property
-    def content(self) -> Optional[str]:
-        """ the contained elements """
-        if len(self._elements) == 0:
-            return None
-        content_lines = [indent(str(element), _INDENT) for element in self._elements]
-        return '\n' + '\n'.join(content_lines) + '\n'
-
-    def append(self, element: SvgElement) -> None:
-        """ add an element to this group """
-        self._elements.append(element)
 
 
 class SVG:

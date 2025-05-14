@@ -7,9 +7,8 @@ from typing import Optional, Self
 
 from svg_timeline.geometry import Vector
 from svg_timeline.css import ClassNames
-from svg_timeline.svg import SvgGroup
-from svg_timeline.svg_primitives import Line, Text, Circle, Image, Rectangle
-from svg_timeline.time_calculations import TimeSpacing
+from svg_timeline.svg_primitives import Line, Text, Circle, Image, Rectangle, SvgGroup
+from svg_timeline.time_spacing import TimeSpacing
 from svg_timeline.timeline_geometry import TimeLineGeometry
 
 Classes = Optional[list[str]]
@@ -20,6 +19,28 @@ class TimeLineElement(ABC):
     def svg(self, geometry: TimeLineGeometry) -> SvgGroup:
         """ generate the SVG representation of this element """
         raise NotImplementedError
+
+
+@dataclass
+class Layer(TimeLineElement):
+    """ a layer of the plot """
+    elements: list[TimeLineElement]
+    index: int
+
+    def svg(self, geometry: TimeLineGeometry) -> SvgGroup:
+        layer = SvgGroup(exact_id=f'layer_{self.index:03}')
+        for element in self.elements:
+            layer.append(element.svg(geometry))
+        return layer
+
+
+@dataclass
+class Background(TimeLineElement):
+    """ the background of the plot """
+    def svg(self, geometry: TimeLineGeometry) -> SvgGroup:
+        width, height = geometry.width, geometry.height
+        bkg = Rectangle(Vector(0, 0), Vector(width, height), classes=['background'])
+        return SvgGroup([bkg], exact_id='background')
 
 
 @dataclass
@@ -142,6 +163,7 @@ class ConnectedEvents(TimeLineElement):
 
     @property
     def classes(self) -> list[Classes]:
+        """ combine the common classes with the individual ones for each event """
         return [self.common_classes + individual for individual in self.individual_classes]
 
     def svg(self, geometry: TimeLineGeometry) -> SvgGroup:
@@ -186,6 +208,7 @@ class DatedImage(TimeLineElement):
     @classmethod
     def from_path(cls, date: datetime, file_path: Path, width: float, height: float,
                   lane: float = 1, palette_color: int = 0, classes: Classes = None) -> Self:
+        """ create an instance by loading an image file from the given path """
         xlink_href = Image.xlink_href_from_file_path(file=file_path)
         return cls(date=date, image_data=xlink_href, height=height, width=width,
                    lane=lane, palette_color=palette_color, classes=classes)
@@ -199,7 +222,8 @@ class DatedImage(TimeLineElement):
         image_top_left = image_center_left + self.width / 2 * geometry.lane_normal.orthogonal(ccw=True)
         image = SvgGroup([
             Line(source=event_base, target=event_end, classes=classes + [ClassNames.COLORED]),
-            Image(top_left=image_top_left, xlink_href=self.image_data, height=self.height, width=self.width, classes=classes),
+            Image(top_left=image_top_left, xlink_href=self.image_data,
+                  height=self.height, width=self.width, classes=classes),
         ], id_base='image')
         return image
 

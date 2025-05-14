@@ -6,13 +6,11 @@ from json import dumps, loads, JSONEncoder, JSONDecoder
 from pathlib import Path
 
 from svg_timeline import __version__
-from svg_timeline.time_calculations import TimeSpacing
 from svg_timeline.timeline import TimelinePlot
-from svg_timeline.timeline_geometry import TimeLineGeometry
 from svg_timeline.css import CascadeStyleSheet
 import svg_timeline.timeline_elements as ele
 import svg_timeline.timeline_geometry as geo
-import svg_timeline.time_calculations as tls
+import svg_timeline.time_spacing as tls
 
 
 def save_json(timeline: TimelinePlot, file_path: Path):
@@ -50,7 +48,7 @@ class KnownClasses(Enum):
     # pylint: disable=invalid-name
     # (the enum names need to be the class names to allow for easier de-serialization)
     TimelinePlot = TimelinePlot
-    TimeLineGeometry = TimeLineGeometry
+    TimeLineGeometry = geo.TimeLineGeometry
     GeometrySettings = geo.GeometrySettings
     CascadeStyleSheet = CascadeStyleSheet
     Title = ele.Title
@@ -86,14 +84,14 @@ class TimeLineEncoder(JSONEncoder):
                     "data": o.css.copy(),
                 },
             }
-        if isinstance(o, TimeLineGeometry):
+        if isinstance(o, geo.TimeLineGeometry):
             return {
                 "type": KnownClasses(o.__class__).name,
                 "start_date": o.first,
                 "end_date": o.last,
                 "settings": o.settings,
             }
-        if isinstance(o, TimeSpacing):
+        if isinstance(o, tls.TimeSpacing):
             return {
                 "type": KnownClasses(o.__class__).name,
                 "start_date": o.start_date,

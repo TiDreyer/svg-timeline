@@ -48,7 +48,8 @@ class CascadeStyleSheet(dict):
             css_section += f'{line_break or " "}}}{line_break or " "}'
         return css_section
 
-    def set_color_palette(self, palette: ColorPalette):
+    def set_color_palette(self, palette: ColorPalette) -> None:
+        """ add CSS entries for all colors in the given palette """
         if self._used_color_palette is not None:
             raise RuntimeError("Color palette was already set on this CascadeStyleSheet")
         for i, color in enumerate(palette):

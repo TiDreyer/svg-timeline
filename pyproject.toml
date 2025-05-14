@@ -29,6 +29,7 @@ pylint = "^3.2.6"
 
 [tool.pylint.main]
 fail-under = 9.5
+max-line-length = 120
 
 
 [build-system]
