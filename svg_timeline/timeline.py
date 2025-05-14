@@ -4,8 +4,7 @@ from typing import Optional
 
 from svg_timeline.css import CascadeStyleSheet
 from svg_timeline.svg import SVG
-from svg_timeline.time_spacing import TimeSpacing
-from svg_timeline.timeline_elements import TimeLineElement, Title, TimeArrow, Background, Layer
+from svg_timeline.timeline_elements import TimeLineElement, Background, Layer
 from svg_timeline.timeline_geometry import TimeLineGeometry
 
 
@@ -44,15 +43,6 @@ class TimelinePlot:
     def css(self) -> CascadeStyleSheet:
         """ the style sheet of this plot """
         return self._css
-
-    def add_title(self, title: str, classes: Optional[list[str]] = None):
-        """ Add a title that should be printed above the timeline """
-        title = Title(text=title, classes=classes)
-        self.add_element(title, layer=0)
-
-    def add_timearrow(self, major_tics: TimeSpacing, minor_tics: Optional[TimeSpacing] = None):
-        """ Add a timearrow to the timeline """
-        self.add_element(TimeArrow(major_tics=major_tics, minor_tics=minor_tics), layer=0)
 
     @property
     def svg(self) -> SVG:
