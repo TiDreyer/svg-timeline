@@ -163,6 +163,7 @@ class ConnectedEvents(TimeLineElement):
 
     @property
     def classes(self) -> list[Classes]:
+        """ combine the common classes with the individual ones for each event """
         return [self.common_classes + individual for individual in self.individual_classes]
 
     def svg(self, geometry: TimeLineGeometry) -> SvgGroup:
@@ -207,6 +208,7 @@ class DatedImage(TimeLineElement):
     @classmethod
     def from_path(cls, date: datetime, file_path: Path, width: float, height: float,
                   lane: float = 1, palette_color: int = 0, classes: Classes = None) -> Self:
+        """ create an instance by loading an image file from the given path """
         xlink_href = Image.xlink_href_from_file_path(file=file_path)
         return cls(date=date, image_data=xlink_href, height=height, width=width,
                    lane=lane, palette_color=palette_color, classes=classes)
