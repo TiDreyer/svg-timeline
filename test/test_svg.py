@@ -1,9 +1,9 @@
 """ test cases for the classes defined in the svg module """
 from textwrap import dedent
 
-from svg_timeline.colors import Color, ColorPalette
-from svg_timeline.css import CascadeStyleSheet
-from svg_timeline.svg import SVG, SvgElement
+from svg_timeline.svg_style_defaults import Color, ColorPalette
+from svg_timeline.svg import SVG, SvgElement, CascadeStyleSheet
+
 
 def test_svg_element_getters():
     empty = SvgElement(tag='empty')

@@ -2,8 +2,7 @@
 from pathlib import Path
 from typing import Optional
 
-from svg_timeline.css import CascadeStyleSheet
-from svg_timeline.svg import SVG
+from svg_timeline.svg import SVG, CascadeStyleSheet
 from svg_timeline.timeline_elements import TimeLineElement, Background, Layer
 from svg_timeline.timeline_geometry import TimeLineGeometry
 

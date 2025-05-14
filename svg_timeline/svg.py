@@ -3,9 +3,67 @@ from html import escape
 from pathlib import Path
 from typing import Optional
 
-from svg_timeline.css import CascadeStyleSheet
+from svg_timeline.svg_style_defaults import DEFAULT_CSS, ColorPalette, DEFAULT_COLORS
 
 _INDENT = 2 * ' '
+
+
+class CascadeStyleSheet(dict):
+    """ basic representation of a CSS """
+    def __init__(self, custom_entries: Optional[dict] = None):
+        super().__init__(DEFAULT_CSS)
+        if custom_entries is not None:
+            self.update(custom_entries)
+        self.full_validate()
+        self._used_color_palette: Optional[ColorPalette] = None
+
+    def full_validate(self):
+        """ check that the object represents valid CSS """
+        for key, value in self.items():
+            self.__validate_one_entry(key, value)
+
+    def __setitem__(self, key, value):
+        self.__validate_one_entry(key, value)
+        super().__setitem__(key, value)
+
+    @staticmethod
+    def __validate_one_entry(key, value):
+        if not isinstance(key, str):
+            raise TypeError(f"Invalid key {key}. All CSS keys must be strings.")
+        if not isinstance(value, dict):
+            raise TypeError(f"Invalid entry for key {key}. All CSS entries must be dicts.")
+        for sub_key, sub_value in value.items():
+            if not isinstance(sub_key, str):
+                raise TypeError(f"Invalid subkey {sub_key} in entry {key}. All CSS keys must be strings.")
+            if not isinstance(sub_value, str):
+                raise TypeError(f"Invalid value for {sub_key} in entry {key}. All CSS values must be strings.")
+
+    def compile(self, indent='', line_break='\n') -> str:
+        """ compile the contained style definition into a css file """
+        if self._used_color_palette is None:
+            self.set_color_palette(DEFAULT_COLORS)
+        css_section = f'{line_break or " "}'
+        for selector, props in self.items():
+            css_section += f'{selector} {{{line_break}'
+            css_section += f'{line_break or " "}'.join(
+                f'{indent}{name}: {value};' for name, value in props.items()
+            )
+            css_section += f'{line_break or " "}}}{line_break or " "}'
+        return css_section
+
+    def set_color_palette(self, palette: ColorPalette) -> None:
+        """ add CSS entries for all colors in the given palette """
+        if self._used_color_palette is not None:
+            raise RuntimeError("Color palette was already set on this CascadeStyleSheet")
+        for i, color in enumerate(palette):
+            self[f'.colored.c{i:02}'] = {
+                'stroke': color.color,
+                'fill': color.color,
+            }
+            self[f'.top_text.c{i:02}'] = {
+                'fill': color.top_text_color,
+            }
+        self._used_color_palette = palette
 
 
 class SvgElement:
