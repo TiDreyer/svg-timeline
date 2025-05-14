@@ -2,7 +2,7 @@
 from pathlib import Path
 
 from svg_timeline.json_serialize import save_json, load_json
-from svg_timeline.svg import SvgGroup
+from svg_timeline.svg_primitives import SvgGroup
 from svg_timeline.time_spacing import TimeSpacingPerDecade, TimeSpacingPerYear
 from svg_timeline.notation import dt
 from svg_timeline.timeline import TimelinePlot
