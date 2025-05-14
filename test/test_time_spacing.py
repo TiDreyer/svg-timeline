@@ -1,10 +1,10 @@
 """ test cases for the classes defined in the time_calculation module """
 from datetime import datetime
 
-from svg_timeline.time_calculations import _normalize_month, _normalize_date, _normalize_time
-from svg_timeline.time_calculations import TimeSpacingPerMillennia, TimeSpacingPerCentury, TimeSpacingPerDecade
-from svg_timeline.time_calculations import TimeSpacingPerYear, TimeSpacingPerMonth, TimeSpacingPerWeek, TimeSpacingPerDay
-from svg_timeline.time_calculations import TimeSpacingPerHour, TimeSpacingPerMinute, TimeSpacingPerSecond
+from svg_timeline.time_spacing import _normalize_month, _normalize_date, _normalize_time
+from svg_timeline.time_spacing import TimeSpacingPerMillennia, TimeSpacingPerCentury, TimeSpacingPerDecade
+from svg_timeline.time_spacing import TimeSpacingPerYear, TimeSpacingPerMonth, TimeSpacingPerWeek, TimeSpacingPerDay
+from svg_timeline.time_spacing import TimeSpacingPerHour, TimeSpacingPerMinute, TimeSpacingPerSecond
 
 
 def test_normalize_month():

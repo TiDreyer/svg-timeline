@@ -4,7 +4,7 @@ from typing import Optional
 
 from svg_timeline.css import CascadeStyleSheet
 from svg_timeline.svg import SVG, SvgGroup
-from svg_timeline.time_calculations import TimeSpacing
+from svg_timeline.time_spacing import TimeSpacing
 from svg_timeline.timeline_elements import TimeLineElement, Title, TimeArrow, Background
 from svg_timeline.timeline_geometry import TimeLineGeometry
 

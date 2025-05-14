@@ -1,4 +1,4 @@
-""" classes and functions for easier calculations on datetimes and coordinates """
+""" classes to create evenly spaced datetime objects within a range """
 import calendar
 from calendar import weekday
 from collections.abc import Iterable

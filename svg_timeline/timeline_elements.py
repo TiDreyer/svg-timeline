@@ -9,7 +9,7 @@ from svg_timeline.geometry import Vector
 from svg_timeline.css import ClassNames
 from svg_timeline.svg import SvgGroup
 from svg_timeline.svg_primitives import Line, Text, Circle, Image, Rectangle
-from svg_timeline.time_calculations import TimeSpacing
+from svg_timeline.time_spacing import TimeSpacing
 from svg_timeline.timeline_geometry import TimeLineGeometry
 
 Classes = Optional[list[str]]
