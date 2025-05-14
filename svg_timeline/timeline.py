@@ -3,9 +3,9 @@ from pathlib import Path
 from typing import Optional
 
 from svg_timeline.css import CascadeStyleSheet
-from svg_timeline.svg import SVG, SvgGroup
+from svg_timeline.svg import SVG
 from svg_timeline.time_spacing import TimeSpacing
-from svg_timeline.timeline_elements import TimeLineElement, Title, TimeArrow, Background
+from svg_timeline.timeline_elements import TimeLineElement, Title, TimeArrow, Background, Layer
 from svg_timeline.timeline_geometry import TimeLineGeometry
 
 
@@ -61,11 +61,9 @@ class TimelinePlot:
         svg = SVG(width, height, css=self.css)
         # first, set a white background
         self.add_element(Background(), layer=-1)
-        for i_layer in sorted(self._layers.keys()):
-            layer = SvgGroup(exact_id=f'layer_{i_layer:03}')
-            for element in self._layers[i_layer]:
-                layer.append(element.svg(self._geometry))
-            svg.elements.append(layer)
+        for i_layer, elements in sorted(self._layers.items()):
+            layer = Layer(elements=elements, index=i_layer)
+            svg.elements.append(layer.svg(self._geometry))
         return svg
 
     def save(self, file_path: Path):

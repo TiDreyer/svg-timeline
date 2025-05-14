@@ -23,6 +23,19 @@ class TimeLineElement(ABC):
 
 
 @dataclass
+class Layer(TimeLineElement):
+    """ a layer of the plot """
+    elements: list[TimeLineElement]
+    index: int
+
+    def svg(self, geometry: TimeLineGeometry) -> SvgGroup:
+        layer = SvgGroup(exact_id=f'layer_{self.index:03}')
+        for element in self.elements:
+            layer.append(element.svg(geometry))
+        return layer
+
+
+@dataclass
 class Background(TimeLineElement):
     """ the background of the plot """
     def svg(self, geometry: TimeLineGeometry) -> SvgGroup:
