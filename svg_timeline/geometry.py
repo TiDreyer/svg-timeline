@@ -80,6 +80,3 @@ class Vector:
         if ccw:
             return Vector(norm.y, -norm.x)
         return Vector(-norm.y, norm.x)
-
-
-ORIGIN = Vector(0, 0)
