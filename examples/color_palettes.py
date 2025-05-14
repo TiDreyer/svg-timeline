@@ -2,7 +2,7 @@
 from pathlib import Path
 
 from svg_timeline.colors import ColorPalette, DEFAULT_COLORS, SEABORN_COLORS
-from svg_timeline.time_calculations import dt
+from svg_timeline.notation import dt
 from svg_timeline.timeline import TimelinePlot
 from svg_timeline.timeline_elements import  TimeSpan
 from svg_timeline.timeline_geometry import TimeLineGeometry, GeometrySettings

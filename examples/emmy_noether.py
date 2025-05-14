@@ -3,7 +3,8 @@ from pathlib import Path
 
 from svg_timeline.json_serialize import save_json, load_json
 from svg_timeline.svg import SvgGroup
-from svg_timeline.time_calculations import TimeSpacingPerDecade, TimeSpacingPerYear, dt
+from svg_timeline.time_calculations import TimeSpacingPerDecade, TimeSpacingPerYear
+from svg_timeline.notation import dt
 from svg_timeline.timeline import TimelinePlot
 from svg_timeline.timeline_elements import Event, TimeSpan, ConnectedEvents, DatedImage
 from svg_timeline.timeline_geometry import TimeLineGeometry, GeometrySettings

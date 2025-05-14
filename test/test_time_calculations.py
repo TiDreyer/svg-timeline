@@ -1,9 +1,6 @@
 """ test cases for the classes defined in the time_calculation module """
 from datetime import datetime
 
-import pytest
-
-from svg_timeline.time_calculations import dt
 from svg_timeline.time_calculations import TimeGradient
 from svg_timeline.time_calculations import _normalize_month, _normalize_date, _normalize_time
 from svg_timeline.time_calculations import TimeSpacingPerMillennia, TimeSpacingPerCentury, TimeSpacingPerDecade
@@ -24,17 +21,6 @@ __COORD_END = Vector(100, 200)
 __COORD_PLUS_POINT_TWO = Vector(120, 220)
 
 __GRADIENT = TimeGradient(source=__COORD_START, target=__COORD_END, start_date=__DATE_START, end_date=__DATE_END)
-
-
-def test_shorthand():
-    assert dt('1987') == datetime(1987, 1, 1)
-    assert dt('1987-09') == datetime(1987, 9, 1)
-    assert dt('1987-09-23') == datetime(1987, 9, 23)
-    today = datetime.today()
-    assert dt('13:43') == datetime(today.year, today.month, today.day, 13, 43)
-    assert dt('13:43:52') == datetime(today.year, today.month, today.day, 13, 43, 52)
-    with pytest.raises(ValueError):
-        dt('asdf')
 
 
 def test_timegradient_init():
