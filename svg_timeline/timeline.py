@@ -3,11 +3,9 @@ from pathlib import Path
 from typing import Optional
 
 from svg_timeline.css import CascadeStyleSheet
-from svg_timeline.geometry import Vector
 from svg_timeline.svg import SVG, SvgGroup
-from svg_timeline.svg_primitives import Rectangle
 from svg_timeline.time_calculations import TimeSpacing
-from svg_timeline.timeline_elements import TimeLineElement, Title, TimeArrow
+from svg_timeline.timeline_elements import TimeLineElement, Title, TimeArrow, Background
 from svg_timeline.timeline_geometry import TimeLineGeometry
 
 
@@ -62,7 +60,7 @@ class TimelinePlot:
         width, height = self._geometry.width, self._geometry.height
         svg = SVG(width, height, css=self.css)
         # first, set a white background
-        svg.elements.append(Rectangle(Vector(0, 0), Vector(width, height), classes=['background']))
+        self.add_element(Background(), layer=-1)
         for i_layer in sorted(self._layers.keys()):
             layer = SvgGroup(exact_id=f'layer_{i_layer:03}')
             for element in self._layers[i_layer]:

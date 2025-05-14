@@ -23,6 +23,15 @@ class TimeLineElement(ABC):
 
 
 @dataclass
+class Background(TimeLineElement):
+    """ the background of the plot """
+    def svg(self, geometry: TimeLineGeometry) -> SvgGroup:
+        width, height = geometry.width, geometry.height
+        bkg = Rectangle(Vector(0, 0), Vector(width, height), classes=['background'])
+        return SvgGroup([bkg], exact_id='background')
+
+
+@dataclass
 class Title(TimeLineElement):
     """ the text of the title """
     text: str

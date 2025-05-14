@@ -84,7 +84,11 @@ path.image {
   fill: #000000;
 }
 </style>
-<rect class="background" x="0" y="0" width="1000.0" height="300.0" />
+<g id="layer_-01">
+  <g id="background">
+    <rect class="background" x="0" y="0" width="1000.0" height="300.0" />
+  </g>
+</g>
 <g id="layer_000">
   <g id="title">
     <text class="title c00" x="500" y="17">Emmy Noether</text>
@@ -208,22 +212,22 @@ path.image {
     <text class="timespan c04 top_text" x="888.6110433042035" y="225.0">&quot;3rd epoch&quot;</text>
   </g>
   <g id="connected_events_001">
-    <g id="group_004">
+    <g id="group_006">
       <path class="c02 colored" d="M500.7113215837524,195.0 L622.1866914026266,195.0" />
       <circle class="c02 colored" cx="500.7113215837524" cy="195.0" r="3" />
       <text class="colored" x="500.7113215837524" y="180.0">Erlangen</text>
     </g>
-    <g id="group_005">
+    <g id="group_007">
       <path class="c03 colored" d="M622.1866914026266,195.0 L919.7944637016062,195.0" />
       <circle class="c03 colored" cx="622.1866914026266" cy="195.0" r="3" />
       <text class="colored" x="622.1866914026266" y="180.0">Göttingen</text>
     </g>
-    <g id="group_006">
+    <g id="group_008">
       <path class="c04 colored" d="M919.7944637016062,195.0 L958.0222623639115,195.0" />
       <circle class="c04 colored" cx="919.7944637016062" cy="195.0" r="3" />
       <text class="colored" x="919.7944637016062" y="180.0">USA</text>
     </g>
-    <g id="group_007" />
+    <g id="group_009" />
   </g>
 </g>
 <g id="layer_002">
