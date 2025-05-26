@@ -7,6 +7,7 @@ from typing import Optional, Self
 
 from svg_timeline.geometry import Vector
 from svg_timeline.css import ClassNames
+from svg_timeline.notation import dt
 from svg_timeline.svg_primitives import Line, Text, Circle, Image, Rectangle, SvgGroup
 from svg_timeline.time_spacing import TimeSpacing
 from svg_timeline.timeline_geometry import TimeLineGeometry
@@ -118,12 +119,16 @@ class TimeArrow(TimeLineElement):
 @dataclass
 class Event(TimeLineElement):
     """ an event that happened at a single point in time """
-    date: datetime
+    date: datetime | str
     text: str
     dot_radius: float = 3
     lane: float = 1
     palette_color: int = 0
     classes: Classes = None
+
+    def __post_init__(self):
+        if isinstance(self.date, str):
+            self.date = dt(self.date)
 
     def svg(self, geometry: TimeLineGeometry) -> SvgGroup:
         classes = self.classes.copy() if self.classes else []
@@ -142,7 +147,7 @@ class Event(TimeLineElement):
 @dataclass
 class ConnectedEvents(TimeLineElement):
     """ a series of events connected via lines """
-    dates: list[datetime]
+    dates: list[datetime | str]
     labels: list[str]
     dot_radius: float = 3
     lane: float = 1
@@ -151,6 +156,9 @@ class ConnectedEvents(TimeLineElement):
     individual_classes: Optional[list[Classes]] = None
 
     def __post_init__(self):
+        for i, date in enumerate(self.dates):
+            if isinstance(date, str):
+                self.dates[i] = dt(date)
         # fill defaults for optional attributes:
         self.common_classes = self.common_classes or []
         if self.individual_classes is None:
@@ -197,7 +205,7 @@ class ConnectedEvents(TimeLineElement):
 @dataclass
 class DatedImage(TimeLineElement):
     """ an image that is associated with a single point in time """
-    date: datetime
+    date: datetime | str
     image_data: str
     height: float
     width: float
@@ -205,8 +213,12 @@ class DatedImage(TimeLineElement):
     palette_color: int = 0
     classes: Classes = None
 
+    def __post_init__(self):
+        if isinstance(self.date, str):
+            self.date = dt(self.date)
+
     @classmethod
-    def from_path(cls, date: datetime, file_path: Path, width: float, height: float,
+    def from_path(cls, date: datetime | str, file_path: Path, width: float, height: float,
                   lane: float = 1, palette_color: int = 0, classes: Classes = None) -> Self:
         """ create an instance by loading an image file from the given path """
         xlink_href = Image.xlink_href_from_file_path(file=file_path)
@@ -231,13 +243,19 @@ class DatedImage(TimeLineElement):
 @dataclass
 class TimeSpan(TimeLineElement):
     """ an entry that is associated with a certain time span """
-    start_date: datetime
-    end_date: datetime
+    start_date: datetime | str
+    end_date: datetime | str
     text: str
     lane: float = 1
     width: Optional[int] = None
     palette_color: int = 0
     classes: Classes = None
+
+    def __post_init__(self):
+        if isinstance(self.start_date, str):
+            self.start_date = dt(self.start_date)
+        if isinstance(self.end_date, str):
+            self.end_date = dt(self.end_date)
 
     def svg(self, geometry: TimeLineGeometry) -> SvgGroup:
         classes = self.classes.copy() if self.classes else []
