@@ -4,6 +4,7 @@ from datetime import datetime
 from typing import Optional
 
 from svg_timeline.geometry import Vector
+from svg_timeline.notation import dt
 
 
 @dataclass
@@ -18,18 +19,19 @@ class GeometrySettings:
 
 class TimeLineGeometry:
     """ class for the transfer of dates and lanes to canvas coordinates """
-    def __init__(self,
-                 start_date: datetime,
-                 end_date: datetime,
-                 settings: Optional[GeometrySettings] = None,
-                 ):
+    def __init__(
+            self,
+            start_date: datetime | str,
+            end_date: datetime | str,
+            settings: Optional[GeometrySettings] = None,
+    ):
         """
         :param start_date: the lower boundary of the timeline
         :param end_date: the upper boundary of the timeline
         """
         self._settings = settings or GeometrySettings()
-        self._first = start_date
-        self._last = end_date
+        self._first = start_date if isinstance(start_date, datetime) else dt(start_date)
+        self._last = end_date if isinstance(end_date, datetime) else dt(end_date)
         y = self._settings.lane_zero_rel_y_position * self._settings.canvas_height
         x1 = self._settings.canvas_x_padding * self._settings.canvas_width
         x2 = (1 - self._settings.canvas_x_padding) * self._settings.canvas_width
@@ -68,7 +70,7 @@ class TimeLineGeometry:
         """
         return (self._gradient.target - self._gradient.source).orthogonal(ccw=True)
 
-    def as_coord(self, date: datetime, lane: float = 0) -> Vector:
+    def as_coord(self, date: datetime | str, lane: float = 0) -> Vector:
         """ return the coordinates responding to this date on a given lane
         (default: on the time arrow)
         """
@@ -79,7 +81,13 @@ class TimeLineGeometry:
 
 class TimeGradient:
     """ class for the transfer of dates to canvas coordinates and back """
-    def __init__(self, source: Vector, target: Vector, start_date: datetime, end_date: datetime):
+    def __init__(
+            self,
+            source: Vector,
+            target: Vector,
+            start_date: datetime | str,
+            end_date: datetime | str,
+    ):
         """
         :param source: the point on the canvas that correspond to the start of the gradient
         :param target: the point on the canvas that correspond to the end of the gradient
@@ -88,8 +96,8 @@ class TimeGradient:
         """
         self._source = source
         self._target = target
-        self._start_date = start_date
-        self._end_date = end_date
+        self._start_date = start_date if isinstance(start_date, datetime) else dt(start_date)
+        self._end_date = end_date if isinstance(end_date, datetime) else dt(end_date)
 
     @property
     def source(self) -> Vector:
@@ -134,12 +142,14 @@ class TimeGradient:
         a = numerator / denominator
         return a
 
-    def date_to_coord(self, date: datetime) -> Vector:
+    def date_to_coord(self, date: datetime | str) -> Vector:
         """ transform a date into a position on the canvas """
         return self.relative_to_coord(self.date_to_relative(date=date))
 
-    def date_to_relative(self, date: datetime) -> float:
+    def date_to_relative(self, date: datetime | str) -> float:
         """ transform a date into a relative position on the timeline """
+        if isinstance(date, str):
+            date = dt(date)
         self_delta = self._end_date - self._start_date
         date_delta = date - self.start_date
         return date_delta / self_delta
