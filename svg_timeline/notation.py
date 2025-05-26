@@ -14,6 +14,15 @@ def dt(datetime_shorthand: str) -> datetime:
     if re.match(r'^\d\d\d\d-\d\d-\d\d$', datetime_shorthand):
         # iso date
         return datetime.fromisoformat(datetime_shorthand)
+    if re.match(r'^\d\d\d\d-\d\d-\d\dT\d\d$', datetime_shorthand):
+        # iso date + hour
+        return datetime.fromisoformat(f'{datetime_shorthand}:00:00')
+    if re.match(r'^\d\d\d\d-\d\d-\d\dT\d\d:\d\d$', datetime_shorthand):
+        # iso date + hour:minute
+        return datetime.fromisoformat(f'{datetime_shorthand}:00')
+    if re.match(r'^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d$', datetime_shorthand):
+        # iso date + time
+        return datetime.fromisoformat(datetime_shorthand)
     # default to today
     year = datetime.today().year
     month = datetime.today().month

@@ -243,3 +243,16 @@ def test_time_spacing_initial_date_overflow():
     assert hour_spacing.dates[0] == datetime.fromisoformat('2000-01-01T00:00:00')
     assert minute_spacing.dates[0] == datetime.fromisoformat('2000-01-01T00:00:00')
     assert second_spacing.dates[0] == datetime.fromisoformat('2000-01-01T00:00:00')
+
+
+def test_string_time_interpretation():
+    from_datetime = TimeSpacingPerYear(
+        datetime.fromisoformat('2000-01-02'),
+        datetime.fromisoformat('2005-01-02'),
+    )
+    from_string = TimeSpacingPerYear(
+        '2000-01-02',
+        '2005-01-02',
+    )
+    assert from_string.labels == from_datetime.labels
+    assert from_string.dates == from_datetime.dates
