@@ -3,7 +3,7 @@ from pathlib import Path
 
 from svg_timeline.time_spacing import TimeSpacingPerDecade, TimeSpacingPerYear
 from svg_timeline.timeline import TimelinePlot
-from svg_timeline.timeline_elements import Event, TimeSpan, ConnectedEvents, DatedImage
+from svg_timeline.timeline_elements import Event, TimeSpan, ConnectedEvents, DatedImage, Title, TimeArrow
 from svg_timeline.timeline_geometry import TimeLineGeometry, GeometrySettings
 
 
@@ -28,11 +28,11 @@ def main():
     timeline = TimelinePlot(geometry=geometry)
 
     # adding a title to the plot
-    timeline.add_title("Emmy Noether")
-    timeline.add_timearrow(
+    timeline.add_element(Title("Emmy Noether"), layer=2)
+    timeline.add_element(TimeArrow(
         major_tics=TimeSpacingPerDecade(geometry.first, geometry.last),
         minor_tics=TimeSpacingPerYear(geometry.first, geometry.last),
-    )
+    ), layer=2)
 
     # adding the image of Emmy Noether
     _image_path = Path(__file__).parent.joinpath('473px-Noether.jpeg')
