@@ -4,14 +4,20 @@ from calendar import weekday
 from collections.abc import Iterable
 from datetime import datetime
 
+from svg_timeline.notation import dt
+
 
 class TimeSpacing:
     """ base class for semantic datetime spacing within a given range """
-    def __init__(self, start_date: datetime, end_date: datetime):
+    def __init__(
+            self,
+            start_date: datetime | str,
+            end_date: datetime | str,
+    ):
         if not start_date < end_date:
             raise ValueError("start date needs to be smaller than end date")
-        self._start_date = start_date
-        self._end_date = end_date
+        self._start_date = start_date if isinstance(start_date, datetime) else dt(start_date)
+        self._end_date = end_date if isinstance(end_date, datetime) else dt(end_date)
 
     @property
     def start_date(self) -> datetime:
