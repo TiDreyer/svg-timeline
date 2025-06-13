@@ -3,7 +3,7 @@ from datetime import datetime
 
 from pytest import fixture
 
-from svg_timeline.geometry import Vector
+from svg_timeline.vectors import Vector
 from svg_timeline.timeline_geometry import TimeGradient, TimeLineGeometry
 
 __DATESTR_MINUS_ONE = '2000'

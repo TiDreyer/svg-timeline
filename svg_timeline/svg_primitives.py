@@ -7,7 +7,7 @@ from pathlib import Path
 from textwrap import indent
 from typing import Optional, Self
 
-from svg_timeline.geometry import Vector
+from svg_timeline.vectors import Vector
 
 
 _INDENT = 2 * ' '

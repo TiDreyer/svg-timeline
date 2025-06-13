@@ -5,7 +5,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional, Self
 
-from svg_timeline.geometry import Vector
+from svg_timeline.vectors import Vector
 from svg_timeline.svg_style_defaults import ClassNames
 from svg_timeline.notation import dt
 from svg_timeline.svg_primitives import Line, Text, Circle, Image, Rectangle, SvgGroup
