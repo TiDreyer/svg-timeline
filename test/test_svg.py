@@ -2,8 +2,7 @@
 from textwrap import dedent
 
 from svg_timeline.svg_style_defaults import Color, ColorPalette
-from svg_timeline.svg_file import SvgFile, CascadeStyleSheet
-from svg_timeline.svg_primitives import SvgElement
+from svg_timeline.svg import SvgFile, CascadeStyleSheet, SvgElement
 
 
 def test_svg_element_getters():

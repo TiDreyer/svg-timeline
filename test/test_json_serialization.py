@@ -3,7 +3,7 @@ from json import dumps, loads
 from pathlib import Path
 
 import svg_timeline.json_serialize as serialize
-from svg_timeline.svg_primitives import SvgGroup
+from svg_timeline.svg import SvgGroup
 from svg_timeline.timeline import Event
 
 

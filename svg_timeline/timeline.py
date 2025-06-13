@@ -6,8 +6,7 @@ from pathlib import Path
 from typing import Optional, Self
 
 from svg_timeline.notation import dt
-from svg_timeline.svg_file import SvgFile, CascadeStyleSheet
-from svg_timeline.svg_primitives import SvgGroup, Rectangle, Text, Line, Circle, Image
+from svg_timeline.svg import SvgFile, CascadeStyleSheet, Line, Text, Rectangle, Circle, Image, SvgGroup
 from svg_timeline.svg_style_defaults import ClassNames
 from svg_timeline.time_spacing import TimeSpacing
 from svg_timeline.timeline_geometry import TimeLineGeometry
