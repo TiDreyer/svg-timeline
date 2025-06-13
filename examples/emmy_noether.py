@@ -2,8 +2,7 @@
 from pathlib import Path
 
 from svg_timeline.time_spacing import TimeSpacingPerDecade, TimeSpacingPerYear
-from svg_timeline.timeline import TimelinePlot
-from svg_timeline.timeline_elements import Event, TimeSpan, ConnectedEvents, DatedImage, Title, TimeArrow
+from svg_timeline.timeline import TimelinePlot, Title, TimeArrow, Event, ConnectedEvents, DatedImage, TimeSpan
 from svg_timeline.timeline_geometry import TimeLineGeometry, GeometrySettings
 
 

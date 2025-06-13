@@ -5,10 +5,10 @@ from enum import Enum
 from json import dumps, loads, JSONEncoder, JSONDecoder
 from pathlib import Path
 
+import svg_timeline.timeline
 from svg_timeline import __version__
 from svg_timeline.timeline import TimelinePlot
 from svg_timeline.svg_file import CascadeStyleSheet
-import svg_timeline.timeline_elements as ele
 import svg_timeline.timeline_geometry as geo
 import svg_timeline.time_spacing as tls
 
@@ -51,12 +51,12 @@ class KnownClasses(Enum):
     TimeLineGeometry = geo.TimeLineGeometry
     GeometrySettings = geo.GeometrySettings
     CascadeStyleSheet = CascadeStyleSheet
-    Title = ele.Title
-    TimeArrow = ele.TimeArrow
-    Event = ele.Event
-    ConnectedEvents = ele.ConnectedEvents
-    DatedImage = ele.DatedImage
-    TimeSpan = ele.TimeSpan
+    Title = svg_timeline.timeline.Title
+    TimeArrow = svg_timeline.timeline.TimeArrow
+    Event = svg_timeline.timeline.Event
+    ConnectedEvents = svg_timeline.timeline.ConnectedEvents
+    DatedImage = svg_timeline.timeline.DatedImage
+    TimeSpan = svg_timeline.timeline.TimeSpan
     TimeSpacingPerMillennia = tls.TimeSpacingPerMillennia
     TimeSpacingPerCentury = tls.TimeSpacingPerCentury
     TimeSpacingPerDecade = tls.TimeSpacingPerDecade
