@@ -1,7 +1,7 @@
 """ Example script to demonstrate the available colors """
 from pathlib import Path
 
-from svg_timeline.svg_style_defaults import ColorPalette, DEFAULT_COLORS, SEABORN_COLORS
+from svg_timeline.svg_style_defaults import ColorPalette, SEABORN_COLORS
 from svg_timeline.notation import dt
 from svg_timeline.timeline import TimelinePlot, TimeSpan
 from svg_timeline.timeline_geometry import TimeLineGeometry, GeometrySettings
