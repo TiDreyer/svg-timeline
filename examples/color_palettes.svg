@@ -23,13 +23,13 @@ circle, rect {
 text.title {
   font-size: 20pt;
 }
-path.time_arrow_axis {
+path.time_axis {
   stroke-width: 3pt;
 }
-path.time_arrow_major_tic {
+path.major_tic {
   stroke-width: 2pt;
 }
-path.time_arrow_minor_tic {
+path.minor_tic {
   stroke-width: 1pt;
 }
 path.event {
@@ -119,7 +119,11 @@ path.image {
   fill: #000000;
 }
 </style>
-<rect class="background" x="0" y="0" width="400.0" height="400.0" />
+<g id="layer_000">
+  <g id="background">
+    <rect class="background" x="0" y="0" width="400.0" height="400.0" />
+  </g>
+</g>
 <g id="layer_001">
   <g id="timespan_001">
     <rect class="timespan c00 colored" x="12.0" y="371.0" width="376.0" height="18.0" />
