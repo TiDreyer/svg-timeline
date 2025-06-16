@@ -3,7 +3,7 @@ import math
 
 import pytest
 
-from svg_timeline.geometry import Vector, COORD_TOLERANCE
+from svg_timeline.vectors import Vector, COORD_TOLERANCE
 
 
 def test_vector_equal():

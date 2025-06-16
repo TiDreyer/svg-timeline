@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pytest import raises
 
-from svg_timeline.timeline_elements import ConnectedEvents
+from svg_timeline.timeline import ConnectedEvents
 
 
 def test_connected_events_raises_on_length():

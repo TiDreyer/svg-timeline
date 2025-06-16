@@ -1,8 +1,8 @@
 """ test cases for the classes defined in the svg_primitives module """
 from pathlib import Path
 
-from svg_timeline.geometry import Vector
-from svg_timeline.svg_primitives import Line, Text, Rectangle, Circle, Image
+from svg_timeline.vectors import Vector
+from svg_timeline.svg import Line, Text, Rectangle, Circle, Image
 
 
 def test_line():

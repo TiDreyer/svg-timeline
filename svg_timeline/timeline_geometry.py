@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
 
-from svg_timeline.geometry import Vector
+from svg_timeline.vectors import Vector
 from svg_timeline.notation import dt
 
 

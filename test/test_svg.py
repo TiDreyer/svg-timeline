@@ -1,9 +1,8 @@
 """ test cases for the classes defined in the svg module """
 from textwrap import dedent
 
-from svg_timeline.colors import Color, ColorPalette
-from svg_timeline.css import CascadeStyleSheet
-from svg_timeline.svg import SVG, SvgElement
+from svg_timeline.svg import SvgFile, SvgElement
+
 
 def test_svg_element_getters():
     empty = SvgElement(tag='empty')
@@ -34,7 +33,7 @@ def test_svg_element_str():
 
 
 def test_svg_header():
-    svg = SVG(width=800, height=600)
+    svg = SvgFile(width=800, height=600)
     header = dedent('''\
     <?xml version="1.0" encoding="UTF-8"?>
     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -48,8 +47,8 @@ def test_svg_defs_section():
         SvgElement('a', {'a1': 'hello', 'a2': 'world'}, 'asdf'),
         SvgElement('b', {'b1': 'hello', 'b2': 'world'}),
     ]
-    svg_with = SVG(width=800, height=600, definitions=definitions)
-    svg_without = SVG(width=800, height=600)
+    svg_with = SvgFile(width=800, height=600, definitions=definitions)
+    svg_without = SvgFile(width=800, height=600)
     defs_section = dedent('''\
     <defs>
       <a a1="hello" a2="world">asdf</a>
@@ -65,8 +64,8 @@ def test_svg_element_section():
         SvgElement('a', {'a1': 'hello', 'a2': 'world'}, 'asdf'),
         SvgElement('b', {'b1': 'hello', 'b2': 'world'}),
     ]
-    svg_with = SVG(width=800, height=600, elements=elements)
-    svg_without = SVG(width=800, height=600)
+    svg_with = SvgFile(width=800, height=600, elements=elements)
+    svg_without = SvgFile(width=800, height=600)
     element_section = dedent('''\
     <a a1="hello" a2="world">asdf</a>
     <b b1="hello" b2="world" />
@@ -76,7 +75,7 @@ def test_svg_element_section():
 
 
 def test_svg_footer():
-    svg = SVG(width=800, height=600)
+    svg = SvgFile(width=800, height=600)
     footer = dedent('''\
     </svg>
     ''')
