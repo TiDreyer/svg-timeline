@@ -9,7 +9,7 @@ class Color:
     top_text_color: str = '#000000'  # default to black text
 
 
-class ColorPalette(tuple[Color]):
+class ColorPalette(tuple[Color, ...]):
     """ a pre-defined list of colors to be used for a plot """
     pass
 
