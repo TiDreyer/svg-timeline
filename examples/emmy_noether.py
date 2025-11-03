@@ -1,3 +1,9 @@
+# /// script
+# requires-python = ">=3.14"
+# dependencies = [
+#     "svg-timeline",
+# ]
+# ///
 """ Example script to create a timeline of Emmy Noether's life """
 from pathlib import Path
 
