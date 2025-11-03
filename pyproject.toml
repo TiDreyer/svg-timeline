@@ -1,6 +1,6 @@
 [project]
 name = "svg-timeline"
-version = "0.2.2"
+version = "1.0.0"
 requires-python = ">=3.11"
 authors = [
   { name="Timo Dreyer", email="dev@timodreyer.de" },
