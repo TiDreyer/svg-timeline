@@ -179,10 +179,6 @@ class Event(TimeLineElement):
     palette_color: int = 0
     classes: Classes = None
 
-    def __post_init__(self):
-        if isinstance(self.date, str):
-            self.date = dt(self.date)
-
     def svg(self, geometry: TimeLineGeometry) -> SvgGroup:
         classes = self.classes.copy() if self.classes else []
         classes += [ClassNames.EVENT, f'c{self.palette_color:02}']
@@ -209,9 +205,6 @@ class ConnectedEvents(TimeLineElement):
     individual_classes: Optional[list[Classes]] = None
 
     def __post_init__(self):
-        for i, date in enumerate(self.dates):
-            if isinstance(date, str):
-                self.dates[i] = dt(date)
         # fill defaults for optional attributes:
         self.common_classes = self.common_classes or []
         if self.individual_classes is None:
@@ -266,10 +259,6 @@ class DatedImage(TimeLineElement):
     palette_color: int = 0
     classes: Classes = None
 
-    def __post_init__(self):
-        if isinstance(self.date, str):
-            self.date = dt(self.date)
-
     @classmethod
     def from_path(cls, date: datetime | str, file_path: Path, width: float, height: float,
                   lane: float = 1, palette_color: int = 0, classes: Classes = None) -> Self:
@@ -304,21 +293,17 @@ class TimeSpan(TimeLineElement):
     palette_color: int = 0
     classes: Classes = None
 
-    def __post_init__(self):
-        if isinstance(self.start_date, str):
-            self.start_date = dt(self.start_date)
-        if isinstance(self.end_date, str):
-            self.end_date = dt(self.end_date)
-
     def svg(self, geometry: TimeLineGeometry) -> SvgGroup:
+        start_date = dt(self.start_date) if isinstance(self.start_date, str) else self.start_date
+        end_date = dt(self.end_date) if isinstance(self.end_date, str) else self.end_date
         classes = self.classes.copy() if self.classes else []
         classes += [ClassNames.TIMESPAN, f'c{self.palette_color:02}']
         # if no explicit width is set, fill 60% of a lane
         width = self.width or 0.6 * geometry.settings.lane_height
         half_width_vector = width / 2 * geometry.lane_normal
-        start_corner = geometry.as_coord(self.start_date, lane=self.lane) + half_width_vector
-        end_corner = geometry.as_coord(self.end_date, lane=self.lane) - half_width_vector
-        middle_date = self.start_date + (self.end_date - self.start_date) / 2
+        start_corner = geometry.as_coord(start_date, lane=self.lane) + half_width_vector
+        end_corner = geometry.as_coord(end_date, lane=self.lane) - half_width_vector
+        middle_date = start_date + (end_date - start_date) / 2
         text_coord = geometry.as_coord(middle_date, lane=self.lane)
         timespan = SvgGroup([
             Rectangle(start_corner, end_corner, classes=classes + [ClassNames.COLORED]),

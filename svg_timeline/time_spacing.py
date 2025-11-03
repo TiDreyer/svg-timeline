@@ -14,10 +14,10 @@ class TimeSpacing:
             start_date: datetime | str,
             end_date: datetime | str,
     ):
-        if not start_date < end_date:
-            raise ValueError("start date needs to be smaller than end date")
         self._start_date = start_date if isinstance(start_date, datetime) else dt(start_date)
         self._end_date = end_date if isinstance(end_date, datetime) else dt(end_date)
+        if not self._start_date < self._end_date:
+            raise ValueError("start date needs to be smaller than end date")
 
     @property
     def start_date(self) -> datetime:
