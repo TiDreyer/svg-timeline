@@ -3,6 +3,8 @@
 # dependencies = [
 #     "svg-timeline",
 # ]
+# [tool.uv.sources]
+# svg-timeline = { path = "../" }
 # ///
 """ Example script to create a timeline of Emmy Noether's life """
 from pathlib import Path
