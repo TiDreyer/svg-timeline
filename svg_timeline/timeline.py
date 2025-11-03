@@ -197,7 +197,7 @@ class Event(TimeLineElement):
 class ConnectedEvents(TimeLineElement):
     """ a series of events connected via lines """
     dates: list[datetime | str]
-    labels: list[str]
+    labels: list[str | None]
     dot_radius: float = 3
     lane: float = 1
     palette_colors: list[int] | int = 0
@@ -209,8 +209,6 @@ class ConnectedEvents(TimeLineElement):
         self.common_classes = self.common_classes or []
         if self.individual_classes is None:
             self.individual_classes = [[] for _ in range(len(self.dates))]
-        if isinstance(self.palette_colors, int):
-            self.palette_colors = [self.palette_colors for _ in range(len(self.dates))]
         # validate that the length of the three lists matches
         if not len(self.dates) == len(self.labels) == len(self.classes):
             raise ValueError("dates, labels and classes need to be of the same length")
@@ -221,6 +219,7 @@ class ConnectedEvents(TimeLineElement):
         return [self.common_classes + individual for individual in self.individual_classes]
 
     def svg(self, geometry: TimeLineGeometry) -> SvgGroup:
+        palette_colors = [self.palette_colors for _ in range(len(self.dates))] if isinstance(self.palette_colors, int) else self.palette_colors
         classes = self.classes.copy() if self.classes else []
         classes += [ClassNames.CONNECTED_EVENTS]
         n_dates = len(self.dates)
@@ -229,7 +228,7 @@ class ConnectedEvents(TimeLineElement):
             groups[i].append(Line(
                 source=geometry.as_coord(self.dates[i], lane=self.lane),
                 target=geometry.as_coord(self.dates[i + 1], lane=self.lane),
-                classes=classes[i] + [f'c{self.palette_colors[i]:02}', ClassNames.COLORED],
+                classes=classes[i] + [f'c{palette_colors[i]:02}', ClassNames.COLORED],
             ))
         for i, label in enumerate(self.labels):
             if label is None:
@@ -237,7 +236,7 @@ class ConnectedEvents(TimeLineElement):
             groups[i].append(Circle(
                 center=geometry.as_coord(self.dates[i], lane=self.lane),
                 radius=self.dot_radius,
-                classes=classes[i] + [f'c{self.palette_colors[i]:02}', ClassNames.COLORED],
+                classes=classes[i] + [f'c{palette_colors[i]:02}', ClassNames.COLORED],
             ))
             groups[i].append(Text(
                 coord=geometry.as_coord(self.dates[i], lane=(self.lane + 0.5 if self.lane >= 0 else self.lane - 0.5)),
