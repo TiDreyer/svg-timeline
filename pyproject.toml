@@ -20,7 +20,7 @@ repository = "https://github.com/TiDreyer/svg-timeline"
 [dependency-groups]
 dev = [
   "pytest",
-  "pylint",
+  "ruff",
 ]
 
 [build-system]
@@ -30,7 +30,3 @@ build-backend = "uv_build"
 [tool.uv.build-backend]
 module-name = "svg_timeline"
 module-root = ""
-
-[tool.pylint.main]
-fail-under = 9.5
-max-line-length = 120
