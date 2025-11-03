@@ -4,6 +4,7 @@ from datetime import datetime
 from enum import Enum
 from json import dumps, loads, JSONEncoder, JSONDecoder
 from pathlib import Path
+from typing import Any
 
 import svg_timeline.timeline
 from svg_timeline import __version__
@@ -121,7 +122,7 @@ class TimeLineDecoder(JSONDecoder):
         return recursive_decode(pure_json)
 
 
-def recursive_decode(json_object: any) -> any:
+def recursive_decode(json_object: Any) -> Any:
     """ recursively transform the object returned by the
     default JSONDecoder into our custom classes """
     # depth-first: decode sub-objects before using them to decode this object

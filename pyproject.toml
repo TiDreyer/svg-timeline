@@ -21,6 +21,7 @@ repository = "https://github.com/TiDreyer/svg-timeline"
 dev = [
   "pytest",
   "ruff",
+  "ty",
 ]
 
 [build-system]

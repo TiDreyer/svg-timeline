@@ -14,10 +14,10 @@ class TimeSpacing:
             start_date: datetime | str,
             end_date: datetime | str,
     ):
-        if not start_date < end_date:
-            raise ValueError("start date needs to be smaller than end date")
         self._start_date = start_date if isinstance(start_date, datetime) else dt(start_date)
         self._end_date = end_date if isinstance(end_date, datetime) else dt(end_date)
+        if not self._start_date < self._end_date:
+            raise ValueError("start date needs to be smaller than end date")
 
     @property
     def start_date(self) -> datetime:
@@ -44,7 +44,7 @@ class TimeSpacing:
         raise NotImplementedError
 
 
-def _normalize_month(year: int, month: int = 1) -> (int, int, int):
+def _normalize_month(year: int, month: int = 1) -> tuple[int, int, int]:
     """ Helper function to normalize a date after the months have been manually counted up or down
     Note: Does NOT correct the day
     :returns (normalized year, normalized month, n_days in month)
@@ -55,7 +55,7 @@ def _normalize_month(year: int, month: int = 1) -> (int, int, int):
     return year, month, n_days
 
 
-def _normalize_date(year: int, month: int = 1, day: int = 1) -> (int, int, int):
+def _normalize_date(year: int, month: int = 1, day: int = 1) -> tuple[int, int, int]:
     """ Helper function to normalize a date
     after the days or months have been manually counted up or down
     :returns (normalized year, normalized month, normalized day)
@@ -72,7 +72,7 @@ def _normalize_date(year: int, month: int = 1, day: int = 1) -> (int, int, int):
     return year, month, day
 
 
-def _normalize_time(hour: int = 0, minute: int = 0, second: int = 0) -> (int, int, int, int):
+def _normalize_time(hour: int = 0, minute: int = 0, second: int = 0) -> tuple[int, int, int, int]:
     """ Helper function to normalize a time
     after the hours, minutes or seconds have been manually counted up or down
     Note: might lead to a day overflow that this function does not handle
