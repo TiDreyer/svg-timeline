@@ -24,7 +24,7 @@ jobs:
         uses: astral-sh/setup-uv@v6
 
       - name: Setup .venv
-        run: uv sync --python ${{ matrix.python-version }}
+        run: uv sync --python ${{ matrix.python-version }} --all-extras
 
       - name: Run ${{ matrix.command }}
         run: uv run --python ${{ matrix.python-version }} ${{ matrix.command }}
