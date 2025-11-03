@@ -1,7 +1,9 @@
 .idea/
 .venv*/
 dist/
+.ipynb_checkpoints/
 
 *.swp
 *.pyc
 .$*.bkp
+juv.tmp.*.py
