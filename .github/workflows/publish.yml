@@ -1,19 +1,69 @@
-# Build using uv and publish to PyPI using OIDC. For reference see:
+# Version and build using uv, then publish to PyPI using OIDC. For reference see:
 # https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-pypi
-name: Publish tagged versions to PyPI
+name: Version, build, and publish the package
 
 on:
-  push:
-    tags:
-      - '[0-9]+\.[0-9]+\.[0-9]+'  # matches semantic version tags like 1.2.3
+  workflow_dispatch:
+    inputs:
+      version_bump_type:
+        description: "Type of new version"
+        required: true
+        type: choice
+        options: [major, minor, patch]
+        default: minor
 
 jobs:
+  version:
+    name: Update package version
+    runs-on: ubuntu-latest
+
+    # We need write access for the push that follows
+    permissions:
+      actions: write
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0               # needed for pushing tags/commits
+          persist-credentials: true    # keep GITHUB_TOKEN for later push
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Set new package version
+        run: uv version --bump ${{ inputs.version_bump_type }}
+
+      - name: Set git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and tag changes
+        run: |
+          VERSION=$(uv version --short)
+          git add -u
+          git commit -m "Bump version to ${VERSION}"
+          git tag -a "${VERSION}" -m "Version ${VERSION}"
+
+      - name: Push to main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git push origin HEAD:main
+          git push origin --tags
+
   build:
     name: Build wheel
+    needs: version
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Install uv
         uses: astral-sh/setup-uv@v6
@@ -29,8 +79,7 @@ jobs:
 
   publish:
     name: Upload release to PyPI
-    needs:
-      - build
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: pypi
