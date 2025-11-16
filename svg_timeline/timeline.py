@@ -71,6 +71,14 @@ class TimelinePlot:
         """ Save an SVG of the timeline under the given file path """
         self.svg.save_as(file_path=file_path)
 
+    def display(self):
+        """ Display the timeline in a jupyter notebook """
+        try:
+            from IPython.display import SVG, display
+        except ImportError:
+            print("IPython not found, please state it as an optional dependency via `pip install svg-timeline[ipython]`")
+        display(SVG(self.svg.full))
+
 
 Classes = Optional[list[str]]
 
