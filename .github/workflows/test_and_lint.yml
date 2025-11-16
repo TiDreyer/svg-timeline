@@ -1,14 +1,18 @@
 # Running unit tests and linting over the project
-name: Test and lint
+name: Tests
 
-# Run on any pushed
-on: push
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   test_and_lint:
-    name: test_and_lint
+    name: test and lint
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.11", "3.12", "3.13", "3.14", "3.15"]
         command: ["pytest", "ruff check", "ty check"]
